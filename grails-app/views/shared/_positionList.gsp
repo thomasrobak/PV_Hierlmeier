@@ -42,6 +42,6 @@
     </tbody>
   </table>
   <div class="pagination">
-    <g:paginate total="${positionen}" />
+    <g:paginate total="${positionListTotal}" />
   </div>
 </div>

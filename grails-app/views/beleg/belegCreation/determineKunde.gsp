@@ -33,7 +33,7 @@
           </tr>
         </thead>
         <tbody>
-        <g:each in="${applicableKundenList}" status="i" var="kunde">
+        <g:each in="${applicableKundeList}" status="i" var="kunde">
           <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
             
             <td><g:link action="belegCreation" event="submit" id="${kunde?.id}">${fieldValue(bean: kunde, field: "nachname")}</g:link></td>
@@ -55,7 +55,7 @@
         </tbody>
       </table>
       <div class="pagination">
-        <g:paginate total="${applicableKundenListTotal}" />
+        <g:paginate total="${kundeListTotal}" />
       </div>
     </div>
   </body>
