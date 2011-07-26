@@ -12,25 +12,26 @@ class BelegController {
     }
     
     def belegCreationFlow = {
-        getListKunden {
+        getListApplicableKunden {
             action {
-                //@todo umschrieben auf listBelegCanditates()
-                [ kundenlist:Kunde.list() ]
+                [applicableKundenList:Kunde.list(), applicableKundenListTotal:Kunde.list()]
+                //flow.applicableKundenListTotal = flow.applicableKundenList.totalCount
+                
             }
             on("success").to "determineKunde"
             //@todo on(Exception).to "handleError"   
         }
         determineKunde {
             on("submit") {
-                flow.chosenkunde = Kunde.get(params.id)
-            }.to "getListPositionen"
+                flow.chosenKunde = Kunde.get(params.id)
+            }.to "getListKundePositionen"
             
             on("return").to "determineKunde"
             
         }
-        getListPositionen {
+        getListKundePositionen {
             action {
-                flow.positionenlist = Position.findAllByKundeAndBelegIsNull(flow.chosenkunde)
+                flow.kundePositionenList = Position.findAllByKundeAndBelegIsNull(flow.chosenKunde)
             }
             on("success").to "determinePositionen"
             //@todo on(Exception).to "handleError"   
