@@ -12,11 +12,27 @@ class BelegController {
     }
     
     def belegCreationFlow = {
+        /* 
+        initBelegCreationFlow {
+            action {
+                def beleg = new Beleg()
+                flow.belegInstance = beleg
+            }
+            on("success").to "getListApplicableKunden"
+        }
+        */
         getListApplicableKunden {
             action {
-                [applicableKundeList:Kunde.list(), kundeListTotal:Kunde.list()]
-                //flow.applicableKundenListTotal = flow.applicableKundenList.totalCount
-                
+                def criteria = Kunde.createCriteria()
+                def results = criteria.listDistinct {
+                    isNotEmpty("positionen")
+                    positionen {
+                       isNull("beleg")
+                    }
+                    //@todo order("nachname", "asc")
+                }
+                flow.applicableKundeList = results
+                flow.applicableKundeListTotal = results.count()
             }
             on("success").to "determineKunde"
             //@todo on(Exception).to "handleError"   
@@ -31,24 +47,45 @@ class BelegController {
         }
         getListKundePositionen {
             action {
-                [kundePositionenList:Position.findAllByKundeAndBelegIsNull(flow.chosenKunde), 
-                 positionenListTotal:Position.findAllByKundeAndBelegIsNull(flow.chosenKunde).count()]
+                def results = Position.findAllByKundeAndBelegIsNull(flow.chosenKunde)
+                flow.kundePositionenList = results
+                flow.positionenTotal = results.count()
             }
             on("success").to "determinePositionen"
             //@todo on(Exception).to "handleError"   
         }
         determinePositionen {
-            on("submit").to "processBelegCreation"
+            on("submit") {
+                def k =  flow.chosenKunde
+                def p = flow.kundePositionenList
+                def bnr = params.belegnummer
+                
+                def b = new Beleg(kunde:k, positionen:p, belegnummer:bnr) 
+                
+                if(!b.validate()) {
+                    b.errors.each {
+                        println it
+                        
+                    }
+                    //flash.message = b.errors.fieldError
+                    return error()
+                }     
+                b.save() 
+                [belegInstance:b]
+            }.to "processBelegCreation"
+            on("error").to "determinePositionen"
             on("return").to "determineKunde"
             
         }
         processBelegCreation {
             action {
-                //@todo do smth
+                def beleg = flow.belegInstance
+                beleg.save()
             }
             on("success").to "displayCreatedBeleg"
+           
         }
-        displayCreatedBeleg ()
+        displayCreatedBeleg()
     }
 
     def list = {

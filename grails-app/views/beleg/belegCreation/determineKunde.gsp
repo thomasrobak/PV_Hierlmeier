@@ -7,6 +7,11 @@
     <title>Kunde wählen</title>
   </head>
   <body>
+    <div class="nav" role="navigation">
+      <ul>
+        <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+      </ul>
+    </div>
     <div id="list-kunde" class="content scaffold-list" role="main">
       <h1>Kunde wählen</h1>
       <g:if test="${flash.message}">
@@ -55,7 +60,7 @@
         </tbody>
       </table>
       <div class="pagination">
-        <g:paginate total="${kundeListTotal}" />
+        <g:paginate total="${applicableKundeListTotal}" />
       </div>
     </div>
   </body>

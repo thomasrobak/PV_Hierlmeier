@@ -13,22 +13,9 @@ class KundeController {
 
     def list = {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        Kunde.count()
 	[kundeInstanceList: Kunde.list(params), kundeInstanceTotal: Kunde.count()]
     }
     
-    def listBelegCanditates = {
-        def criteria = Kunde.createCriteria()
-        def results = criteria.listDistinct {
-            positionen {
-                isNull("beleg")
-            }
-            //@todo order("nachname", "asc")
-        }
-        
-        return [applicableKundenList:results]
-    }
-
     def create = {
         def kundeInstance = new Kunde()
         kundeInstance.properties = params
