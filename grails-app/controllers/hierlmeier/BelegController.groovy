@@ -27,7 +27,9 @@ class BelegController {
         def ByteArrayOutputStream out
         
         try {
-            out = printBelegService.generatePDF(belegInstance)
+            def belegxsltfile = servletContext.getResource("/belegstylesheet.xsl") //@todo why doenst this resource shit work? workaround for dev-env in PrintBelegService
+            println("belegxsltfile = " + belegxsltfile)
+            out = printBelegService.generatePDF(belegInstance, belegxsltfile)
             
             response.setContentType("application/pdf");
             response.setContentLength(out.size());

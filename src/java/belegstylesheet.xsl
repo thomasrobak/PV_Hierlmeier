@@ -65,22 +65,118 @@
 
             <fo:page-sequence master-reference="rechnung">
                 <fo:static-content flow-name="ersteseite-before">
-                    <fo:block text-align="left"> Hierlmeier GmbH</fo:block>
-                    <fo:block text-align="right"> Belegnummer <xsl:value-of select="/beleg/belegnummer"/></fo:block>
-                    <fo:block text-align="center"> Kundendaten </fo:block>
+                    <fo:table>
+                        <fo:table-column column-width="50%"/>
+                        <fo:table-column column-width="50%"/>
+
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">Hierlmeier GmbH</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="right"> Belegnummer: 
+                                        <xsl:value-of select="/beleg/belegnummer"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">VetMed in Bavaria</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="right">Datum: 
+                                        <xsl:value-of select="/beleg/datum"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                    
+                    
+                                      
+                    <fo:table>
+                        <fo:table-column column-width="25mm"/>
+                        <fo:table-column column-width="50mm"/>
+
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block text-align="right"></fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">Rechnung an:</fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block text-align="right">Name:</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">
+                                        <xsl:value-of select="/beleg/kunde/vorname"/> 
+                                        <xsl:value-of select="/beleg/kunde/nachname"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block text-align="right">Adresse:</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">
+                                        <xsl:value-of select="/beleg/kunde/adresse"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block text-align="right">Ort:</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block text-align="left">
+                                        <xsl:value-of select="/beleg/kunde/wohnort"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <xsl:if test="/beleg/kunde/telefonnummer != ''">
+                                <fo:table-row>
+                                    <fo:table-cell>
+                                        <fo:block text-align="right">Tel.Nr.:</fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell>
+                                        <fo:block text-align="left">
+                                            <xsl:value-of select="/beleg/kunde/telefonnummer"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+                                </fo:table-row>
+                            </xsl:if>
+                        </fo:table-body>
+
+                    </fo:table>
+                    
                 </fo:static-content>
                 
                 <fo:static-content flow-name="xsl-region-before">
-                    <fo:block text-align="left"> Hierlmeier GmbH<fo:page-number /></fo:block>
-                    <fo:block text-align="right"> Belegnummer <xsl:value-of select="/beleg/belegnummer"/></fo:block>
+                    <fo:block text-align="left"> Hierlmeier GmbH
+                        <fo:page-number />
+                    </fo:block>
+                    <fo:block text-align="right"> Belegnummer 
+                        <xsl:value-of select="/beleg/belegnummer"/>
+                    </fo:block>
+                    <fo:block text-align="right"> Datum: 
+                        <xsl:value-of select="/beleg/datum"/>
+                    </fo:block>
                 </fo:static-content>
 
                 <fo:static-content flow-name="xsl-region-after">
-                    <fo:block text-align="center"> Seite <fo:page-number /></fo:block>
+                    <fo:block text-align="center"> Seite 
+                        <fo:page-number />
+                    </fo:block>
                 </fo:static-content>
                 
                 <fo:flow flow-name="xsl-region-body">
-                    <fo:block text-align="left"> flowbody </fo:block>
+                    <fo:block text-align="left"> Positionentable </fo:block>
                 </fo:flow>
             </fo:page-sequence>
             

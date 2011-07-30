@@ -1,6 +1,6 @@
 package hierlmeier
 
-//import org.springframework.context.ApplicationContextAware
+import org.springframework.context.ApplicationContextAware
 
 import grails.converters.XML
 
@@ -20,31 +20,37 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.MimeConstants;
 
 
-class PrintBelegService /*implements ApplicationContextAware*/ {
+class PrintBelegService {
 
     static transactional = false
     static scope = "singleton"
-    
-    // def applicationContext //@todo maybe needed for getting the xsl per resource
     
     // configure fopFactory as desired
     FopFactory fopFactory = FopFactory.newInstance();
     TransformerFactory transFactory = TransformerFactory.newInstance();
 
-    def ByteArrayOutputStream generatePDF(Beleg beleg) {
+    def ByteArrayOutputStream generatePDF(Beleg beleg, xsltfileURL) {
         
         def obj2xmlconverter
         XML.use("deep"){ obj2xmlconverter = beleg as XML }
         
         // Setup directories
-        File baseDir = new File(".");
+        //File baseDir = new File(".");
         //File outDir = new File(baseDir, "out");
         //outDir.mkdirs();
 
         // Setup input files
-        def xmlstring = obj2xmlconverter.toString();
-        File xsltfile = new File(baseDir, "src/java/belegstylesheet.xsl");
-
+        def xmlstring = obj2xmlconverter.toString()
+        File xsltfile
+        
+        if(xsltfileURL != null){
+            xsltfile = new File(xsltfileURL)
+        }
+        else {
+            xsltfile = new File("src/java/belegstylesheet.xsl")
+        }
+            
+        
         println("Input: XML (" + xmlstring + ")");
         println("Stylesheet: " + xsltfile);
         println();
