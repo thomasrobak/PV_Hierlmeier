@@ -102,6 +102,14 @@
           <span class="required-indicator">*</span>
         </label>
         <g:textField name="belegnummer" value="${fieldValue(bean: belegInstance, field: 'belegnummer')}" />
+        
+        <div class="fieldcontain ${hasErrors(bean: belegInstance, field: 'datum', 'error')} required">
+          <label for="datum">
+		<g:message code="beleg.datum.label" default="Datum" />
+		<span class="required-indicator">*</span>
+          </label>
+          <g:datePicker name="datum" precision="day" />
+        </div>
 
       </div>
     </div>

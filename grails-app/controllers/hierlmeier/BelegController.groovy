@@ -81,8 +81,9 @@ class BelegController {
                 def k =  flow.chosenKunde
                 def p = flow.kundePositionenList
                 def bnr = params.belegnummer
+                def d = params.datum
                 
-                def b = new Beleg(kunde:k, positionen:p, belegnummer:bnr) 
+                def b = new Beleg(kunde:k, positionen:p, belegnummer:bnr, datum:d) 
                 
                 if(!b.validate()) {
                     b.errors.each {
