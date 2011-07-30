@@ -1,33 +1,53 @@
 package hierlmeier
 
 import grails.converters.JSON
+import grails.converters.XML
+
+import hierlmeier.PrintBelegService
 
 class BelegController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     static defaultAction = "index"
+    
+    PrintBelegService printBelegService
 
     def index = {
         redirect(action: "list", params: params)
     }
     
-    def belegCreationFlow = {
-        /* 
-        initBelegCreationFlow {
-            action {
-                def beleg = new Beleg()
-                flow.belegInstance = beleg
-            }
-            on("success").to "getListApplicableKunden"
+    def print = {
+        def belegInstance = Beleg.get(params.id)
+        
+        if (!belegInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'beleg.label', default: 'Beleg'), params.id])
+            redirect(action: "show", id: belegInstance.id)
         }
-        */
+        
+        def ByteArrayOutputStream out
+        
+        try {
+            out = printBelegService.generatePDF(belegInstance)
+            
+            response.setContentType("application/pdf");
+            response.setContentLength(out.size());
+    
+            response.getOutputStream().write(out.toByteArray());
+            response.getOutputStream().flush();
+        } finally {
+            out.close();
+            println("error pdf")
+        }
+    }
+    
+    def belegCreationFlow = {
         getListApplicableKunden {
             action {
                 def criteria = Kunde.createCriteria()
                 def results = criteria.listDistinct {
                     isNotEmpty("positionen")
                     positionen {
-                       isNull("beleg")
+                        isNull("beleg")
                     }
                     //@todo order("nachname", "asc")
                 }
@@ -72,18 +92,9 @@ class BelegController {
                 }     
                 b.save() 
                 [belegInstance:b]
-            }.to "processBelegCreation"
+            }.to "displayCreatedBeleg"
             on("error").to "determinePositionen"
             on("return").to "determineKunde"
-            
-        }
-        processBelegCreation {
-            action {
-                def beleg = flow.belegInstance
-                beleg.save()
-            }
-            on("success").to "displayCreatedBeleg"
-           
         }
         displayCreatedBeleg()
     }

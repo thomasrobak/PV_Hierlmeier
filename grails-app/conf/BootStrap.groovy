@@ -49,7 +49,7 @@ class BootStrap {
                 
             }
             if (!Beleg.count()) {
-                beleg1 = new Beleg(belegnummer: "1111111", kunde: huber).save(failOnError: true)
+                beleg1 = new Beleg(datum: new Date(Calendar.getInstance().getTimeInMillis()), belegnummer: "1111111", kunde: huber).save(failOnError: true)
                 
             }
             if (!Position.count()) {

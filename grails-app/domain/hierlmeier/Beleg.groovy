@@ -6,6 +6,7 @@ class Beleg implements Serializable { //muss Seriazable implementieren für Flow
     //Boolean bezahlt //@todo das flag doch behalten?
     //Integer summebezahlt //@todo doch behalten oder jedesmal rechnen?
     
+    Date datum
     Kunde kunde
     
     static hasMany = [positionen:Position, zahlungsteile:Zahlungsteil]

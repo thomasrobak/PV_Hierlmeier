@@ -4,6 +4,7 @@ class Zahlung {
     
     Kunde kunde
     Integer betrag
+    Date datum
     
     static hasMany = [zahlungsteile:Zahlungsteil]
     
