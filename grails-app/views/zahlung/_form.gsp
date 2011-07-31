@@ -18,6 +18,14 @@
 	<g:select id="kunde" name="kunde.id" from="${hierlmeier.Kunde.list()}" optionKey="id" required="" value="${zahlungInstance?.kunde?.id}" class="many-to-one"/>
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'datum', 'error')} required">
+	<label for="datum">
+		<g:message code="zahlung.datum.label" default="Datum" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:datePicker name="datum" precision="day" value="${zahlungInstance?.datum}"  />
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'zahlungsteile', 'error')} ">
 	<label for="zahlungsteile">
 		<g:message code="zahlung.zahlungsteile.label" default="Zahlungsteile" />

@@ -77,7 +77,7 @@
         </li>
       </g:if>
 
-      <g:if test="${kundeInstance?.mwst}">
+      <g:if test="${kundeInstance?.mwst != null}">
         <li class="fieldcontain">
           <span id="mwst-label" class="property-label"><g:message code="kunde.mwst.label" default="Mwst" /></span>
 
@@ -97,7 +97,7 @@
 
       <g:if test="${kundeInstance?.positionen}">
         <li class="fieldcontain">
-        <tmpl:/shared/positionList positionen="${kundeInstance?.positionen}" listlabel="Positionen" />
+        <tmpl:/shared/positionList positionen="${kundeInstance?.positionen}" positionenTotal="${kundeInstance?.positionen.count()}" listlabel="Positionen" />
           </li>
       </g:if>
       <g:else>

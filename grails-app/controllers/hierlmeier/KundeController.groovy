@@ -16,19 +16,6 @@ class KundeController {
 	[kundeInstanceList: Kunde.list(params), kundeInstanceTotal: Kunde.count()]
     }
     
-    def listBelegCanditates = {
-        def criteria = Kunde.createCriteria()
-        def results = criteria.list {
-            isNotEmpty("positionen")
-            positionen {
-                isNull("beleg")
-            }
-            //@todo order("nachname", "asc")
-        }
-        
-        return results
-    }
-
     def create = {
         def kundeInstance = new Kunde()
         kundeInstance.properties = params
