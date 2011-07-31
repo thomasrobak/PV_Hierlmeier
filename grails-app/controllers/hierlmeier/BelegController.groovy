@@ -1,52 +1,105 @@
 package hierlmeier
 
 import grails.converters.JSON
+import grails.converters.XML
+
+import hierlmeier.PrintBelegService
 
 class BelegController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     static defaultAction = "index"
+    
+    PrintBelegService printBelegService
 
     def index = {
         redirect(action: "list", params: params)
     }
     
+    def print = {
+        def belegInstance = Beleg.get(params.id)
+        
+        if (!belegInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'beleg.label', default: 'Beleg'), params.id])
+            redirect(action: "show", id: belegInstance.id)
+        }
+        
+        def ByteArrayOutputStream out
+        
+        try {
+            def belegxsltfile = servletContext.getResource("/belegstylesheet.xsl") //@todo why doenst this resource shit work? workaround for dev-env in PrintBelegService
+            println("belegxsltfile = " + belegxsltfile)
+            out = printBelegService.generatePDF(belegInstance, belegxsltfile)
+            
+            response.setContentType("application/pdf");
+            response.setContentLength(out.size());
+    
+            response.getOutputStream().write(out.toByteArray());
+            response.getOutputStream().flush();
+        } finally {
+            out.close();
+            println("error pdf")
+        }
+    }
+    
     def belegCreationFlow = {
-        getListKunden {
+        getListApplicableKunden {
             action {
-                //@todo umschrieben auf listBelegCanditates()
-                [ kundenlist:Kunde.list() ]
+                def criteria = Kunde.createCriteria()
+                def results = criteria.listDistinct {
+                    isNotEmpty("positionen")
+                    positionen {
+                        isNull("beleg")
+                    }
+                    //@todo order("nachname", "asc")
+                }
+                flow.applicableKundeList = results
+                flow.applicableKundeListTotal = results.count()
             }
             on("success").to "determineKunde"
             //@todo on(Exception).to "handleError"   
         }
         determineKunde {
             on("submit") {
-                flow.chosenkunde = Kunde.get(params.id)
-            }.to "getListPositionen"
+                flow.chosenKunde = Kunde.get(params.id)
+            }.to "getListKundePositionen"
             
             on("return").to "determineKunde"
             
         }
-        getListPositionen {
+        getListKundePositionen {
             action {
-                flow.positionenlist = Position.findAllByKundeAndBelegIsNull(flow.chosenkunde)
+                def results = Position.findAllByKundeAndBelegIsNull(flow.chosenKunde)
+                flow.kundePositionenList = results
+                flow.positionenTotal = results.count()
             }
             on("success").to "determinePositionen"
             //@todo on(Exception).to "handleError"   
         }
         determinePositionen {
-            on("submit").to "processBelegCreation"
+            on("submit") {
+                def k =  flow.chosenKunde
+                def p = flow.kundePositionenList
+                def bnr = params.belegnummer
+                def d = params.datum
+                
+                def b = new Beleg(kunde:k, positionen:p, belegnummer:bnr, datum:d) 
+                
+                if(!b.validate()) {
+                    b.errors.each {
+                        println it
+                        
+                    }
+                    //flash.message = b.errors.fieldError
+                    return error()
+                }     
+                b.save() 
+                [belegInstance:b]
+            }.to "displayCreatedBeleg"
+            on("error").to "determinePositionen"
             on("return").to "determineKunde"
-            
         }
-        processBelegCreation {
-            action {
-                //@todo do smth
-            }
-            on("success").to "displayCreatedBeleg"
-        }
-        displayCreatedBeleg ()
+        displayCreatedBeleg()
     }
 
     def list = {
