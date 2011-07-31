@@ -26,7 +26,7 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:h2:prodDb"
+  	    jndiName = "java:/comp/env/jdbc/pvDataSource"
         }
     }
 }
