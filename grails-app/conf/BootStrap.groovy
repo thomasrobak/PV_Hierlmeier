@@ -56,13 +56,13 @@ class BootStrap {
                 pos1 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
                              typ: wurmkur, preis: "34", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos2 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
-                             typ: krallen, preis: "34", menge: "", kunde: huber, beleg: beleg1).save(failOnError: true)
+                             typ: krallen, preis: "34", menge: "2", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos3 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix", tier: kuh,
                              typ: wurmkur, preis: "4", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos4 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix2", tier: karnickel,
                              typ: wurmkur, preis: "5", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos5 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix3", tier: katze,
-                             typ: krallen, preis: "6", menge: "", kunde: holzmann).save(failOnError: true)
+                             typ: krallen, preis: "6", menge: "1", kunde: holzmann).save(failOnError: true)
                 pos6 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix4", tier: hund,
                              typ: wurmkur, preis: "7", menge: "2", kunde: holzmann).save(failOnError: true)
                 

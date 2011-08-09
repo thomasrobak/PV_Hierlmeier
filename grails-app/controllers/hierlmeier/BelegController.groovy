@@ -38,7 +38,6 @@ class BelegController {
             response.getOutputStream().flush();
         } finally {
             out.close();
-            println("error pdf")
         }
     }
     
@@ -83,7 +82,10 @@ class BelegController {
                 def bnr = params.belegnummer
                 def d = params.datum
                 
-                def b = new Beleg(kunde:k, positionen:p, belegnummer:bnr, datum:d) 
+                def b = new Beleg(kunde:k, belegnummer:bnr, datum:d)
+                p.each {
+                    it.beleg = b    
+                }
                 
                 if(!b.validate()) {
                     b.errors.each {
@@ -93,7 +95,7 @@ class BelegController {
                     //flash.message = b.errors.fieldError
                     return error()
                 }     
-                b.save() 
+                b.save(flush: true) 
                 [belegInstance:b]
             }.to "displayCreatedBeleg"
             on("error").to "determinePositionen"

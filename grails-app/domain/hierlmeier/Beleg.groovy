@@ -14,6 +14,7 @@ class Beleg implements Serializable { //muss Seriazable implementieren für Flow
     static constraints = {
         belegnummer(blank:false, unique:true, nullable:false)
         zahlungsteile(nullable:true)
+        positionen(nullable:true) //@todo nicht ganz richtig eigentlich
     }
     
     def String toString () {

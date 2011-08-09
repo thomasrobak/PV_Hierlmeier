@@ -14,7 +14,8 @@ environments {
     development {
         dataSource {
             dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:h2:mem:devDB" //TODO zum anschauen: "jdbc:h2:file:devDB;AUTO_SERVER=TRUE"
+            //url = "jdbc:h2:mem:devDB"
+            url = "jdbc:h2:file:devDB;AUTO_SERVER=TRUE" //@todo nur zum anschauen der db
         }
     }
     test {
