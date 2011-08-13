@@ -127,7 +127,7 @@
 				<ul>
                                   <li class="controller"><g:link controller="beleg" action="list">Belege ansehen</g:link></li>
                                   <li class="controller"><g:link controller="beleg" action="belegCreation">Beleg erstellen</g:link></li>
-                                  <li class="controller">Beleg drucken</li>
+                                  <li class="controller"><g:link controller="beleg" action="list">Beleg drucken</g:link></li>
                                   <li class="controller">Mahnung erstellen</li>
                                 </ul>
                                 <h2>Zahlungen</h2>

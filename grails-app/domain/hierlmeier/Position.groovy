@@ -7,7 +7,7 @@ class Position implements Serializable { //muss Seriazable implementieren für F
     
     Tier tier
     Positionstyp typ    // Medikament oder Leistung
-    Integer preis       // zB Preis abweichend vom Katalogpreis (= typ.preis)
+    BigDecimal preis    // zB Preis abweichend vom Katalogpreis (= typ.preis)
     Integer menge       // im falle von typ==leistung is menge==null
     Kunde kunde
     Beleg beleg
