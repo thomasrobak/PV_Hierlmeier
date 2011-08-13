@@ -345,7 +345,7 @@
     
     <xsl:template name="currency-formatter">
         <xsl:param name="amount" as="xs:number" required="yes"/>
-        <xsl:value-of select="format-number($amount, '# €')"/>
+        <xsl:value-of select="format-number($amount, '#.00 €')"/>
     </xsl:template>
 
 </xsl:stylesheet>

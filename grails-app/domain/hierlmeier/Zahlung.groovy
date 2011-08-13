@@ -3,7 +3,7 @@ package hierlmeier
 class Zahlung {
     
     Kunde kunde
-    Integer betrag
+    BigDecimal betrag
     Date datum
     
     static hasMany = [zahlungsteile:Zahlungsteil]
