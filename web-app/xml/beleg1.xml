@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beleg>
+    <belegnummer>676776</belegnummer>
+    <kunde id="2">
+        <adresse>Kornstrasse 45/4-5</adresse>
+        <belege />
+        <bemerkung></bemerkung>
+        <beruf>Zahnarzt</beruf>
+        <mwst>false</mwst>
+        <nachname>Holzmann</nachname>
+        <positionen>
+            <position id="6">
+                <anmerkung>nix4</anmerkung>
+                <beleg />
+                <datum>2011-07-29 15:09:08.319 MESZ</datum>
+                <kunde ref="../.." />
+                <menge>2</menge>
+                <preis>7</preis>
+                <tier id="5">
+                    <bezeichnung>Hund</bezeichnung>
+                </tier>
+                <typ id="1">
+                    <bezeichnung>Wurmkur</bezeichnung>
+                    <preis>12</preis>
+                </typ>
+            </position>
+            <position id="4">
+                <anmerkung>nix2</anmerkung>
+                <beleg />
+                <datum>2011-07-29 15:09:08.308 MESZ</datum>
+                <kunde ref="../.." />
+                <menge>2</menge>
+                <preis>5</preis>
+                <tier id="3">
+                    <bezeichnung>Karnickel</bezeichnung>
+                </tier>
+                <typ id="1">
+                    <bezeichnung>Wurmkur</bezeichnung>
+                    <preis>12</preis>
+                </typ>
+            </position>
+            <position id="5">
+                <anmerkung>nix3</anmerkung>
+                <beleg />
+                <datum>2011-07-29 15:09:08.313 MESZ</datum>
+                <kunde ref="../.." />
+                <menge />
+                <preis>6</preis>
+                <tier id="4">
+                    <bezeichnung>Katze</bezeichnung>
+                </tier>
+                <typ id="4">
+                    <bezeichnung>Krallen Stutzen</bezeichnung>
+                    <preis>12</preis>
+                </typ>
+            </position>
+            <position id="3">
+                <anmerkung>nix</anmerkung>
+                <beleg />
+                <datum>2011-07-29 15:09:08.301 MESZ</datum>
+                <kunde ref="../.." />
+                <menge>2</menge>
+                <preis>4</preis>
+                <tier id="1">
+                    <bezeichnung>Kuh</bezeichnung>
+                </tier>
+                <typ id="1">
+                    <bezeichnung>Wurmkur</bezeichnung>
+                    <preis>12</preis>
+                </typ>
+            </position>
+        </positionen>
+        <telefonnummer></telefonnummer>
+        <vorname>Erwin</vorname>
+        <wohnort>45678 Fürstenfeld</wohnort>
+        <zahlungen />
+    </kunde>
+    <positionen>
+        <position id="6">
+            <anmerkung>nix4</anmerkung>
+            <beleg />
+            <datum>2011-07-29 15:09:08.319 MESZ</datum>
+            <kunde id="2">
+                <adresse>Kornstrasse 45/4-5</adresse>
+                <belege />
+                <bemerkung></bemerkung>
+                <beruf>Zahnarzt</beruf>
+                <mwst>false</mwst>
+                <nachname>Holzmann</nachname>
+                <positionen ref="../.." />
+                <telefonnummer></telefonnummer>
+                <vorname>Erwin</vorname>
+                <wohnort>45678 Fürstenfeld</wohnort>
+                <zahlungen />
+            </kunde>
+            <menge>2</menge>
+            <preis>7</preis>
+            <tier id="5">
+                <bezeichnung>Hund</bezeichnung>
+            </tier>
+            <typ id="1">
+                <bezeichnung>Wurmkur</bezeichnung>
+                <preis>12</preis>
+            </typ>
+        </position>
+        <position id="4">
+            <anmerkung>nix2</anmerkung>
+            <beleg />
+            <datum>2011-07-29 15:09:08.308 MESZ</datum>
+            <kunde id="2">
+                <adresse>Kornstrasse 45/4-5</adresse>
+                <belege />
+                <bemerkung></bemerkung>
+                <beruf>Zahnarzt</beruf>
+                <mwst>false</mwst>
+                <nachname>Holzmann</nachname>
+                <positionen ref="../.." />
+                <telefonnummer></telefonnummer>
+                <vorname>Erwin</vorname>
+                <wohnort>45678 Fürstenfeld</wohnort>
+                <zahlungen />
+            </kunde>
+            <menge>2</menge>
+            <preis>5</preis>
+            <tier id="3">
+                <bezeichnung>Karnickel</bezeichnung>
+            </tier>
+            <typ id="1">
+                <bezeichnung>Wurmkur</bezeichnung>
+                <preis>12</preis>
+            </typ>
+        </position>
+        <position id="5">
+            <anmerkung>nix3</anmerkung>
+            <beleg />
+            <datum>2011-07-29 15:09:08.313 MESZ</datum>
+            <kunde id="2">
+                <adresse>Kornstrasse 45/4-5</adresse>
+                <belege />
+                <bemerkung></bemerkung>
+                <beruf>Zahnarzt</beruf>
+                <mwst>false</mwst>
+                <nachname>Holzmann</nachname>
+                <positionen ref="../.." />
+                <telefonnummer></telefonnummer>
+                <vorname>Erwin</vorname>
+                <wohnort>45678 Fürstenfeld</wohnort>
+                <zahlungen />
+            </kunde>
+            <menge />
+            <preis>6</preis>
+            <tier id="4">
+                <bezeichnung>Katze</bezeichnung>
+            </tier>
+            <typ id="4">
+                <bezeichnung>Krallen Stutzen</bezeichnung>
+                <preis>12</preis>
+            </typ>
+        </position>
+        <position id="3">
+            <anmerkung>nix</anmerkung>
+            <beleg />
+            <datum>2011-07-29 15:09:08.301 MESZ</datum>
+            <kunde id="2">
+                <adresse>Kornstrasse 45/4-5</adresse>
+                <belege />
+                <bemerkung></bemerkung>
+                <beruf>Zahnarzt</beruf>
+                <mwst>false</mwst>
+                <nachname>Holzmann</nachname>
+                <positionen ref="../.." />
+                <telefonnummer></telefonnummer>
+                <vorname>Erwin</vorname>
+                <wohnort>45678 Fürstenfeld</wohnort>
+                <zahlungen />
+            </kunde>
+            <menge>2</menge>
+            <preis>4</preis>
+            <tier id="1">
+                <bezeichnung>Kuh</bezeichnung>
+            </tier>
+            <typ id="1">
+                <bezeichnung>Wurmkur</bezeichnung>
+                <preis>12</preis>
+            </typ>
+        </position>
+    </positionen>
+    <zahlungsteile />
+</beleg>

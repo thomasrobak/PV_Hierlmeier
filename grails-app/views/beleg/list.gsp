@@ -24,13 +24,11 @@
       <thead>
         <tr>
 
-          <g:sortableColumn property="id" title="Id" titleKey="beleg.id" />
+      <g:sortableColumn property="belegnummer" title="Belegnummer" titleKey="beleg.belegnummer" />
 
-          <g:sortableColumn property="belegnummer" title="Belegnummer" titleKey="beleg.belegnummer" />
+      <th><g:message code="beleg.kunde" default="Kunde" /></th>
 
-          <th><g:message code="beleg.kunde" default="Kunde" /></th>
-
-          <g:sortableColumn property="errors" title="Errors" titleKey="beleg.errors" />
+      <g:sortableColumn property="datum" title="Datum" titleKey="beleg.datum" />
 
       </tr>
       </thead>
@@ -38,13 +36,11 @@
       <g:each in="${belegInstanceList}" status="i" var="belegInstance">
         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
 
-          <td><g:link action="show" id="${belegInstance.id}">${fieldValue(bean: belegInstance, field: "id")}</g:link></td>
-
-        <td>${fieldValue(bean: belegInstance, field: "belegnummer")}</td>
+        <td><g:link action="show" id="${belegInstance.id}">${fieldValue(bean: belegInstance, field: "belegnummer")}</g:link></td>
 
         <td>${fieldValue(bean: belegInstance, field: "kunde")}</td>
 
-        <td>${fieldValue(bean: belegInstance, field: "errors")}</td>
+        <td>${fieldValue(bean: belegInstance, field: "datum")}</td>
 
         </tr>
       </g:each>

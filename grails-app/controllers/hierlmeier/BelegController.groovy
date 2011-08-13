@@ -10,7 +10,7 @@ class BelegController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     static defaultAction = "index"
     
-    PrintBelegService printBelegService
+    PrintService printService
 
     def index = {
         redirect(action: "list", params: params)
@@ -26,19 +26,21 @@ class BelegController {
         
         def ByteArrayOutputStream out
         
+        def xslfile = servletContext.getAttribute("BelegStyleSheet")
+                
         try {
-            def belegxsltfile = servletContext.getResource("/belegstylesheet.xsl") //@todo why doenst this resource shit work? workaround for dev-env in PrintBelegService
-            println("belegxsltfile = " + belegxsltfile)
-            out = printBelegService.generatePDF(belegInstance, belegxsltfile)
+            out = printService.generatePDF(belegInstance, xslfile)
             
             response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=Beleg_${belegInstance.belegnummer}")
             response.setContentLength(out.size());
-    
             response.getOutputStream().write(out.toByteArray());
             response.getOutputStream().flush();
-        } finally {
+        } catch (Exception e) {
+            println("Exception: " + e.toString())
+        }
+        finally {
             out.close();
-            println("error pdf")
         }
     }
     
@@ -83,7 +85,10 @@ class BelegController {
                 def bnr = params.belegnummer
                 def d = params.datum
                 
-                def b = new Beleg(kunde:k, positionen:p, belegnummer:bnr, datum:d) 
+                def b = new Beleg(kunde:k, belegnummer:bnr, datum:d)
+                p.each {
+                    it.beleg = b    
+                }
                 
                 if(!b.validate()) {
                     b.errors.each {
@@ -93,7 +98,7 @@ class BelegController {
                     //flash.message = b.errors.fieldError
                     return error()
                 }     
-                b.save() 
+                b.save(flush: true) 
                 [belegInstance:b]
             }.to "displayCreatedBeleg"
             on("error").to "determinePositionen"

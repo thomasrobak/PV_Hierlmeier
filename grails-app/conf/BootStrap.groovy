@@ -5,6 +5,38 @@ import hierlmeier.*
 class BootStrap {
 
     def init = { servletContext ->
+        
+        println()
+        println("********** Bootstrap Strizzi Actions Start")
+                
+        // read the servletContext path and add the /xml directory to it
+        // this is needed because dev and prod environments have different paths
+        def xslstylesheetdir = new String(servletContext.getRealPath("/") + "xml/") 
+        println("*** xsl-stylesheets directory: " + xslstylesheetdir)
+        
+        // add the xsl stylesheet names to the path we got above
+        // xsl stylesheets are needed for pdf transformation in hierlmeier.PrintService
+        String belegstylesheetname = "belegstylesheet.xsl" //@todo vllt noch in ein config file verlagern
+        println("*** name of the xsl-stylesheet for Beleg: " + belegstylesheetname)
+        
+        // load files for xsl-stylesheets
+        def belegstylesheet = new File(new String(xslstylesheetdir + belegstylesheetname))
+        println("*** loaded file: " + belegstylesheet)
+        
+        // add xsl-stylesheet files to servletContext so they can be accessed from within the app
+        servletContext.setAttribute("BelegStyleSheet", belegstylesheet)
+        println("*** added attribute BelegStyleSheet to serlvetContext")
+        
+        // test added attributes
+        println("********** Test Added ServletContext Attributes:")
+        def testattribute = servletContext.getAttribute("BelegStyleSheet")
+        println("*** attribute BelegStyleSheet: " + testattribute)
+       
+        // end of Strizzi Bootstrap Äktschns
+        
+        println("********** Bootstrap Strizzi Actions Ende")
+        println()
+        
         if (Environment.getCurrent() == Environment.DEVELOPMENT) {
             
             Medikament wurmkur
@@ -16,14 +48,14 @@ class BootStrap {
             Beleg beleg1
             
             if (!Medikament.count()) {
-                wurmkur = new Medikament(bezeichnung: "Wurmkur", preis: "12").save(failOnError: true)
-                new Medikament(bezeichnung: "Penicillin", preis: "5").save(failOnError: true)
-                new Medikament(bezeichnung: "Abführmittel", preis: "1").save(failOnError: true)
+                wurmkur = new Medikament(bezeichnung: "Wurmkur", preis: "12.70").save(failOnError: true)
+                new Medikament(bezeichnung: "Penicillin", preis: "5.50").save(failOnError: true)
+                new Medikament(bezeichnung: "Abführmittel", preis: "1.99").save(failOnError: true)
             }
             if (!Leistung.count()) {
-                krallen = new Leistung(bezeichnung: "Krallen Stutzen", preis: "12").save(failOnError: true)
-                new Leistung(bezeichnung: "Schnipp Schnapp, Scrotum ab", preis: "200").save(failOnError: true)
-                new Leistung(bezeichnung: "Blinddarm raus", preis: "169").save(failOnError: true)
+                krallen = new Leistung(bezeichnung: "Krallen Stutzen", preis: "12.00").save(failOnError: true)
+                new Leistung(bezeichnung: "Schnipp Schnapp, Scrotum ab", preis: "200.00").save(failOnError: true)
+                new Leistung(bezeichnung: "Blinddarm raus", preis: "169.00").save(failOnError: true)
             }
             if (!Tier.count()) {
                 kuh = new Tier(bezeichnung: "Kuh").save(failOnError: true)
@@ -54,17 +86,17 @@ class BootStrap {
             }
             if (!Position.count()) {
                 pos1 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
-                             typ: wurmkur, preis: "34", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
+                             typ: wurmkur, preis: "34.23", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos2 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
-                             typ: krallen, preis: "34", menge: "", kunde: huber, beleg: beleg1).save(failOnError: true)
+                             typ: krallen, preis: "13.19", menge: "2", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos3 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix", tier: kuh,
-                             typ: wurmkur, preis: "4", menge: "2", kunde: holzmann).save(failOnError: true)
+                             typ: wurmkur, preis: "4.12", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos4 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix2", tier: karnickel,
-                             typ: wurmkur, preis: "5", menge: "2", kunde: holzmann).save(failOnError: true)
+                             typ: wurmkur, preis: "5.32", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos5 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix3", tier: katze,
-                             typ: krallen, preis: "6", menge: "", kunde: holzmann).save(failOnError: true)
+                             typ: krallen, preis: "6.12", menge: "1", kunde: holzmann).save(failOnError: true)
                 pos6 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix4", tier: hund,
-                             typ: wurmkur, preis: "7", menge: "2", kunde: holzmann).save(failOnError: true)
+                             typ: wurmkur, preis: "7.19", menge: "2", kunde: holzmann).save(failOnError: true)
                 
             }
             
