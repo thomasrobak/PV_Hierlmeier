@@ -10,6 +10,49 @@ class PositionController {
     def index = {
         redirect(action: "list", params: params)
     }
+    
+    def dataTableJSONByKunde = {
+        println("****** Position.dataTableJSONForKunde() START")
+        println("params: " + params)
+        
+        def kunde = Kunde.get(params.kundeid)
+        
+        /*
+        def criteria = Positionen.createCriteria()
+        def poslist = criteria.listDistinct {
+            isNotEmpty("positionen")
+            positionen {
+                isNull("beleg")
+            }
+        }
+        */
+        
+        def positionen = Position.findAllByKunde(kunde, params)
+        def foundRecords = Position.countByKunde(kunde)
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedPositionen = positionen.collect {
+            [
+                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
+                typ: it.typ.toString(),
+                tier: it.tier.toString(),
+                menge: it.menge.toString(),
+                beleg: it.beleg.toString()
+            ]
+        }
+        
+        def data = [
+            totalRecords: foundRecords,
+            results: formattedPositionen
+        ]
+        
+        println("db query results: " + positionen)
+        println("JSON: " + data)
+        println("****** Position.dataTableJSONForKunde() END")
+        
+        render data as JSON
+    }
 
     def list = {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)

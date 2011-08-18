@@ -44,7 +44,7 @@ class BootStrap {
             Tier kuh, katze, hund, meersau, karnickel, pferd
             Kunde huber
             Kunde holzmann
-            Position pos1, pos2, pos3, pos4, pos5, pos6
+            Position pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8
             Beleg beleg1
             
             if (!Medikament.count()) {
@@ -89,6 +89,10 @@ class BootStrap {
                              typ: wurmkur, preis: "34.23", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos2 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
                              typ: krallen, preis: "13.19", menge: "2", kunde: huber, beleg: beleg1).save(failOnError: true)
+                pos7 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
+                             typ: wurmkur, preis: "9.99", menge: "2", kunde: huber).save(failOnError: true)
+                pos8 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
+                             typ: krallen, preis: "8.79", menge: "1", kunde: huber).save(failOnError: true)
                 pos3 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix", tier: kuh,
                              typ: wurmkur, preis: "4.12", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos4 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix2", tier: karnickel,

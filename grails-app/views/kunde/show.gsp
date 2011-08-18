@@ -4,9 +4,10 @@
 <html>
   <head>
     <meta name="layout" content="main">
-  <g:set var="entityName" value="${message(code: 'kunde.label', default: 'Kunde')}" />
-  <title><g:message code="default.show.label" args="[entityName]" /></title>
-</head>
+    <gui:resources components="dataTable"/>
+    <g:set var="entityName" value="${message(code: 'kunde.label', default: 'Kunde')}" />
+    <title><g:message code="default.show.label" args="[entityName]" /></title>
+  </head>
 <body>
   <a href="#show-kunde" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
   <div class="nav" role="navigation">
@@ -97,8 +98,28 @@
 
       <g:if test="${kundeInstance?.positionen}">
         <li class="fieldcontain">
-        <tmpl:/shared/positionList positionen="${kundeInstance?.positionen}" positionenTotal="${kundeInstance?.positionen.count()}" listlabel="Positionen" />
-          </li>
+          <div id="list-positionen" class="yui-skin-sam content scaffold-list">
+            <h1><g:message code="kunde.positionen" default="Positionen" /></h1>
+            <gui:dataTable
+              id="list-positionen"
+              controller="position" action="dataTableJSONByKunde"
+              columnDefs="[
+              [key:'datum', label:'Datum'],
+              [key:'typ', label:'Typ'],
+              [key:'tier', label:'Tier'],
+              [key:'menge', label:'Menge'],
+              [key:'beleg', label:'Beleg']
+              ]"
+              params="[kundeid:kundeInstance.id]"
+              sortedBy="datum"
+              rowsPerPage="12"
+              paginatorConfig="[
+              template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
+              pageReportTemplate:'{totalRecords} results'
+              ]"
+              />
+          </div>
+        </li>
       </g:if>
       <g:else>
         <li class="fieldcontain">
@@ -108,15 +129,31 @@
 
       <g:if test="${kundeInstance?.belege}">
         <li class="fieldcontain">
-          <span id="belege-label" class="property-label"><g:message code="kunde.belege.label" default="Belege" /></span>
-
-        <g:each in="${kundeInstance.belege}" var="b">
-          <span class="property-value" aria-labelledby="belege-label"><g:link controller="beleg" action="show" id="${b.id}">${b?.encodeAsHTML()}</g:link></span>
-        </g:each>
-
+          <div id="list-belege" class="yui-skin-sam content scaffold-list">
+            <h1><g:message code="kunde.belege" default="Positionen" /></h1>
+            <gui:dataTable
+              id="list-belege"
+              controller="beleg" action="dataTableJSONByKunde"
+              columnDefs="[
+              [key:'datum', label:'Datum'],
+              [key:'belegnummer', label:'Belegnummer']
+              ]"
+              params="[kundeid:kundeInstance.id]"
+              sortedBy="datum"
+              rowsPerPage="12"
+              paginatorConfig="[
+              template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
+              pageReportTemplate:'{totalRecords} results'
+              ]"
+              />
+          </div>
         </li>
       </g:if>
-
+      <g:else>
+        <li class="fieldcontain">
+          Kunde ${kundeInstance?.nachname} ${kundeInstance?.vorname} hat keine Belege!
+        </li>
+      </g:else>
 
       <g:if test="${kundeInstance?.zahlungen}">
         <li class="fieldcontain">

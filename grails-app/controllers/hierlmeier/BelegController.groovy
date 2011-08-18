@@ -3,7 +3,7 @@ package hierlmeier
 import grails.converters.JSON
 import grails.converters.XML
 
-import hierlmeier.PrintBelegService
+import hierlmeier.PrintService
 
 class BelegController {
 
@@ -14,6 +14,77 @@ class BelegController {
 
     def index = {
         redirect(action: "list", params: params)
+    }
+    
+    def dataTableJSON = {
+        println("****** Beleg.dataTableJSON() START")
+        println("params: " + params)
+        
+        def belege = Beleg.list(params)
+        def foundRecords = Beleg.count()
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedResults = belege.collect {
+            [
+                belegnummer: it.belegnummer,
+                kunde: it.kunde.toString(),
+                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
+                dataUrl: g.createLink(action:'show', id:it.id)
+            ]
+        }
+        
+        def data = [
+            totalRecords: foundRecords,
+            results: formattedResults
+        ]
+        
+        println("db query results: " + belege)
+        println("JSON: " + data)
+        println("****** Beleg.dataTableJSON() END")
+        
+        render data as JSON
+    }
+    
+    def dataTableJSONByKunde = {
+        //@todo log.info "Executing within controller $controllerName $actionName"
+        println("****** Beleg.dataTableJSONForKunde() START")
+        println("params: " + params)
+        
+        def kunde = Kunde.get(params.kundeid)
+        
+        /*
+        def criteria = Positionen.createCriteria()
+        def poslist = criteria.listDistinct {
+            isNotEmpty("positionen")
+            positionen {
+                isNull("beleg")
+            }
+        }
+        */
+        
+        def belege = Beleg.findAllByKunde(kunde, params)
+        def foundRecords = Beleg.countByKunde(kunde)
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedResults = belege.collect {
+            [
+                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
+                belegnummer: it.belegnummer
+            ]
+        }
+        
+        def data = [
+            totalRecords: foundRecords,
+            results: formattedResults
+        ]
+        
+        println("db query results: " + belege)
+        println("JSON: " + data)
+        println("****** Beleg.dataTableJSONForKunde() END")
+        
+        render data as JSON
     }
     
     def print = {
@@ -98,13 +169,16 @@ class BelegController {
                     //flash.message = b.errors.fieldError
                     return error()
                 }     
-                b.save(flush: true) 
+                b.save(flush: true)
+                flow.createdBeleg = b
                 [belegInstance:b]
             }.to "displayCreatedBeleg"
             on("error").to "determinePositionen"
             on("return").to "determineKunde"
         }
-        displayCreatedBeleg()
+        displayCreatedBeleg {
+            redirect(action:"show", id:flow.createdBeleg.id)
+        }
     }
 
     def list = {

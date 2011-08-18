@@ -2,9 +2,6 @@
 
 <div id="list-position" class="content scaffold-list" role="main">
   <h1>Positionen ohne Beleg</h1>
-  <g:if test="${flash.message}">
-    <div class="message" role="status">${flash.message}</div>
-  </g:if>
   <table>
     <thead>
       <tr>
@@ -26,8 +23,6 @@
           <g:hiddenField name="id" value="${position?.id}" />
           
           <td>${fieldValue(bean: position, field: "typ")}</td>
-          
-          <!--td><g:link action="show" id="${position?.id}">${fieldValue(bean: position, field: "typ")}</g:link></td-->
       
           <td>${fieldValue(bean: position, field: "anmerkung")}</td>
 
