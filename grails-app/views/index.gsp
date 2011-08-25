@@ -1,159 +1,79 @@
 
 <!doctype html>
 <html>
-	<head>
-		<meta name="layout" content="main"/>
-		<title>Patientenverwaltung Hierlmeier</title>
-		<style type="text/css" media="screen">
-			#status {
-				background-color: #eee;
-				border: .2em solid #fff;
-				margin: 2em 2em 1em;
-				padding: 1em;
-				width: 12em;
-				float: left;
-				 -moz-box-shadow: 0px 0px 1.25em #ccc;
-			  -webkit-box-shadow: 0px 0px 1.25em #ccc;
-					  box-shadow: 0px 0px 1.25em #ccc;
-			  -moz-border-radius: 0.6em;
-		   -webkit-border-radius: 0.6em;
-				   border-radius: 0.6em;
-			}
+  <head>
+    <meta name="layout" content="main"/>
+    <title>Patientenverwaltung Hierlmeier</title>
 
-			.ie6 #status {
-				display: inline; /* float double margin fix http://www.positioniseverything.net/explorer/doubled-margin.html */
-			}
+    <style type="text/css">
+    #index-body {
+      margin: 2em 5em 1.25em;
+    }
 
-			#status ul {
-				font-size: 0.9em;
-				list-style-type: none;
-				margin-bottom: 0.6em;
-				padding: 0;
-			}
+    #index-body h1 {
+      margin-top: 0;
+    }
 
-			#status h1 {
-				text-transform: uppercase;
-				font-size: 1.1em;
-				margin: 0 0 0.3em;
-			}
+    h2 {
+      margin-top: 1em;
+      margin-bottom: 0.3em;
+      font-size: 1em;
+    }
+    </style>
 
-			#page-body {
-				margin: 2em 1em 1.25em 18em;
-			}
+  </head>
+  <body>
+    <a href="#index-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
-			h2 {
-				margin-top: 1em;
-				margin-bottom: 0.3em;
-				font-size: 1em;
-			}
+    <div id="index-body" class="content" role="main">
+      <div id="action-list" role="navigation">
+        <span style="display:table-cell">
+          <h2>Kunden</h2>
+          <ul>
+            <li class="controller"><g:link controller="kunde" action="list">Kunden ansehen</g:link></li>
+            <li class="controller"><g:link controller="kunde" action="create">Kunde hinzufügen</g:link></li>
+          </ul>
+          <h2>Tiere</h2>
+          <ul>
+            <li class="controller"><g:link controller="tier" action="list">Tiere ansehen</g:link></li>
+            <li class="controller"><g:link controller="tier" action="create">Tier hinzufügen</g:link></li>
+          </ul>
+          <h2>Medikamente/Leistungen</h2>
+          <ul>
+            <li class="controller"><g:link controller="positionstyp" action="list">Medikamente/Leistungen ansehen</g:link></li>
+            <li class="controller"><g:link controller="medikament" action="create">Medikament hinzufügen</g:link></li>
+            <li class="controller"><g:link controller="leistung" action="create">Leistung hinzufügen</g:link></li>
+          </ul>
 
-			p {
-				margin: 0.25em 0;
-			}
-
-			#controller-list ul {
-				list-style-position: inside;
-			}
-
-			#controller-list li {
-				list-style-position: inside;
-				margin: 0.25em 0;
-			}
-
-			@media screen and (max-width: 480px) {
-				#status {
-					display: none;
-				}
-
-				#page-body {
-					margin: 0 1em 1em;
-				}
-
-				#page-body h1 {
-					margin-top: 0;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div id="status" role="complementary">
-			<h1>Application Status</h1>
-			<ul>
-				<li>App version: <g:meta name="app.version"/></li>
-				<li>Grails version: <g:meta name="app.grails.version"/></li>
-				<li>Groovy version: ${org.codehaus.groovy.runtime.InvokerHelper.getVersion()}</li>
-				<li>JVM version: ${System.getProperty('java.version')}</li>
-				<li>Controllers: ${grailsApplication.controllerClasses.size()}</li>
-				<li>Domains: ${grailsApplication.domainClasses.size()}</li>
-				<li>Services: ${grailsApplication.serviceClasses.size()}</li>
-				<li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
-			</ul>
-			<h1>Installed Plugins</h1>
-			<ul>
-				<g:set var="pluginManager" value="${applicationContext.getBean('pluginManager')}"/>
-				<g:each var="plugin" in="${pluginManager.allPlugins}">
-					<li>${plugin.name} - ${plugin.version}</li>
-				</g:each>
-			</ul>
-		</div>
-		<div id="page-body" role="main">
-			<h1>Patientenverwaltung Hierlmeier</h1>
-			<p>Menü eventuell nach links verlagern als Sidebar, dort wo jetz die ganzen Plugins etc gelistet sind.</p>
-
-                        <div id="controller-list" role="navigation">
-				<h2>Kunden</h2>
-				<ul>
-                                  <li class="controller"><g:link controller="kunde" action="list">Kunden ansehen</g:link></li>
-                                  <li class="controller"><g:link controller="kunde" action="create">Kunde hinzufügen</g:link></li>
-				</ul>
-                                <h2>Tiere</h2>
-				<ul>
-                                  <li class="controller"><g:link controller="tier" action="list">Tiere ansehen</g:link></li>
-                                  <li class="controller"><g:link controller="tier" action="create">Tier hinzufügen</g:link></li>
-				</ul>
-                                <h2>Medikamente/Leistungen</h2>
-				<ul>
-                                  <li class="controller"><g:link controller="positionstyp" action="list">Medikamente/Leistungen ansehen</g:link></li>
-                                  <li class="controller"><g:link controller="medikament" action="create">Medikament hinzufügen</g:link></li>
-                                  <li class="controller"><g:link controller="leistung" action="create">Leistung hinzufügen</g:link></li>
-				</ul>
-                                <h2>Positionen</h2>
-                                <ul>
-                                  <li class="controller"><g:link controller="position" action="list">Positionen ansehen</g:link></li>
-                                  <li class="controller"><g:link controller="position" action="create">Position erstellen</g:link></li>
-                                </ul>
-                                <h2>Belege</h2>
-				<ul>
-                                  <li class="controller"><g:link controller="beleg" action="list">Belege ansehen</g:link></li>
-                                  <li class="controller"><g:link controller="beleg" action="belegCreation">Beleg erstellen</g:link></li>
-                                  <li class="controller"><g:link controller="beleg" action="list">Beleg drucken</g:link></li>
-                                  <li class="controller">Mahnung erstellen</li>
-                                </ul>
-                                <h2>Zahlungen</h2>
-				<ul>
-                                  <li class="controller">Zahlungen ansehen</li>
-                                  <li class="controller">Zahlung erfassen</li>
-                                </ul>
-                                <h2>Statistiken</h2>
-				<ul>
-                                  <li class="controller">Tagesbericht</li>
-                                  <li class="controller">Leistungen</li>
-                                  <li class="controller">Medikamente</li>
-                                  <li class="controller">Kunden</li>
-                                  <li class="controller">Offene Positionen</li>
-                                </ul>
-                                
-			</div>
-                        
-			<div id="controller-list" role="navigation">
-				<h2>[deprecated] Generierte Controller Liste:</h2>
-				<ul>
-					<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-						<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-					</g:each>
-				</ul>
-			</div>
-		</div>
-	</body>
+          <h2>Positionen</h2>
+          <ul>
+            <li class="controller"><g:link controller="position" action="list">Positionen ansehen</g:link></li>
+            <li class="controller"><g:link controller="position" action="create">Position erstellen</g:link></li>
+          </ul>
+        </span>
+        <span style="display:table-cell;padding-left:4em">
+          <h2>Belege</h2>
+          <ul>
+            <li class="controller"><g:link controller="beleg" action="list">Belege ansehen</g:link></li>
+            <li class="controller"><g:link controller="beleg" action="belegCreation">Beleg erstellen</g:link></li>
+            <li class="controller"><g:link controller="beleg" action="list">Beleg drucken</g:link></li>
+            <li class="controller">Mahnung erstellen</li>
+          </ul>
+          <h2>Zahlungen</h2>
+          <ul>
+            <li class="controller">Zahlungen ansehen</li>
+            <li class="controller"><g:link controller="zahlung" action="zahlungCreation">Zahlung erfassen</g:link></li>   
+          </ul>
+          <h2>Statistiken</h2>
+          <ul>
+            <li class="controller">Tagesbericht</li>
+            <li class="controller">Leistungen</li>
+            <li class="controller">Medikamente</li>
+            <li class="controller">Kunden</li>
+            <li class="controller">Offene Positionen</li>
+          </ul>
+        </span>
+      </div>
+    </div>
+  </body>
 </html>

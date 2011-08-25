@@ -39,8 +39,8 @@ class BootStrap {
         
         if (Environment.getCurrent() == Environment.DEVELOPMENT) {
             
-            Medikament wurmkur
-            Leistung krallen
+            Medikament wurmkur, penic, gacken
+            Leistung krallen, scrotum, appendix
             Tier kuh, katze, hund, meersau, karnickel, pferd
             Kunde huber
             Kunde holzmann
@@ -49,13 +49,13 @@ class BootStrap {
             
             if (!Medikament.count()) {
                 wurmkur = new Medikament(bezeichnung: "Wurmkur", preis: "12.70").save(failOnError: true)
-                new Medikament(bezeichnung: "Penicillin", preis: "5.50").save(failOnError: true)
-                new Medikament(bezeichnung: "Abführmittel", preis: "1.99").save(failOnError: true)
+                penic = new Medikament(bezeichnung: "Penicillin", preis: "5.50").save(failOnError: true)
+                gacken = new Medikament(bezeichnung: "Abführmittel", preis: "1.99").save(failOnError: true)
             }
             if (!Leistung.count()) {
                 krallen = new Leistung(bezeichnung: "Krallen Stutzen", preis: "12.00").save(failOnError: true)
-                new Leistung(bezeichnung: "Schnipp Schnapp, Scrotum ab", preis: "200.00").save(failOnError: true)
-                new Leistung(bezeichnung: "Blinddarm raus", preis: "169.00").save(failOnError: true)
+                scrotum = new Leistung(bezeichnung: "Schnipp Schnapp, Scrotum ab", preis: "200.00").save(failOnError: true)
+                appendix = new Leistung(bezeichnung: "Blinddarm raus", preis: "169.00").save(failOnError: true)
             }
             if (!Tier.count()) {
                 kuh = new Tier(bezeichnung: "Kuh").save(failOnError: true)
@@ -81,26 +81,29 @@ class BootStrap {
                 
             }
             if (!Beleg.count()) {
-                beleg1 = new Beleg(datum: new Date(Calendar.getInstance().getTimeInMillis()), belegnummer: "1111111", kunde: huber).save(failOnError: true)
+                beleg1 = new Beleg(datum: new Date(Calendar.getInstance().getTimeInMillis()), belegnummer: "1111111", kunde: huber,
+                    netto: "184.34", brutto: "221.21", betrag: "221.21", summeBezahlt: "0.00").save(failOnError: true)
+                
                 
             }
             if (!Position.count()) {
                 pos1 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
-                             typ: wurmkur, preis: "34.23", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
+                    typ: wurmkur, preis: "34.23", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos2 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
-                             typ: krallen, preis: "13.19", menge: "2", kunde: huber, beleg: beleg1).save(failOnError: true)
-                pos7 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
-                             typ: wurmkur, preis: "9.99", menge: "2", kunde: huber).save(failOnError: true)
-                pos8 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
-                             typ: krallen, preis: "8.79", menge: "1", kunde: huber).save(failOnError: true)
+                    typ: krallen, preis: "13.19", menge: "1", kunde: huber, beleg: beleg1).save(failOnError: true)
+                
+                pos7 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: katze,
+                    typ: appendix, preis: "9.99", menge: "1", kunde: huber).save(failOnError: true)
+                pos8 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: hund,
+                    typ: scrotum, preis: "8.79", menge: "1", kunde: huber).save(failOnError: true)
                 pos3 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix", tier: kuh,
-                             typ: wurmkur, preis: "4.12", menge: "2", kunde: holzmann).save(failOnError: true)
+                    typ: wurmkur, preis: "4.12", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos4 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix2", tier: karnickel,
-                             typ: wurmkur, preis: "5.32", menge: "2", kunde: holzmann).save(failOnError: true)
+                    typ: gacken, preis: "5.32", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos5 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix3", tier: katze,
-                             typ: krallen, preis: "6.12", menge: "1", kunde: holzmann).save(failOnError: true)
+                    typ: appendix, preis: "6.12", menge: "1", kunde: holzmann).save(failOnError: true)
                 pos6 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix4", tier: hund,
-                             typ: wurmkur, preis: "7.19", menge: "2", kunde: holzmann).save(failOnError: true)
+                    typ: penic, preis: "7.19", menge: "2", kunde: holzmann).save(failOnError: true)
                 
             }
             

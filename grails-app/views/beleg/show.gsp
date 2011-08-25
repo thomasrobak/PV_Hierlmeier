@@ -4,6 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
+                <gui:resources components="dataTable"/>
 		<g:set var="entityName" value="${message(code: 'beleg.label', default: 'Beleg')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
@@ -42,9 +43,25 @@
 				</g:if>
 			
 				<g:if test="${belegInstance?.positionen}">
-                                  <li class="fieldcontain">
-                                    <tmpl:/shared/positionList positionen="${belegInstance?.positionen}" listlabel="Positionen"/>
-                                  </li>
+                                  <div id="list-positionen" class="yui-skin-sam">
+                                    <gui:dataTable
+                                      controller="position" action="dataTableJSONByBeleg"
+                                      columnDefs="[
+                                      [key:'datum', label:'Datum'],
+                                      [key:'typ', label:'Typ'],
+                                      [key:'tier', label:'Tier'],
+                                      [key:'menge', label:'Menge'],
+                                      [key:'beleg', label:'Beleg']
+                                      ]"
+                                      params="[belegId:belegInstance.id]"
+                                      sortedBy="datum"
+                                      rowsPerPage="12"
+                                      paginatorConfig="[
+                                      template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
+                                      pageReportTemplate:'{totalRecords} results'
+                                      ]"
+                                      />
+                                  </div>
                                 </g:if>
                                 <g:else>
                                   <li class="fieldcontain">

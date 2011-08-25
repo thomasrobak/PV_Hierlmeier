@@ -5,6 +5,8 @@ import grails.converters.XML
 
 import hierlmeier.PrintService
 
+import java.math.RoundingMode
+
 class BelegController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -17,7 +19,7 @@ class BelegController {
     }
     
     def dataTableJSON = {
-        println("****** Beleg.dataTableJSON() START")
+        println("****** $controllerName.$actionName START")
         println("params: " + params)
         
         def belege = Beleg.list(params)
@@ -41,17 +43,47 @@ class BelegController {
         
         println("db query results: " + belege)
         println("JSON: " + data)
-        println("****** Beleg.dataTableJSON() END")
+        println("****** $controllerName.$actionName END")
+        
+        render data as JSON
+    }
+    
+    
+    def dataTableJSONByBelege = {
+        println("****** $controllerName.$actionName START")
+        println("params: " + params)
+        
+        def belege = params.belege
+        println("belege: " + belege)
+        
+        def foundRecords = belege.size()
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedResults = belege.collect {
+            [
+                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
+                belegnummer: it.belegnummer
+            ]
+        }
+        
+        def data = [
+            totalRecords: foundRecords,
+            results: formattedResults
+        ]
+        
+        println("no db query done, list supplied: " + belege)
+        println("JSON: " + data)
+        println("****** $controllerName.$actionName END")
         
         render data as JSON
     }
     
     def dataTableJSONByKunde = {
-        //@todo log.info "Executing within controller $controllerName $actionName"
-        println("****** Beleg.dataTableJSONForKunde() START")
+        println("****** $controllerName.$actionName START")
         println("params: " + params)
         
-        def kunde = Kunde.get(params.kundeid)
+        def kunde = Kunde.get(params.kundeId)
         
         /*
         def criteria = Positionen.createCriteria()
@@ -82,7 +114,7 @@ class BelegController {
         
         println("db query results: " + belege)
         println("JSON: " + data)
-        println("****** Beleg.dataTableJSONForKunde() END")
+        println("****** $controllerName.$actionName END")
         
         render data as JSON
     }
@@ -155,8 +187,18 @@ class BelegController {
                 def p = flow.kundePositionenList
                 def bnr = params.belegnummer
                 def d = params.datum
+                def netto = new BigDecimal("0.00")
+                p.each {
+                    netto = netto.add(it.betrag)   
+                }
+                def brutto = new BigDecimal(netto.multiply(new BigDecimal(g.message(code:'default.tax.rate'))))
+                // brutto needs rounding because the scale maybe to long after multiplication
+                brutto = brutto.setScale(g.message(code:'default.scale').toInteger(), RoundingMode.valueOf(g.message(code:'default.rounding.mode')))
+                def betrag = k.mwst ? new BigDecimal(brutto) : new BigDecimal(netto)
+                def sbz = new BigDecimal("0.00")
                 
-                def b = new Beleg(kunde:k, belegnummer:bnr, datum:d)
+                def b = new Beleg(kunde:k, belegnummer:bnr, datum:d, netto:netto, brutto:brutto, betrag:betrag, summeBezahlt:sbz)
+                
                 p.each {
                     it.beleg = b    
                 }
@@ -166,18 +208,18 @@ class BelegController {
                         println it
                         
                     }
-                    //flash.message = b.errors.fieldError
+                    //@todo flash.message = b.errors.fieldError
                     return error()
                 }     
                 b.save(flush: true)
-                flow.createdBeleg = b
+                flow.createdBeleg = b //@todo check if needed weil siehe drunter
                 [belegInstance:b]
             }.to "displayCreatedBeleg"
             on("error").to "determinePositionen"
             on("return").to "determineKunde"
         }
         displayCreatedBeleg {
-            redirect(action:"show", id:flow.createdBeleg.id)
+            redirect(action:"show", belegInstance:flow.createdBeleg)
         }
     }
 
@@ -187,9 +229,7 @@ class BelegController {
     }
 
     def create = {
-        def belegInstance = new Beleg()
-        belegInstance.properties = params
-        return [belegInstance: belegInstance]
+        redirect(action: "belegCreation")
     }
 
     def save = {

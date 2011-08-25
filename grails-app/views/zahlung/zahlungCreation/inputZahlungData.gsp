@@ -3,7 +3,8 @@
 <html>
   <head>
     <meta name="layout" content="main">
-    <title>Positionen wählen</title>
+    <gui:resources components="dataTable"/>
+    <title>Zahlung erfassen</title>
   </head>
   <body>
     <div class="nav" role="navigation">
@@ -11,8 +12,8 @@
         <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
       </ul>
     </div>
-    <div id="show-kunde" class="content scaffold-show" role="main">
-      <h1>Neuen Beleg erstellen für Kunde:</h1>
+    <div id="show-zahlung" class="content scaffold-show" role="main">
+      <h1>Neue Zahlung erfassen für Kunde:</h1>
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
       </g:if>
@@ -92,20 +93,20 @@
       </ol>
 
     </div>
-  <g:form action="belegCreation">
-    <div id="show-applicable-positionen" class="content fieldset" role="main">
-      <h1>Neuen Beleg erstellen mit folgenden Daten:</h1>
+  <g:form action="zahlungCreation">
+    <div id="show-applicable-belege" class="content fieldset" role="main">
+      <h1>Neue Zahlung erfassen mit folgenden Daten:</h1>
 
-      <div class="fieldcontain ${hasErrors(bean: belegInstance, field: 'belegnummer', 'error')} required">
-        <label for="belegnummer">
-          <g:message code="beleg.belegnummer.label" default="Belegnummer" />
+      <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'betrag', 'error')} required">
+        <label for="betrag">
+          <g:message code="zahlung.betrag.label" default="Betrag €" />
           <span class="required-indicator">*</span>
         </label>
-        <g:textField name="belegnummer" value="${fieldValue(bean: belegInstance, field: 'belegnummer')}" />
+        <g:textField name="betrag" value="${fieldValue(bean: zahlungInstance, field: 'betrag')}" />
         
-        <div class="fieldcontain ${hasErrors(bean: belegInstance, field: 'datum', 'error')} required">
+        <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'datum', 'error')} required">
           <label for="datum">
-		<g:message code="beleg.datum.label" default="Datum" />
+		<g:message code="zahlung.datum.label" default="Datum" />
 		<span class="required-indicator">*</span>
           </label>
           <g:datePicker name="datum" precision="day" />
@@ -113,10 +114,26 @@
 
       </div>
     </div>
-    <tmpl:/shared/positionListInteractive positionen="${kundePositionenList}" />
+    <div class="yui-skin-sam">
+      <gui:dataTable
+        controller="beleg" action="dataTableJSONByBelege"
+        columnDefs="[
+        [key:'belegnummer', label:'Belegnummer'],
+        [key:'datum', label:'Datum']
+        ]"
+        params="[belege:kundeOffeneBelegeList]"
+        sortedBy="datum"
+        rowClickNavigation='true'
+        rowsPerPage="12"
+        paginatorConfig="[
+        template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
+        pageReportTemplate:'{totalRecords} results'
+        ]"
+        />
+    </div>
     <div class="buttons">
       <span class="button">
-        <g:submitButton name="submit" class="save" value="${message(code: 'default.beleg.create.label', default: 'Beleg Erstellen')}" />
+        <g:submitButton name="submit" class="save" value="${message(code: 'default.zahlung.create.label', default: 'Zahlung Erfassen')}" />
       </span>
     </div>
   </g:form>

@@ -2,6 +2,10 @@ package hierlmeier
 
 import grails.converters.JSON
 
+import org.codehaus.groovy.grails.orm.hibernate.exceptions.GrailsQueryException
+
+import java.math.RoundingMode
+
 class ZahlungController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -15,11 +19,73 @@ class ZahlungController {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	[zahlungInstanceList: Zahlung.list(params), zahlungInstanceTotal: Zahlung.count()]
     }
+    
+    def zahlungCreationFlow = {
+        getListApplicableKunden {
+            action {
+                def offeneBelegeList = Beleg.unbeglichene.list()
+                println(offeneBelegeList.class.toString() + " offeneBelegeList: " + offeneBelegeList)
+
+                def kundenList = []
+                offeneBelegeList.each {
+                    if(!kundenList.contains(it.kunde)) {
+                        kundenList.add(it.kunde)
+                    }
+                }
+                println(kundenList.class.toString() + " kundenList: " + kundenList)
+
+                flow.applicableKundenList = kundenList
+                flow.applicableKundenListTotal = kundenList.size()
+                flow.offeneBelegeList = offeneBelegeList
+            }
+            on("success").to "determineKunde"
+            //@todo on(Exception).to "handleError"   
+        }
+        determineKunde {
+            on("submit") {
+                flow.chosenKunde = Kunde.get(params.id)
+                
+            }.to "getListKundeOffeneBelege"
+            on("return").to "determineKunde"
+        }
+        getListKundeOffeneBelege {
+            action {
+                def results = Beleg.unbeglichene.findAllByKunde(flow.chosenKunde)
+                flow.kundeOffeneBelegeList = results
+                flow.kundeOffeneBelegeTotal = results.size()
+            }
+            on("success").to "inputZahlungData"
+            //@todo on(Exception).to "handleError"   
+        }
+        inputZahlungData {
+            on("submit") {
+                def k =  flow.chosenKunde
+                def b = params.betrag
+                def d = params.datum
+                
+                def z = new Zahlung(kunde:k, betrag:b, datum:d)
+                                
+                if(!z.validate()) {
+                    z.errors.each {
+                        println it
+                    }
+                    //flash.message = b.errors.fieldError
+                    return error()
+                }     
+                z.save(flush: true)
+                flow.createdZahlung = z
+                [zahlungsInstance:z]
+            }.to "displayCreatedZahlung"
+            on("error").to "inputZahlungData"
+            on("return").to "determineKunde"
+        }
+        displayCreatedZahlung {
+            redirect(action:"show", id:flow.createdZahlung.id)
+        }
+    }
 
     def create = {
-        def zahlungInstance = new Zahlung()
-        zahlungInstance.properties = params
-        return [zahlungInstance: zahlungInstance]
+        redirect(action:"zahlungCreation")
     }
 
     def save = {

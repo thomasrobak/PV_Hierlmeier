@@ -24,6 +24,16 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
         bemerkung(blank:true)
     }
     
+    static namedQueries = { 
+        withDetachedPositionen {
+            isNotEmpty("positionen")
+            positionen {
+                isNull("beleg")
+            }
+        }
+    }
+
+    
     def String toString () {
         return "${nachname} ${vorname}"
     }

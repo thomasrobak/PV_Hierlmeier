@@ -1,5 +1,4 @@
 
-<%@ page import="hierlmeier.Beleg" %>
 <!doctype html>
 <html>
   <head>
@@ -9,34 +8,36 @@
   <title><g:message code="default.list.label" args="[entityName]" /></title>
 </head>
 <body>
-  <a href="#list-beleg" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+  <a href="#table-beleg" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
   <div class="nav" role="navigation">
     <ul>
       <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label" default="Home"/></a></li>
       <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
     </ul>
   </div>
-  
-  <div id="table-beleg" class="yui-skin-sam content scaffold-list" role="main">
+
+  <div id="table-beleg" class="content scaffold-list" role="main">
     <h1><g:message code="default.list.label" args="[entityName]" /></h1>
     <g:if test="${flash.message}">
       <div class="message" role="status">${flash.message}</div>
     </g:if>
-    <gui:dataTable
-      controller="beleg" action="dataTableJSON"
-      columnDefs="[
-      [key:'belegnummer', label:'Belegnummer'],
-      [key:'kunde', label:'Kunde'],
-      [key:'datum', label:'Datum']
-      ]"
-      sortedBy="belegnummer"
-      rowClickNavigation='true'
-      rowsPerPage="12"
-      paginatorConfig="[
-      template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
-      pageReportTemplate:'{totalRecords} results'
-      ]"
-      />
+    <div class="yui-skin-sam">
+      <gui:dataTable
+        controller="beleg" action="dataTableJSON"
+        columnDefs="[
+        [key:'belegnummer', label:'Belegnummer'],
+        [key:'kunde', label:'Kunde'],
+        [key:'datum', label:'Datum']
+        ]"
+        sortedBy="belegnummer"
+        rowClickNavigation='true'
+        rowsPerPage="12"
+        paginatorConfig="[
+        template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
+        pageReportTemplate:'{totalRecords} results'
+        ]"
+        />
+    </div>
   </div>
   
   <%--

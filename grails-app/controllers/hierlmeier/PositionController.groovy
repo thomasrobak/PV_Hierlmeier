@@ -12,10 +12,10 @@ class PositionController {
     }
     
     def dataTableJSONByKunde = {
-        println("****** Position.dataTableJSONForKunde() START")
+        println("****** $controllerName.$actionName START")
         println("params: " + params)
         
-        def kunde = Kunde.get(params.kundeid)
+        def kunde = Kunde.get(params.kundeId)
         
         /*
         def criteria = Positionen.createCriteria()
@@ -49,7 +49,50 @@ class PositionController {
         
         println("db query results: " + positionen)
         println("JSON: " + data)
-        println("****** Position.dataTableJSONForKunde() END")
+        println("****** $controllerName.$actionName END")
+        
+        render data as JSON
+    }
+    
+    def dataTableJSONByBeleg = {
+        println("****** $controllerName.$actionName START")
+        println("params: " + params)
+        
+        def beleg = Beleg.get(params.belegId)
+        
+        /*
+        def criteria = Positionen.createCriteria()
+        def poslist = criteria.listDistinct {
+        isNotEmpty("positionen")
+        positionen {
+        isNull("beleg")
+        }
+        }
+         */
+        
+        def positionen = Position.findAllByBeleg(beleg, params)
+        def foundRecords = Position.countByBeleg(beleg)
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedPositionen = positionen.collect {
+            [
+                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
+                typ: it.typ.toString(),
+                tier: it.tier.toString(),
+                menge: it.menge.toString(),
+                beleg: it.beleg.toString()
+            ]
+        }
+        
+        def data = [
+            totalRecords: foundRecords,
+            results: formattedPositionen
+        ]
+        
+        println("db query results: " + positionen)
+        println("JSON: " + data)
+        println("****** $controllerName.$actionName END")
         
         render data as JSON
     }
@@ -57,19 +100,6 @@ class PositionController {
     def list = {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	[positionInstanceList: Position.list(params), positionInstanceTotal: Position.count()]
-    }
-    
-    def listBelegCanditates = {
-        def criteria = Position.createCriteria()
-        def results = criteria.list {
-            isNotEmpty("positionen")
-            positionen {
-                isNull("beleg")
-            }
-            //@todo order("nachname", "asc")
-        }
-        
-        return results
     }
 
     def create = {

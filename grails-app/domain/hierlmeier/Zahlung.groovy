@@ -10,9 +10,10 @@ class Zahlung {
     
 
     static constraints = {
+        zahlungsteile(nullable:true)
     }
     
     def String toString() {
-        return "Zahlung von: $kunde : $betrag"
+        return "Zahlung von: ${kunde} : ${betrag}"
     }
 }
