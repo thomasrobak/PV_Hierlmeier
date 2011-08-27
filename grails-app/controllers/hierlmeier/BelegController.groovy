@@ -53,11 +53,14 @@ class BelegController {
         println("****** $controllerName.$actionName START")
         println("params: " + params)
         
-        def belege = params.belege
+        def belegIds
+        params.belege.each {
+            belegIds.add(it.id)
+        }
+        def belege = Beleg.getAll(belegIds)
         println("belege: " + belege)
         
-        def foundRecords = belege.size()
-        
+        def foundRecords = belegIds.size()
         println("foundRecords: " + foundRecords)
         
         def formattedResults = belege.collect {

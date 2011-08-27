@@ -48,8 +48,8 @@
 	<label for="datum">
 		<g:message code="position.datum.label" default="Datum" />
 		<span class="required-indicator">*</span>
-	</label>
-	<g:datePicker name="datum" precision="day" value="${positionInstance?.datum}"  />
+        </label>
+        <g:textField id="datepicker" name="datum" value="${positionInstance?.datum}" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'menge', 'error')} ">

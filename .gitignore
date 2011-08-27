@@ -3,4 +3,4 @@
 .classpath
 target/*
 stacktrace.log
-devDB.*
+devDB*
