@@ -109,7 +109,7 @@
 		<g:message code="zahlung.datum.label" default="Datum" />
 		<span class="required-indicator">*</span>
           </label>
-          <g:datePicker name="datum" precision="day" />
+          <g:textField id="datepicker" name="datum" />
         </div>
 
       </div>
@@ -137,7 +137,7 @@
       </span>
     </div>
   </g:form>
-
-
+<g:javascript src="datepicker.js"/>
+<g:javascript src="jquery.ui.datepicker-de.js"/>
 </body>
 </html>

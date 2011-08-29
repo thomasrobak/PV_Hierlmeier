@@ -1,7 +1,7 @@
 import org.springframework.context.i18n.LocaleContextHolder as LCH
 
 /* Zum Filtern aller Requests die ein Datum enthalten. 
- * Wenn Datum == String, konvertieren in Date()
+ * Wenn Datum == java.lang.String, konvertieren in Date()
  * JQuery Datepicker schickt zB Strings, app erwartet aber Date()
  */
 class DatumFilters {
