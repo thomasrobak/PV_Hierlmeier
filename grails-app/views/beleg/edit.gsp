@@ -7,11 +7,6 @@
         <title><g:message code="beleg.edit" default="Edit Beleg" /></title>
     </head>
     <body>
-        <div class="nav">
-            <span class="menuButton"><a class="home" href="${createLinkTo(dir: '')}"><g:message code="home" default="Home" /></a></span>
-            <span class="menuButton"><g:link class="list" action="list"><g:message code="beleg.list" default="Beleg List" /></g:link></span>
-            <span class="menuButton"><g:link class="create" action="create"><g:message code="beleg.new" default="New Beleg" /></g:link></span>
-        </div>
         <div class="body">
             <h1><g:message code="beleg.edit" default="Edit Beleg" /></h1>
             <g:if test="${flash.message}">

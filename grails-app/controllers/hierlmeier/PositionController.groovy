@@ -11,6 +11,35 @@ class PositionController {
         redirect(action: "list", params: params)
     }
     
+    def dataTableJSON = {
+        println("****** $controllerName.$actionName START")
+        println("params: " + params)
+        
+        def pos = Position.list(params)
+        def foundRecords = Position.count()
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedResults = pos.collect {
+            [
+                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
+                typ: it.typ.toString(),
+                tier: it.tier.toString(),
+                menge: it.menge.toString(),
+                beleg: it.beleg.toString()
+            ]
+        }
+        
+        def data = ["aaData":formattedResults]
+        
+        println("db query results: " + pos)
+        println("JSON: " + data)
+        println("****** $controllerName.$actionName END")
+        
+        render data as JSON
+    }
+    
+    
     def dataTableJSONByKunde = {
         println("****** $controllerName.$actionName START")
         println("params: " + params)
@@ -32,7 +61,7 @@ class PositionController {
         
         println("foundRecords: " + foundRecords)
         
-        def formattedPositionen = positionen.collect {
+        def formattedResults = positionen.collect {
             [
                 datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
                 typ: it.typ.toString(),
@@ -44,7 +73,7 @@ class PositionController {
         
         def data = [
             totalRecords: foundRecords,
-            results: formattedPositionen
+            results: formattedResults
         ]
         
         println("db query results: " + positionen)
@@ -75,7 +104,7 @@ class PositionController {
         
         println("foundRecords: " + foundRecords)
         
-        def formattedPositionen = positionen.collect {
+        def formattedResults = positionen.collect {
             [
                 datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
                 typ: it.typ.toString(),
@@ -87,7 +116,7 @@ class PositionController {
         
         def data = [
             totalRecords: foundRecords,
-            results: formattedPositionen
+            results: formattedResults
         ]
         
         println("db query results: " + positionen)

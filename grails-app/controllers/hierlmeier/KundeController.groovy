@@ -11,6 +11,36 @@ class KundeController {
         redirect(action: "list", params: params)
     }
 
+
+    def dataTableJSON = {
+        println("****** $controllerName.$actionName START")
+        println("params: " + params)
+        
+        def results = Kunde.list(params)
+        def foundRecords = Kunde.count()
+        
+        println("foundRecords: " + foundRecords)
+        
+        def formattedResults = results.collect {
+            [
+                it.nachname,
+                it.bemerkung,
+                it.adresse,
+                it.wohnort,
+                it.mwst,
+                it.telefonnummer
+            ]
+        }
+        
+        def data = [aaData: formattedResults]
+        
+        println("db query results: " + results)
+        println("JSON: " + data)
+        println("****** $controllerName.$actionName END")
+        
+        render data as JSON
+    }
+    
     def list = {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	[kundeInstanceList: Kunde.list(params), kundeInstanceTotal: Kunde.count()]

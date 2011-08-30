@@ -4,3 +4,6 @@
 target/*
 stacktrace.log
 devDB*
+web-app/js/jquery.dataTables.js
+web-app/js/jquery-ui-1.8.16.custom.js
+web-app/js/jquery-1.6.1.js
