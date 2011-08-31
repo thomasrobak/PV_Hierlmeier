@@ -9,7 +9,7 @@
 	background: transparent;
 	border-right: transparent solid 1px;
 	border-left: transparent solid 1px;
-	color: #C2E9FF;
+	color: #E1F2B6;
 }
 
 .ui-menu-bar+* {
@@ -42,7 +42,7 @@
 }
 
 .ui-menu-bar .ui-state-active.ui-menu-item {
-	background: #C2E9FF !important;
+	background: #E1F2B6 !important;
 	color: #000 !important;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .ui-menu-bar .ui-menu-title {
-	border: 1px solid #888;
+	border: 1px solid #48802c;
 	display: inline-block;
 	margin-right: .1em;
 	text-decoration: none !important;
@@ -87,21 +87,21 @@
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
-	color: #C2E9FF;
+	color: #E1F2B6;
 	line-height: 1.4em;
 	font-size: 1em;
 	background: #aed1e5;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#C2E9FF),
-		to(#9BBACC) ) !important;
-	background: -moz-linear-gradient(top, #C2E9FF, #9BBACC) !important;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E1F2B6),
+		to(#A1AD83) ) !important;
+	background: -moz-linear-gradient(top, #E1F2B6, #A1AD83) !important;
 /* 	filter: progid : DXImageTransform.Microsoft.gradient ( startColorstr = */
-/* 		'#C2E9FF', endColorstr = '#9BBACC' ); */
-	border-color: #C2E9FF;
-	border-bottom-color: #888;
-	border-left-color: #8fafca;
-	border-right-color: #8fafca;
+/* 		'#E1F2B6', endColorstr = '#A1AD83' ); */
+	border-color: #E1F2B6;
+	border-bottom-color: #48802c;
+	border-left-color: #7D8766;
+	border-right-color: #7D8766;
 	color: #203846 !important;
-	text-shadow: 1px 1px 1px #e1f4ff !important;
+	text-shadow: 1px 1px 1px #DAEAB2 !important;
 	font-weight: bold;
 	-moz-box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
 	-webkit-box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
@@ -109,20 +109,20 @@
 }
 
 .ui-menu-bar .ui-menu-title.ui-state-active {
-	background: #a1c1d4;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9BBACC),
-		to(#C2E9FF) ) !important;
-	background: -moz-linear-gradient(top, #9BBACC, #C2E9FF) !important;
+	background: #B0BC91;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#A1AD83),
+		to(#E1F2B6) ) !important;
+	background: -moz-linear-gradient(top, #A1AD83, #E1F2B6) !important;
 /* 	filter: progid : DXImageTransform.Microsoft.gradient ( startColorstr = */
-/* 		'#9BBACC', endColorstr = '#C2E9FF' ); */
-	border-color: #888;
-	border-left-color: #8fafca;
-	border-right-color: #8fafca;
+/* 		'#A1AD83', endColorstr = '#E1F2B6' ); */
+	border-color: #48802c;
+	border-left-color: #7D8766;
+	border-right-color: #7D8766;
 	text-shadow: -1px -1px -1px #cfe1eb !important;
 	-moz-box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.25);
 	-webkit-box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.25);
 	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.25);
-	color: #33596f !important;
+	color: #3F6625 !important;
 }
 
 .ui-menu-bar .ui-menu-title+.ui-menu-title {
@@ -159,7 +159,7 @@
 	margin-left: 0.5em;
 	opacity: 0;
 	background-image:
-		url(custom-theme/images/ui-icons_c2e9ff_256x240.png)
+		url(../images/jquery-ui/ui-icons_c2e9ff_256x240.png)
 		!important;
 	background-position: -64px -144px !important;
 	background-color: transparent !important;
@@ -172,14 +172,14 @@
 
 .ui-menu-bar .ui-menu-check-icon.ui-state-active {
 	background-image:
-		url(custom-theme/images/ui-icons_000000_256x240.png)
+		url(../images/jquery-ui/ui-icons_000000_256x240.png)
 		!important;
 }
 
 .ui-menu-bar .ui-menu-parent-icon {
 	margin-right: 0.5em;
 	background-image:
-		url(custom-theme/images/ui-icons_c2e9ff_256x240.png)
+		url(../images/jquery-ui/ui-icons_c2e9ff_256x240.png)
 		!important;
 	background-position: -32px -16px;
 	background-color: transparent !important;
@@ -188,7 +188,7 @@
 
 .ui-menu-bar .ui-state-active.ui-menu-parent-icon {
 	background-image:
-		url(custom-theme/images/ui-icons_000000_256x240.png)
+		url(../images/jquery-ui/ui-icons_000000_256x240.png)
 		!important;
 }
 

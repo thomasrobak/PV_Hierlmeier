@@ -185,7 +185,12 @@ class BelegController {
             //@todo on(Exception).to "handleError"   
         }
         determinePositionen {
-            on("submit") {
+            on("submit").to "saveCreatedBeleg"
+            on("error").to "determinePositionen"
+            on("return").to "determineKunde"
+        }
+        saveCreatedBeleg {
+            action {
                 def k =  flow.chosenKunde
                 def p = flow.kundePositionenList
                 def bnr = params.belegnummer
@@ -206,6 +211,7 @@ class BelegController {
                     it.beleg = b    
                 }
                 
+                /*
                 if(!b.validate()) {
                     b.errors.each {
                         println it
@@ -213,13 +219,19 @@ class BelegController {
                     }
                     //@todo flash.message = b.errors.fieldError
                     return error()
-                }     
-                b.save(flush: true)
+                }
+                */
+                if (b.save()) {
+                    flash.message = message(code: 'default.created.message', args: [message(code: 'beleg.label', default: 'Beleg'), b.id])
+                }
+                else {
+                    return error()
+                }
                 flow.createdBeleg = b //@todo check if needed weil siehe drunter
                 [belegInstance:b]
-            }.to "displayCreatedBeleg"
+            }
+            on("success").to "displayCreatedBeleg"
             on("error").to "determinePositionen"
-            on("return").to "determineKunde"
         }
         displayCreatedBeleg {
             redirect(action:"show", belegInstance:flow.createdBeleg)

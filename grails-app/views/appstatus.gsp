@@ -7,7 +7,7 @@
 			#status {
 				background-color: #eee;
 				border: .2em solid #fff;
-				margin: 2em 2em 1em;
+				margin: 0.5em 1em;
 				padding: 1em;
 				width: 12em;
 				float: left;
@@ -37,7 +37,7 @@
 			}
 
 			#page-body {
-				margin: 2em 1em 1.25em 18em;
+				margin: 1em 1em 1.25em;
 			}
 
 			h2 {
@@ -75,7 +75,6 @@
 		</style>
 	</head>
 	<body>
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div id="status" role="complementary">
 			<h1>Application Status</h1>
 			<ul>
