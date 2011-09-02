@@ -16,11 +16,13 @@ class KundeController {
         println("****** $controllerName.$actionName START")
         println("params: " + params)
         
-        def results = Kunde.list(params)
+        def results = Kunde.list()
+        println("results Class: " + results.getClass().toString())
         def foundRecords = Kunde.count()
         
         println("foundRecords: " + foundRecords)
         
+        /*
         def formattedResults = results.collect {
             [
                 it.nachname,
@@ -31,19 +33,21 @@ class KundeController {
                 it.telefonnummer
             ]
         }
-        
         def data = [aaData: formattedResults]
+        */
+        def data = [aaData: results]
         
         println("db query results: " + results)
-        println("JSON: " + data)
+        println("data before JSON rendering: " + data)
         println("****** $controllerName.$actionName END")
         
         render data as JSON
     }
     
+    
     def list = {
-	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-	[kundeInstanceList: Kunde.list(params), kundeInstanceTotal: Kunde.count()]
+//	params.max = Math.min(params.max ? params.int('max') : 10, 100)
+//	[kundeInstanceList: Kunde.list(params), kundeInstanceTotal: Kunde.count()]
     }
     
     def create = {

@@ -36,7 +36,7 @@
 				margin: 0 0 0.3em;
 			}
 
-			#page-body {
+			#pvhm-content {
 				margin: 1em 1em 1.25em;
 			}
 
@@ -64,11 +64,11 @@
 					display: none;
 				}
 
-				#page-body {
+				#pvhm-content {
 					margin: 0 1em 1em;
 				}
 
-				#page-body h1 {
+				#pvhm-content h1 {
 					margin-top: 0;
 				}
 			}
@@ -95,7 +95,7 @@
 				</g:each>
 			</ul>
 		</div>
-                <div id="page-body" role="main">
+                <div id="pvhm-content" role="main">
                   <div id="controller-list" role="navigation">
                     <h2>[deprecated] Generierte Controller Liste:</h2>
                     <ul>
