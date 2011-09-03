@@ -7,7 +7,7 @@
     <title>Kunde wählen</title>
   </head>
   <body>
-    <div id="list-kunde" class="content scaffold-list" role="main">
+    <div id="list-kunde" class="content scaffold-list">
       <h1>Kunde wählen</h1>
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>

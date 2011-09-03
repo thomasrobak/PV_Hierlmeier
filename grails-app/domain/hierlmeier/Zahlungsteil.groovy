@@ -14,6 +14,6 @@ class Zahlungsteil {
     }
     
     def String toString() {
-        return "zahlteil:${betrag} von zahlung:${zahlung}"
+        return "Zahlteil ${betrag} of ${zahlung}"
     }
 }

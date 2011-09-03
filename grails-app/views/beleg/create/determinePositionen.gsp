@@ -6,7 +6,7 @@
     <title>Positionen wählen</title>
   </head>
   <body>
-    <div id="show-kunde" class="content scaffold-show" role="main">
+    <div id="show-kunde" class="content scaffold-show">
       <h1>Neuen Beleg erstellen für Kunde:</h1>
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
@@ -87,8 +87,8 @@
       </ol>
 
     </div>
-  <g:form action="belegCreation">
-    <div id="show-applicable-positionen" class="content fieldset" role="main">
+  <g:form action="createBeleg">
+    <div id="show-applicable-positionen" class="content fieldset">
       <h1>Neuen Beleg erstellen mit folgenden Daten:</h1>
 
       <div class="fieldcontain ${hasErrors(bean: belegInstance, field: 'belegnummer', 'error')} required">

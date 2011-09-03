@@ -73,6 +73,6 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
     */
     
     def String toString () {
-        return "Belegnr.: ${belegnummer}"
+        return "Beleg ${belegnummer}"
     }
 }

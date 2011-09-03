@@ -1,5 +1,5 @@
 
-<div id="list-position-readonly" class="yui-skin-sam" role="main">
+<div id="list-position-readonly" class="yui-skin-sam">
   <h1><g:message code="default.list.label" args="[PositionenXXX]" /></h1>
   <gui:dataTable
     controller="position" action="dataTableJSONForKunde"

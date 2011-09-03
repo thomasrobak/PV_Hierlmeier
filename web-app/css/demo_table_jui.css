@@ -279,11 +279,11 @@ table.display tr.even.gradeU {
 
 
 tr.odd {
-	background-color: #E2E4FF;
+	background-color: #F7F7F7;
 }
 
 tr.even {
-	background-color: white;
+	background-color: #FFFFFF;
 }
 
 
@@ -512,10 +512,44 @@ tr.even.gradeU td.sorting_3 {
 /*
  * Row highlighting example
  */
-.ex_highlight #example tbody tr.even:hover, #example tbody tr.even td.highlighted {
+table.display tbody tr.even:hover, table.display tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+                cursor: pointer;
+}
+
+table.display tr.odd:hover, table.display tr.odd td.highlighted {
+	background-color: #E6FF99;
+                cursor: pointer;
+}
+
+table.display tr.even:hover {
 	background-color: #ECFFB3;
 }
 
-.ex_highlight #example tbody tr.odd:hover, #example tbody tr.odd td.highlighted {
+table.display tr.even:hover td.sorting_1 {
+	background-color: #DDFF75;
+}
+
+table.display tr.even:hover td.sorting_2 {
+	background-color: #E7FF9E;
+}
+
+table.display tr.even:hover td.sorting_3 {
+	background-color: #E2FF89;
+}
+
+table.display tr.odd:hover {
 	background-color: #E6FF99;
+}
+
+table.display tr.odd:hover td.sorting_1 {
+	background-color: #D6FF5C;
+}
+
+table.display tr.odd:hover td.sorting_2 {
+	background-color: #E0FF84;
+}
+
+table.display tr.odd:hover td.sorting_3 {
+	background-color: #DBFF70;
 }

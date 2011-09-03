@@ -23,9 +23,6 @@
     <g:javascript src="application.js"/>
     <script type="text/javascript">
       var applocale = '${message(code: "application.language")}'
-      var dt_kunde_datasource = '${createLink(controller:"kunde", action:"dataTableJSON")}'
-      var dt_beleg_datasource = '${createLink(controller:"beleg", action:"dataTableJSON")}'
-      var dt_position_datasource = '${createLink(controller:"position", action:"dataTableJSON")}'
       $(function(){
         $("#navbar").menubar({
           items: [
@@ -139,7 +136,7 @@
       <h1 style="font-size:1.5em;font-weight:bold;">Patientenverwaltung Hierlmeier</h1>
   </div><a href="#action-body" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
   <div id="navbar" role="navigation" style="font-size: 14px"></div>
-  <div id="action-body" role="main">
+  <div id="action-body" class="content" role="main">
     <g:layoutBody/>
     <div class="footer" role="contentinfo"></div>
     <div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>

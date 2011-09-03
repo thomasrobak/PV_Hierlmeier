@@ -14,6 +14,6 @@ class Zahlung {
     }
     
     def String toString() {
-        return "Zahlung von: ${kunde} : ${betrag}"
+        return "Zahlung of ${kunde} amount ${betrag}"
     }
 }

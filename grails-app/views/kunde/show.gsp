@@ -12,7 +12,7 @@
   <g:if test="${flash.message}">
     <div class="message" role="status">${flash.message}</div>
   </g:if>
-  <div id="show-kunde" class="content scaffold-show" role="main">
+  <div id="show-kunde" class="content scaffold-show">
     <h1><g:message code="default.show.label" args="[entityName]" /></h1>
     <div class="yui-skin-sam">
         <gui:accordion multiple="true">

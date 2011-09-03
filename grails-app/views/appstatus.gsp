@@ -95,7 +95,7 @@
 				</g:each>
 			</ul>
 		</div>
-                <div id="pvhm-content" role="main">
+                <div id="pvhm-content">
                   <div id="controller-list" role="navigation">
                     <h2>[deprecated] Generierte Controller Liste:</h2>
                     <ul>

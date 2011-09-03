@@ -150,8 +150,12 @@ class BelegController {
         }
     }
     
-    def belegCreationFlow = {
-        getListApplicableKunden {
+    def create = {
+        redirect(action:"createBeleg")
+    }
+    
+    def createBelegFlow = {  //flow names must be unique for whole application
+        fetchPossibleKunden {
             action {
                 def criteria = Kunde.createCriteria()
                 def results = criteria.listDistinct {
@@ -164,16 +168,13 @@ class BelegController {
                 flow.applicableKundeList = results
                 flow.applicableKundeListTotal = results.count()
             }
-            on("success").to "determineKunde"
+            on("success").to "chooseKunde"
             //@todo on(Exception).to "handleError"   
         }
-        determineKunde {
+        chooseKunde {
             on("submit") {
                 flow.chosenKunde = Kunde.get(params.id)
-            }.to "getListKundePositionen"
-            
-            on("return").to "determineKunde"
-            
+            }.to "getListKundePositionen"            
         }
         getListKundePositionen {
             action {
@@ -187,7 +188,7 @@ class BelegController {
         determinePositionen {
             on("submit").to "saveCreatedBeleg"
             on("error").to "determinePositionen"
-            on("return").to "determineKunde"
+            on("return").to "chooseKunde"
         }
         saveCreatedBeleg {
             action {
@@ -241,10 +242,6 @@ class BelegController {
     def list = {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	[belegInstanceList: Beleg.list(params), belegInstanceTotal: Beleg.count()]
-    }
-
-    def create = {
-        redirect(action: "belegCreation")
     }
 
     def save = {

@@ -21,7 +21,7 @@ class ZahlungController {
     }
     
     def zahlungCreationFlow = {
-        getListApplicableKunden {
+        fetchPossibleKunden {
             action {
                 def offeneBelegeList = Beleg.unbeglichene.list()
                 println(offeneBelegeList.class.toString() + " offeneBelegeList: " + offeneBelegeList)

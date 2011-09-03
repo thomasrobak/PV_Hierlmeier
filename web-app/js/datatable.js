@@ -27,6 +27,8 @@ $(function() {
             dt_locale_file = String("../txt/datatable_en.txt");
             break;
     }
+    var table_kunde_datasource = $("#dt-kunde").attr("datasource");
+    var table_kunde_row_clock_action = $("#dt-kunde").attr("rowclickaction");
     var table_kunde = $("#dt-kunde").dataTable({
         "bAutoWidth": true,
         "bDeferRender": true,
@@ -35,7 +37,7 @@ $(function() {
         "sPaginationType": "two_button",
         "iCookieDuration": 60*60*12,
         "sCookiePrefix": "pvhm_datatable_",
-        "sAjaxSource": dt_kunde_datasource,
+        "sAjaxSource": table_kunde_datasource,
         "oLanguage": {
             "sUrl": dt_locale_file
         },
@@ -83,7 +85,7 @@ $(function() {
     
     $("#dt-kunde tbody tr").live("click",function(){
         var row_obj = table_kunde.fnGetData(this);
-        var redirectUrl = dt_row_click_link.replace("_x_", row_obj.id);
+        var redirectUrl = table_kunde_row_clock_action.replace("_x_", row_obj.id);
         window.location.href = redirectUrl;
     });
 });

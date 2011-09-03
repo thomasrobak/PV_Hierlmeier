@@ -1,6 +1,6 @@
 
 
-<div id="list-position" class="content scaffold-list" role="main">
+<div id="list-position" class="content scaffold-list">
   <h1>Positionen ohne Beleg</h1>
   <table>
     <thead>

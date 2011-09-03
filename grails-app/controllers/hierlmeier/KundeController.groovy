@@ -7,10 +7,19 @@ class KundeController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     static defaultAction = "index"
     
+    enum DataTableFilter {  // filter for the dataTableJSON method, filter is set in the view and submitted by the ajax call
+        NONE("kunde.list.filter.NONE"),
+        UPP("kunde.list.filter.UPP")
+
+        private final String value //value is a message.properties code
+        DataTableFilter(String value) { this.value = value }
+        String toString() { value }
+        String getKey() { name() }
+    }
+    
     def index = {
         redirect(action: "list", params: params)
     }
-
 
     def dataTableJSON = {
         println("****** $controllerName.$actionName START")
@@ -18,6 +27,7 @@ class KundeController {
         
         def results = Kunde.list()
         println("results Class: " + results.getClass().toString())
+        println("db query results: " + results)
         def foundRecords = Kunde.count()
         
         println("foundRecords: " + foundRecords)
@@ -37,7 +47,6 @@ class KundeController {
         */
         def data = [aaData: results]
         
-        println("db query results: " + results)
         println("data before JSON rendering: " + data)
         println("****** $controllerName.$actionName END")
         
@@ -46,8 +55,11 @@ class KundeController {
     
     
     def list = {
-//	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-//	[kundeInstanceList: Kunde.list(params), kundeInstanceTotal: Kunde.count()]
+        def filters = []
+        for (filter in DataTableFilter.values()) {
+            filters.add(filter)
+        }
+	[dt_filters: filters]
     }
     
     def create = {

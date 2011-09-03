@@ -4,14 +4,33 @@
 <html>
   <head>
     <meta name="layout" content="main">
-    <title>Kunde wählen</title>
+    <title>Kunde wählen (hardcoded)</title>
+    <script type="text/javascript">
+      var dt_row_click_action = '${createLink(controller:"beleg", action:"createBeleg", event: "submit", id:"_x_")}'
+    </script>
   </head>
   <body>
-    <div id="list-kunde" class="content scaffold-list" role="main">
-      <h1>Kunde wählen</h1>
-      <g:if test="${flash.message}">
-        <div class="message" role="status">${flash.message}</div>
-      </g:if>
+    <h1>Kunde wählen (hardcoded)</h1>
+  <g:if test="${flash.message}">
+    <div class="message" role="status">${flash.message}</div>
+  </g:if>
+  <div style="margin: 1em">
+    <table id="dt-kunde" class="display">
+      <thead>
+        <tr>
+          <th class="dt-kunde-th-nachname">Nachname</th>
+          <th class="dt-kunde-th-bemerkung">Bemerkung</th>
+          <th class="dt-kunde-th-wohnort">Wohnort</th>
+          <th class="dt-kunde-th-mwst">MwSt</th>
+          <th class="dt-kunde-th-telefonnummer">Telefonnummer</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <g:javascript src="datatable.js"/>
+  
+  <%--
       <table>
         <thead>
           <tr>
@@ -36,7 +55,7 @@
         <g:each in="${applicableKundeList}" status="i" var="kunde">
           <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
             
-            <td><g:link action="belegCreation" event="submit" id="${kunde?.id}">${fieldValue(bean: kunde, field: "nachname")}</g:link></td>
+            <td><g:link action="create" event="submit" id="${kunde?.id}">${fieldValue(bean: kunde, field: "nachname")}</g:link></td>
         
             <td>${fieldValue(bean: kunde, field: "vorname")}</td>
         
@@ -57,6 +76,6 @@
       <div class="pagination">
         <g:paginate total="${applicableKundeListTotal}" />
       </div>
-    </div>
+    --%>
   </body>
 </html>

@@ -36,6 +36,6 @@ class Position implements Serializable { //muss Seriazable implementieren für F
     }
     
     def String toString() {
-        return "Position: ${typ} : ${kunde} : ${datum}"
+        return "Pos ${typ} for ${kunde} on ${datum}"
     }
 }

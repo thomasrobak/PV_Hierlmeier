@@ -7,7 +7,7 @@
     <title>Zahlung erfassen</title>
   </head>
   <body>
-    <div id="show-zahlung" class="content scaffold-show" role="main">
+    <div id="show-zahlung" class="content scaffold-show">
       <h1>Neue Zahlung erfassen für Kunde:</h1>
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
@@ -89,7 +89,7 @@
 
     </div>
   <g:form action="zahlungCreation">
-    <div id="show-applicable-belege" class="content fieldset" role="main">
+    <div id="show-applicable-belege" class="content fieldset">
       <h1>Neue Zahlung erfassen mit folgenden Daten:</h1>
 
       <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'betrag', 'error')} required">

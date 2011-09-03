@@ -24,7 +24,7 @@
   </head>
   <body>
     
-    <div id="index-body" class="content" role="main">
+    <div id="index-body" class="content">
       <div id="action-list" role="navigation">
         <span style="display:table-cell">
           <h2>Kunden</h2>
@@ -54,7 +54,7 @@
           <h2>Belege</h2>
           <ul>
             <li class="controller"><g:link controller="beleg" action="list">Belege ansehen</g:link></li>
-            <li class="controller"><g:link controller="beleg" action="belegCreation">Beleg erstellen</g:link></li>
+            <li class="controller"><g:link controller="beleg" action="create">Beleg erstellen</g:link></li>
             <li class="controller"><g:link controller="beleg" action="list">Beleg drucken</g:link></li>
             <li class="controller">Mahnung erstellen</li>
           </ul>
