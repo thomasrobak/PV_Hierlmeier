@@ -155,22 +155,6 @@ class BelegController {
     }
     
     def createBelegFlow = {  //flow names must be unique for whole application
-        fetchPossibleKunden {
-            action {
-                def criteria = Kunde.createCriteria()
-                def results = criteria.listDistinct {
-                    isNotEmpty("positionen")
-                    positionen {
-                        isNull("beleg")
-                    }
-                    //@todo order("nachname", "asc")
-                }
-                flow.applicableKundeList = results
-                flow.applicableKundeListTotal = results.count()
-            }
-            on("success").to "chooseKunde"
-            //@todo on(Exception).to "handleError"   
-        }
         chooseKunde {
             on("submit") {
                 flow.chosenKunde = Kunde.get(params.id)
@@ -196,6 +180,7 @@ class BelegController {
                 def p = flow.kundePositionenList
                 def bnr = params.belegnummer
                 def d = params.datum
+                //@todo berechnung checken da passt was net mit den nachkommastellen, siehe Beleg.print() console output
                 def netto = new BigDecimal("0.00")
                 p.each {
                     netto = netto.add(it.betrag)   

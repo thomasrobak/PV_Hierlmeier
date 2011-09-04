@@ -1,19 +1,20 @@
-package hierlmeier
+package hierlmeier   //Maybe NetBeans shows an java.lang.Enum related error here (IDE Bug)
 
 import grails.converters.JSON
 
 class KundeController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", dataTableJSON: "POST"]
     static defaultAction = "index"
     
-    enum DataTableFilter {  // filter for the dataTableJSON method, filter is set in the view and submitted by the ajax call
-        NONE("kunde.list.filter.NONE"),
-        UPP("kunde.list.filter.UPP")
+    enum Filter {  // filter for the dataTableJSON method, filter is set in the view and submitted by the ajax call
+        NOFILTER("filter.NOFILTER"),    //value is a message.properties code
+        UPP("filter.UPP")               //value is a message.properties code
 
-        private final String value //value is a message.properties code
-        DataTableFilter(String value) { this.value = value }
+        private final String value 
+        Filter(String value) { this.value = value }
         String toString() { value }
+        String value() { value }
         String getKey() { name() }
     }
     
@@ -23,43 +24,50 @@ class KundeController {
 
     def dataTableJSON = {
         println("****** $controllerName.$actionName START")
-        println("params: " + params)
         
-        def results = Kunde.list()
-        println("results Class: " + results.getClass().toString())
-        println("db query results: " + results)
-        def foundRecords = Kunde.count()
+        println("** params: " + params)
         
-        println("foundRecords: " + foundRecords)
+        def results
+        def foundRecords
         
-        /*
-        def formattedResults = results.collect {
-            [
-                it.nachname,
-                it.bemerkung,
-                it.adresse,
-                it.wohnort,
-                it.mwst,
-                it.telefonnummer
-            ]
+        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+            results = Kunde.list()
+            foundRecords = results.size();
         }
-        def data = [aaData: formattedResults]
-        */
+        else if(params.filter == g.message(code: Filter.UPP.value())) {
+            results = Kunde.withDetachedPositionen.listDistinct();
+            foundRecords = results.size();
+            /*
+            def criteria = Kunde.createCriteria()
+            def results = criteria.listDistinct {
+            isNotEmpty("positionen")
+            positionen {
+            isNull("beleg")
+            }
+            //@todo order("nachname", "asc")
+             */
+        }
+        else {
+            println("** params.filter not set or unknown value, showing all")
+            flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
+            results = Kunde.list()
+            foundRecords = results.size();
+        }
+
+        println("** results Class: " + results.getClass().toString())
+        println("** foundRecords: " + foundRecords)
+        println("** db query results: " + results)
+
         def data = [aaData: results]
         
-        println("data before JSON rendering: " + data)
-        println("****** $controllerName.$actionName END")
+        println("** data before JSON rendering: " + data)
         
+        println("****** $controllerName.$actionName END")
         render data as JSON
     }
     
-    
     def list = {
-        def filters = []
-        for (filter in DataTableFilter.values()) {
-            filters.add(filter)
-        }
-	[dt_filters: filters]
+	return [InstanceFilters: Filter.values()]
     }
     
     def create = {

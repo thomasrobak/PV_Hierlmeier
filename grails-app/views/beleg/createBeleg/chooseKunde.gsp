@@ -6,7 +6,7 @@
     <meta name="layout" content="main">
     <title>Kunde wählen (hardcoded)</title>
     <script type="text/javascript">
-      var dt_row_click_action = '${createLink(controller:"beleg", action:"createBeleg", event: "submit", id:"_x_")}'
+      var dt_row_click_action = ''
     </script>
   </head>
   <body>
@@ -15,7 +15,10 @@
     <div class="message" role="status">${flash.message}</div>
   </g:if>
   <div style="margin: 1em">
-    <table id="dt-kunde" class="display">
+    <table id="dt-kunde" class="display"
+           datasource="${createLink(controller:'kunde', action:'dataTableJSON')}"
+           filter="${message(code: 'filter.UPP')}"
+           rowclickaction="${createLink(controller:'beleg', action:'createBeleg', event:'submit', id:'_x_')}">
       <thead>
         <tr>
           <th class="dt-kunde-th-nachname">Nachname</th>

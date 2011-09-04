@@ -22,7 +22,7 @@
     <g:javascript src="jquery.menubar.js"/>
     <g:javascript src="application.js"/>
     <script type="text/javascript">
-      var applocale = '${message(code: "application.language")}'
+      var app_locale = '${message(code: "application.language")}'
       $(function(){
         $("#navbar").menubar({
           items: [

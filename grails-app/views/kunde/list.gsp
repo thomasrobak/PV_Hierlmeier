@@ -15,7 +15,7 @@
 <div style="margin: 1em">
   <table id="dt-kunde" class="display" 
          datasource="${createLink(controller:'kunde', action:'dataTableJSON')}"
-         filter="${message(code: 'kunde.list.filter.NONE')}"
+         filter="${message(code: 'filter.NOFILTER')}"
          rowclickaction="${createLink(controller:'kunde', action:'show', id:'_x_')}">
     <thead>
       <tr>

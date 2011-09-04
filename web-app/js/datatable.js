@@ -16,7 +16,7 @@ $.fn.dataTableExt.oSort['numeric-comma-desc'] = function(a,b) {
 
 $(function() {
     var dt_locale_file
-    switch(applocale) {
+    switch(app_locale) {
         case "de":
             dt_locale_file = String("../txt/datatable_de.txt");
             break;
@@ -27,8 +27,11 @@ $(function() {
             dt_locale_file = String("../txt/datatable_en.txt");
             break;
     }
+    
     var table_kunde_datasource = $("#dt-kunde").attr("datasource");
-    var table_kunde_row_clock_action = $("#dt-kunde").attr("rowclickaction");
+    var table_kunde_row_click_action = $("#dt-kunde").attr("rowclickaction");
+    var table_kunde_filter = $("#dt-kunde").attr("filter");
+    
     var table_kunde = $("#dt-kunde").dataTable({
         "bAutoWidth": true,
         "bDeferRender": true,
@@ -40,6 +43,19 @@ $(function() {
         "sAjaxSource": table_kunde_datasource,
         "oLanguage": {
             "sUrl": dt_locale_file
+        },
+        "fnServerData": function ( sSource, aoData, fnCallback ) {
+            aoData.push( {
+                "name": "filter", 
+                "value": table_kunde_filter
+            } );
+            $.ajax( {
+                "dataType": 'json', 
+                "type": "POST", 
+                "url": sSource, 
+                "data": aoData, 
+                "success": fnCallback
+            } );
         },
         "aoColumnDefs": [
             {   /* Kunde.id */
@@ -85,8 +101,8 @@ $(function() {
     
     $("#dt-kunde tbody tr").live("click",function(){
         var row_obj = table_kunde.fnGetData(this);
-        var redirectUrl = table_kunde_row_clock_action.replace("_x_", row_obj.id);
-        window.location.href = redirectUrl;
+        var link = table_kunde_row_click_action.replace("_x_", row_obj.id);
+        window.location.href = link;
     });
 });
 
