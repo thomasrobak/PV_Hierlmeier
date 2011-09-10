@@ -8,6 +8,7 @@
 	"sInfoPostFix":  "",
 	"sSearch":       "Search:",
 	"sUrl":          "",
+        "dateFormat":    "MM/dd/yyyy",
 	"oPaginate": {
 		"sFirst":    "First",
 		"sPrevious": "Previous",

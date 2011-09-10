@@ -14,6 +14,7 @@ class CustomPropertyEditorRegistrar implements PropertyEditorRegistrar {
 	}
 }
 
+        //@todo JQuery DatePicker doesnt change DateFormat according to locale, check this
 class CustomDateEditor extends PropertyEditorSupport {
 	boolean allowEmpty
 	String[] formats

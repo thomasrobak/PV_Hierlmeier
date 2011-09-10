@@ -1,47 +1,80 @@
-package hierlmeier
+package hierlmeier   //Maybe NetBeans shows an java.lang.Enum related error here (IDE Bug)
 
 import grails.converters.JSON
 
 class PositionController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", dataTableJSON:"POST"]
     static defaultAction = "index"
+        
+    enum Filter {  // filter for the dataTableJSON method, filter is set in the view and submitted by the ajax call
+        NOFILTER("filter.NOFILTER"),
+        UPP("filter.UPP")
 
+        private final String value //value is a message.properties code
+        Filter(String value) { this.value = value }
+        String toString() { value }
+        String value() { value }
+        String getKey() { name() }
+    }
+    
     def index = {
         redirect(action: "list", params: params)
     }
     
     def dataTableJSON = {
-        println("****** $controllerName.$actionName START")
-        println("params: " + params)
+        println("**** $controllerName.$actionName START")
         
-        def pos = Position.list(params)
-        def foundRecords = Position.count()
+        println("** params: " + params)
         
-        println("foundRecords: " + foundRecords)
+        def results
+        def foundRecords
         
-        def formattedResults = pos.collect {
-            [
-                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
-                typ: it.typ.toString(),
-                tier: it.tier.toString(),
-                menge: it.menge.toString(),
-                beleg: it.beleg.toString()
-            ]
+        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Position.findAllByKunde(kunde)
+                foundRecords = results.size();
+            }
+            else {
+                results = Position.list()
+                foundRecords = results.size();
+            }
+            
         }
+        else if(params.filter == g.message(code: Filter.UPP.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Position.findAllByKundeAndBelegIsNull(kunde)
+                foundRecords = results.size();
+            }
+            else {
+                results = Position.findAllByBelegIsNull();
+                foundRecords = results.size();
+            }
+        }
+        else {
+            println("** params.filter not set or unknown value, showing all for $controllerName")
+            flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
+            results = Position.list()
+            foundRecords = results.size();
+        }
+
+        println("** results Class: " + results.getClass().toString())
+        println("** foundRecords: " + foundRecords)
+        println("** db query results: " + results)
+
+        def data
+        JSON.use("deep"){ data = [aoData: results] as JSON }
+        //def data = [aoData: results]
+        println("** data after JSON rendering: " + data)
         
-        def data = ["aaData":formattedResults]
-        
-        println("db query results: " + pos)
-        println("JSON: " + data)
-        println("****** $controllerName.$actionName END")
-        
-        render data as JSON
-    }
-    
+        println("**** $controllerName.$actionName END")
+        render data
+    }  
     
     def dataTableJSONByKunde = {
-        println("****** $controllerName.$actionName START")
+        println("**** $controllerName.$actionName START")
         println("params: " + params)
         
         def kunde = Kunde.get(params.kundeId)
@@ -78,13 +111,13 @@ class PositionController {
         
         println("db query results: " + positionen)
         println("JSON: " + data)
-        println("****** $controllerName.$actionName END")
+        println("**** $controllerName.$actionName END")
         
         render data as JSON
     }
     
     def dataTableJSONByBeleg = {
-        println("****** $controllerName.$actionName START")
+        println("**** $controllerName.$actionName START")
         println("params: " + params)
         
         def beleg = Beleg.get(params.belegId)
@@ -121,7 +154,7 @@ class PositionController {
         
         println("db query results: " + positionen)
         println("JSON: " + data)
-        println("****** $controllerName.$actionName END")
+        println("**** $controllerName.$actionName END")
         
         render data as JSON
     }

@@ -19,13 +19,13 @@ class BelegController {
     }
     
     def dataTableJSON = {
-        println("****** $controllerName.$actionName START")
-        println("params: " + params)
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
         
         def belege = Beleg.list(params)
         def foundRecords = Beleg.count()
         
-        println("foundRecords: " + foundRecords)
+        println("** foundRecords: " + foundRecords)
         
         def formattedResults = belege.collect {
             [
@@ -41,27 +41,27 @@ class BelegController {
             results: formattedResults
         ]
         
-        println("db query results: " + belege)
-        println("JSON: " + data)
-        println("****** $controllerName.$actionName END")
+        println("** db query results: " + belege)
+        println("** JSON: " + data)
+        println("**** $controllerName.$actionName END")
         
         render data as JSON
     }
     
     
     def dataTableJSONByBelege = {
-        println("****** $controllerName.$actionName START")
-        println("params: " + params)
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
         
         def belegIds
         params.belege.each {
             belegIds.add(it.id)
         }
         def belege = Beleg.getAll(belegIds)
-        println("belege: " + belege)
+        println("** belege: " + belege)
         
         def foundRecords = belegIds.size()
-        println("foundRecords: " + foundRecords)
+        println("** foundRecords: " + foundRecords)
         
         def formattedResults = belege.collect {
             [
@@ -75,16 +75,16 @@ class BelegController {
             results: formattedResults
         ]
         
-        println("no db query done, list supplied: " + belege)
-        println("JSON: " + data)
-        println("****** $controllerName.$actionName END")
+        println("** no db query done, list supplied: " + belege)
+        println("** JSON: " + data)
+        println("**** $controllerName.$actionName END")
         
         render data as JSON
     }
     
     def dataTableJSONByKunde = {
-        println("****** $controllerName.$actionName START")
-        println("params: " + params)
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
         
         def kunde = Kunde.get(params.kundeId)
         
@@ -101,7 +101,7 @@ class BelegController {
         def belege = Beleg.findAllByKunde(kunde, params)
         def foundRecords = Beleg.countByKunde(kunde)
         
-        println("foundRecords: " + foundRecords)
+        println("** foundRecords: " + foundRecords)
         
         def formattedResults = belege.collect {
             [
@@ -115,9 +115,9 @@ class BelegController {
             results: formattedResults
         ]
         
-        println("db query results: " + belege)
-        println("JSON: " + data)
-        println("****** $controllerName.$actionName END")
+        println("** db query results: " + belege)
+        println("** JSON: " + data)
+        println("**** $controllerName.$actionName END")
         
         render data as JSON
     }
@@ -157,25 +157,44 @@ class BelegController {
     def createBelegFlow = {  //flow names must be unique for whole application
         chooseKunde {
             on("submit") {
+                println("****** $controllerName.$actionName chooseKunde.onSubmit")
+                println("*** params: " + params)
                 flow.chosenKunde = Kunde.get(params.id)
-            }.to "getListKundePositionen"            
+            }.to "choosePositionen"            
         }
+        /*
         getListKundePositionen {
             action {
                 def results = Position.findAllByKundeAndBelegIsNull(flow.chosenKunde)
                 flow.kundePositionenList = results
                 flow.positionenTotal = results.count()
             }
-            on("success").to "determinePositionen"
+            on("success").to "choosePositionen"
             //@todo on(Exception).to "handleError"   
         }
-        determinePositionen {
-            on("submit").to "saveCreatedBeleg"
-            on("error").to "determinePositionen"
+        */
+        choosePositionen {
+            on("submit") {
+                println("****** $controllerName.$actionName choosePositionen.onSubmit")
+                println("*** params: " + params)
+                def selectedIds = [] 
+                params.selected.each {
+                    selectedIds.add(it.toInteger())
+                }
+                println("*** selectedIds: " + selectedIds)
+                def results = Position.getAll(selectedIds)
+                flow.kundePositionenList = results
+            }.to "saveCreatedBeleg"
+            on("error") {
+                println("*!*!* Error during $controllerName.$actionName choosePositionen.onSubmit")
+                flash.message = "irgendein fehler während createBelegFlow.choosePositionen"
+            }.to "choosePositionen"
             on("return").to "chooseKunde"
         }
         saveCreatedBeleg {
             action {
+                println("****** $controllerName.$actionName saveCreatedBeleg.action")
+                println("*** params: " + params)
                 def k =  flow.chosenKunde
                 def p = flow.kundePositionenList
                 def bnr = params.belegnummer
@@ -216,8 +235,14 @@ class BelegController {
                 flow.createdBeleg = b //@todo check if needed weil siehe drunter
                 [belegInstance:b]
             }
-            on("success").to "displayCreatedBeleg"
-            on("error").to "determinePositionen"
+            on("success") {
+                println("****** $controllerName.$actionName saveCreatedBeleg.action.onSuccess")
+                println("*** created beleg: " + flow.createdBeleg)
+            }.to "displayCreatedBeleg"
+            on("error") {
+                println("*!*!* Error during $controllerName.$actionName saveCreatedBeleg.action")
+                flash.message = "irgendein fehler während createBelegFlow.saveCreatedBeleg"
+            }.to "choosePositionen"
         }
         displayCreatedBeleg {
             redirect(action:"show", belegInstance:flow.createdBeleg)

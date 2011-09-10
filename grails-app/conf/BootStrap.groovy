@@ -32,8 +32,9 @@ class BootStrap {
         def testattribute = servletContext.getAttribute("BelegStyleSheet")
         println("*** attribute BelegStyleSheet: " + testattribute)
        
+        //insert further init äktschns here
+
         // end of Strizzi Bootstrap Äktschns
-        
         println("********** Bootstrap Strizzi Actions Ende")
         println()
         
@@ -87,18 +88,22 @@ class BootStrap {
                 
             }
             if (!Position.count()) {
+                // 2 Positionen in Beleg für Kunde Huber
                 pos1 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
                     typ: wurmkur, preis: "34.23", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos2 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
                     typ: krallen, preis: "13.19", menge: "1", kunde: huber, beleg: beleg1).save(failOnError: true)
                 
+                // 2 Positionen ohne Beleg für Kunde Huber
                 pos7 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: katze,
                     typ: appendix, preis: "9.99", menge: "1", kunde: huber).save(failOnError: true)
                 pos8 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: hund,
                     typ: scrotum, preis: "8.79", menge: "1", kunde: huber).save(failOnError: true)
-                pos3 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix", tier: kuh,
+                
+                // 4 Positionen ohne Beleg für Kunde Holzmann
+                pos3 = new Position(datum: new Date(123141411325), anmerkung: "nix", tier: kuh,
                     typ: wurmkur, preis: "4.12", menge: "2", kunde: holzmann).save(failOnError: true)
-                pos4 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix2", tier: karnickel,
+                pos4 = new Position(datum: new Date(111231231234), anmerkung: "nix2", tier: karnickel,
                     typ: gacken, preis: "5.32", menge: "2", kunde: holzmann).save(failOnError: true)
                 pos5 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "nix3", tier: katze,
                     typ: appendix, preis: "6.12", menge: "1", kunde: holzmann).save(failOnError: true)

@@ -23,32 +23,35 @@ class KundeController {
     }
 
     def dataTableJSON = {
-        println("****** $controllerName.$actionName START")
+        println("**** $controllerName.$actionName START")
         
         println("** params: " + params)
         
         def results
         def foundRecords
         
-        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
-            results = Kunde.list()
-            foundRecords = results.size();
-        }
-        else if(params.filter == g.message(code: Filter.UPP.value())) {
-            results = Kunde.withDetachedPositionen.listDistinct();
-            foundRecords = results.size();
-            /*
-            def criteria = Kunde.createCriteria()
-            def results = criteria.listDistinct {
-            isNotEmpty("positionen")
-            positionen {
-            isNull("beleg")
+        if(params.filter) {
+            if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+                results = Kunde.list()
+                foundRecords = results.size();
             }
-            //@todo order("nachname", "asc")
-             */
+            else if(params.filter == g.message(code: Filter.UPP.value())) {
+                results = Kunde.withUnprocessedPositionen.listDistinct();
+                foundRecords = results.size();
+                /*
+                def criteria = Kunde.createCriteria()
+                def results = criteria.listDistinct {
+                isNotEmpty("positionen")
+                positionen {
+                isNull("beleg")
+                }
+                //@todo order("nachname", "asc")
+                 */
+            }
         }
         else {
-            println("** params.filter not set or unknown value, showing all")
+            println("** params.filter not set or unknown value, showing all for $controllerName")
+            //@todo flash.message funzt net mit ajax, js code nötig dafür
             flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
             results = Kunde.list()
             foundRecords = results.size();
@@ -58,11 +61,11 @@ class KundeController {
         println("** foundRecords: " + foundRecords)
         println("** db query results: " + results)
 
-        def data = [aaData: results]
+        def data = [aoData: results]
         
         println("** data before JSON rendering: " + data)
         
-        println("****** $controllerName.$actionName END")
+        println("**** $controllerName.$actionName END")
         render data as JSON
     }
     

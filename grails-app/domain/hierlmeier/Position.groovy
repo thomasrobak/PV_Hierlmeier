@@ -17,7 +17,7 @@ class Position implements Serializable { //muss Seriazable implementieren für F
     static transients = ['userAction']
 
     static mapping = {
-      betrag formula: 'MENGE * PREIS'
+        betrag formula: 'MENGE * PREIS'
     }
     
     static constraints = {

@@ -4,6 +4,9 @@ import org.springframework.context.i18n.LocaleContextHolder as LCH
  * Wenn Datum == java.lang.String, konvertieren in Date()
  * JQuery Datepicker schickt zB Strings, app erwartet aber Date()
  */
+
+//@todo filter evtl nicht mehr nötig durch customPropertyEditor siehe Groovy Source Packages/util/CustomPropertyEditorRegistrar
+// and Configuration/spring/resources.groovy
 class DatumFilters {
     def messageSource  // for fetching the default.date.format from i18n message.properties
     
@@ -22,7 +25,7 @@ class DatumFilters {
                             println("** trying to convert params.datum to java.util.Date using this parseFormat: " + expectedDateFormat)
                             params.datum = Date.parse(expectedDateFormat, params.datum)
                         } catch (Exception e) {
-                            println("** Exception ocurred during conversion:")
+                            println("** Exception ocurred during conversion")
                             println(e)
                             println("***** DatumFilters.saveInActionName.before END")
                             return

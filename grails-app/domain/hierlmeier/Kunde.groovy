@@ -25,7 +25,7 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
     }
     
     static namedQueries = { 
-        withDetachedPositionen {
+        withUnprocessedPositionen {
             isNotEmpty("positionen")
             positionen {
                 isNull("beleg")

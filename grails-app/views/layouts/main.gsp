@@ -23,6 +23,7 @@
     <g:javascript src="application.js"/>
     <script type="text/javascript">
       var app_locale = '${message(code: "application.language")}'
+      var app_base_dir = '${createLink(uri:"/")}'
       $(function(){
         $("#navbar").menubar({
           items: [
