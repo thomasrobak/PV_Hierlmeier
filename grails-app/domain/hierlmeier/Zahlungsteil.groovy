@@ -1,6 +1,6 @@
 package hierlmeier
 
-class Zahlungsteil {
+class Zahlungsteil implements Serializable { //muss Seriazable implementieren für Flows in Grails
     
     BigDecimal betrag      // == teilbetrag einer Zahlung
     

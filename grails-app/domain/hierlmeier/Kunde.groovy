@@ -31,6 +31,12 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
                 isNull("beleg")
             }
         }
+        withUnpaidBelege {
+            isNotEmpty("belege")
+            belege {
+                gtProperty 'betrag', 'summeBezahlt'
+            }
+        }
     }
 
     

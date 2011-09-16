@@ -62,7 +62,7 @@
 
 <div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'preis', 'error')} required">
 	<label for="preis">
-		<g:message code="position.preis.label" default="Preis" />
+		<g:message code="position.preis.label" default="Einzelpreis" />
 		<span class="required-indicator">*</span>
 	</label>
 	<g:field type="number" name="preis" required="" value="${fieldValue(bean: positionInstance, field: 'preis')}"/>

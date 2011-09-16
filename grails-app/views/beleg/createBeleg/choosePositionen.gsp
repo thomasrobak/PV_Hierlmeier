@@ -3,11 +3,11 @@
 <html>
   <head>
     <meta name="layout" content="main">
-    <title>Positionen wählen</title>
+    <title>Positionen wählen (hardcoded)</title>
   </head>
   <body>
     <div id="show-kunde" class="content scaffold-show">
-      <h1>Neuen Beleg erstellen für Kunde:</h1>
+      <h1>Neuen Beleg erstellen für Kunde: (hardcoded)</h1>
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
       </g:if>
@@ -89,7 +89,7 @@
     </div>
   <g:form name="formBeleg" action="createBeleg">
     <div id="show-applicable-positionen" class="content fieldset">
-      <h1>Neuen Beleg erstellen mit folgenden Daten:</h1>
+      <h1>Neuen Beleg erstellen mit folgenden Daten: (hardcoded)</h1>
       
       <div class="fieldcontain ${hasErrors(bean: belegInstance, field: 'belegnummer', 'error')} required">
         <label for="belegnummer">
@@ -109,25 +109,24 @@
       
     </div>
     <div style="margin: 1em">
-      <table id="dt-position" class="display"
+      <table id="dt-position-interactive" class="display"
              datasource="${createLink(controller:'position', action:'dataTableJSON')}"
              filter="${message(code: 'filter.UPP')}"
              kundeId="${chosenKunde.id}">
         <thead>
           <tr>
+            <th class="dt-position-th-checkbox"><input type="checkbox" disabled="disabled" name="selected" value="all" /></th>
             <th class="dt-position-th-typ">Typ</th>
             <th class="dt-position-th-anmerkung">Anmerkung</th>
             <th class="dt-position-th-tier">Tier</th>
             <th class="dt-position-th-menge">Menge</th>
             <th class="dt-position-th-preis">Preis</th>
             <th class="dt-position-th-datum">Datum</th>
-            <th class="dt-position-th-checkbox">Selected</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
-    <%-- <tmpl:/shared/positionListInteractive positionen="${kundePositionenList}" /> --%>
     <div class="buttons">
       <span class="button">
         <g:submitButton name="submit" class="save" value="${message(code: 'default.beleg.create.label', default: 'Beleg Erstellen')}" />

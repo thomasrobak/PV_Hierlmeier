@@ -4,72 +4,49 @@
   <head>
     <meta name="layout" content="main"/>
     <title>Patientenverwaltung Hierlmeier</title>
-
-    <style type="text/css">
-    #action-list {
-      margin: 2em 5em 1.25em;
-    }
-
-    #action-list h1 {
-      margin-top: 0;
-    }
-
-    h2 {
-      margin-top: 1em;
-      margin-bottom: 0.3em;
-      font-size: 1em;
-    }
-    </style>
-
+    <script type="text/javascript">
+      var statistik_overview = '${createLink(controller:"statistik", action:"overviewJSON")}'
+    </script>
   </head>
   <body>
-    <div id="action-list">
-      <span style="display:table-cell">
-        <h2>Kunden</h2>
-        <ul>
-          <li class="controller"><g:link controller="kunde" action="list">Kunden ansehen</g:link></li>
-          <li class="controller"><g:link controller="kunde" action="create">Kunde hinzufügen</g:link></li>
-        </ul>
-        <h2>Tiere</h2>
-        <ul>
-          <li class="controller"><g:link controller="tier" action="list">Tiere ansehen</g:link></li>
-          <li class="controller"><g:link controller="tier" action="create">Tier hinzufügen</g:link></li>
-        </ul>
-        <h2>Medikamente/Leistungen</h2>
-        <ul>
-          <li class="controller"><g:link controller="positionstyp" action="list">Medikamente/Leistungen ansehen</g:link></li>
-          <li class="controller"><g:link controller="medikament" action="create">Medikament hinzufügen</g:link></li>
-          <li class="controller"><g:link controller="leistung" action="create">Leistung hinzufügen</g:link></li>
-        </ul>
-
-        <h2>Positionen</h2>
-        <ul>
-          <li class="controller"><g:link controller="position" action="list">Positionen ansehen</g:link></li>
-          <li class="controller"><g:link controller="position" action="create">Position erstellen</g:link></li>
-        </ul>
-      </span>
-      <span style="display:table-cell;padding-left:4em">
-        <h2>Belege</h2>
-        <ul>
-          <li class="controller"><g:link controller="beleg" action="list">Belege ansehen</g:link></li>
-          <li class="controller"><g:link controller="beleg" action="create">Beleg erstellen</g:link></li>
-          <li class="controller"><g:link controller="beleg" action="list">Beleg drucken</g:link></li>
-          <li class="controller">Mahnung erstellen</li>
-        </ul>
-        <h2>Zahlungen</h2>
-        <ul>
-          <li class="controller">Zahlungen ansehen</li>
-          <li class="controller"><g:link controller="zahlung" action="zahlungCreation">Zahlung erfassen</g:link></li>   
-        </ul>
-        <h2>Statistiken</h2>
-        <ul>
-          <li class="controller">Tagesbericht</li>
-          <li class="controller">Leistungen</li>
-          <li class="controller">Medikamente</li>
-          <li class="controller">Kunden</li>
-          <li class="controller">Offene Positionen</li>
-        </ul>
-      </span>
-    </div>
-  </body>
+  <g:if test="${flash.message}">
+    <div class="message" role="status">${flash.message}</div>
+  </g:if>
+  <h1><g:message code="overview.label" default="Übersicht" /></h1>
+  <ol class="property-list">
+    <li class="fieldcontain">
+      <span class="property-label">Kunden in db:</span>
+      <span id="kundecount" class="property-value"></span>
+    </li>
+    <li class="fieldcontain">
+      <span class="property-label">Belege in db:</span>
+      <span id="belegcount" class="property-value"></span>
+      <span class="property-label">davon unbeglichen:</span>
+      <span id="belegunbeglichen" class="property-value"></span>
+    </li>
+    <li class="fieldcontain">
+      <span class="property-label">Positionen in db:</span>
+      <span id="positioncount" class="property-value"></span>
+      <span class="property-label">davon nicht zugewiesen:</span>
+      <span id="positionunzugewiesen" class="property-value"></span>
+    </li>
+    <li class="fieldcontain">
+      <span class="property-label">Zahlungen in db:</span>
+      <span id="zahlungcount" class="property-value"></span>
+    </li>
+    <li class="fieldcontain">
+      <span class="property-label">Medikamente in db:</span>
+      <span id="medikamentcount" class="property-value"></span>
+    </li>
+    <li class="fieldcontain">
+      <span class="property-label">Leistungen in db:</span>
+      <span id="leistungcount" class="property-value"></span>
+    </li>
+    <li class="fieldcontain">
+      <span class="property-label">Tiere in db:</span>
+      <span id="tiercount" class="property-value"></span>
+    </li>
+  </ol>
+  <g:javascript src="statistiken.js"/>
+</body>
 </html>

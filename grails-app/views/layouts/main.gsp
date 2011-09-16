@@ -61,42 +61,45 @@
                 }
               ]
             },{
-              name: "Bearbeiten", 
+              name: "Erfassen", 
               items: [
                 { 
-                  name: "Belege erfassen", 
+                  name: "Beleg", 
                   attr: { title: "Erstelle neuen Beleg." },
                   selecton: function(){window.location.href='${createLink(controller:"beleg", action:"create")}'} 
                 },{ 
-                  name: "Belege drucken", 
-                  attr: { title: "Erstelle neuen Beleg." },
-                  selecton: function(){window.location.href='${createLink(controller:"beleg", action:"list")}'} 
-                },{ 
-                  name: "Kunden erfassen", 
+                  name: "Kunde", 
                   attr: { title: "Erstelle neuen Kunden." },
                   selecton: function(){window.location.href='${createLink(controller:"kunde", action:"create")}'} 
                 },{ 
-                  name: "Medikamente erfassen", 
+                  name: "Medikament", 
                   attr: { title: "Erstelle neues Medikament." },
                   selecton: function(){window.location.href='${createLink(controller:"medikament", action:"create")}'} 
                 },{ 
-                  name: "Leistungen erfassen", 
+                  name: "Leistung", 
                   attr: { title: "Erstelle neue Leistung." },
                   selecton: function(){window.location.href='${createLink(controller:"leistung", action:"create")}'} 
                 },{ 
-                  name: "Positionen erfassen", 
+                  name: "Position", 
                   attr: { title: "Erstelle neue Positione." },
                   selecton: function(){window.location.href='${createLink(controller:"position", action:"create")}'} 
                 },{ 
-                  name: "Tiere erfassen", 
+                  name: "Tier", 
                   attr: { title: "Erstelle neues Tier." },
                   selecton: function(){window.location.href='${createLink(controller:"tier", action:"create")}'} 
                 },{ 
-                  name: "Zahlungen erfassen", 
+                  name: "Zahlung", 
                   attr: { title: "Erstelle neue Zahlung." },
                   selecton: function(){window.location.href='${createLink(controller:"zahlung", action:"create")}'} 
                 }
               ]
+            },{
+              name: "Drucken",
+              items: [{ 
+                  name: "Belege drucken", 
+                  attr: { title: "Erstelle neuen Beleg." },
+                  selecton: function(){window.location.href='${createLink(controller:"beleg", action:"list")}'} 
+              }]              
             },{
               name: "Statistiken", 
               items: [

@@ -3,13 +3,13 @@ package hierlmeier
 class Beleg implements Serializable { //muss Serializable implementieren für Flows in Grails
     
     String belegnummer
-    //Boolean bezahlt //@todo das flag doch behalten?
     Date datum
     Kunde kunde
     BigDecimal brutto
     BigDecimal netto
     BigDecimal betrag
     BigDecimal summeBezahlt
+    //Boolean bezahlt //@todo das flag doch behalten?
         
     static hasMany = [positionen:Position, zahlungsteile:Zahlungsteil]
 
@@ -74,5 +74,17 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
     
     def String toString () {
         return "Beleg ${belegnummer}"
+    }
+    
+    def String toStringDetailed() {
+        return "{ID: " + this.id +
+               ", Belegnummer: " + this.belegnummer + 
+               ", Datum: " + this.datum +
+               ", Kunde: " + this.kunde + 
+               ", Brutto: " + this.brutto +
+               ", Netto: " + this.netto +
+               ", Betrag: " + this.betrag +
+               ", SummeBezahlt: " + this.summeBezahlt +
+               "}"
     }
 }

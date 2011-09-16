@@ -1,4 +1,4 @@
-package hierlmeier
+package hierlmeier //Maybe NetBeans shows an java.lang.Enum related error here (IDE Bug)
 
 import grails.converters.JSON
 import grails.converters.XML
@@ -13,6 +13,17 @@ class BelegController {
     static defaultAction = "index"
     
     PrintService printService
+    
+    enum Filter {  // possible filters for the dataTableJSON method, filter is set in the view and submitted by the ajax call
+        NOFILTER("filter.NOFILTER"),    //value is a message.properties code (no filter at all)
+        NPB("filter.NPB")               //value is a message.properties code (has not paid belege)
+
+        private final String value 
+        Filter(String value) { this.value = value }
+        String toString() { value }
+        String value() { value }
+        String getKey() { name() }
+    }
 
     def index = {
         redirect(action: "list", params: params)
@@ -22,32 +33,45 @@ class BelegController {
         println("**** $controllerName.$actionName START")
         println("** params: " + params)
         
-        def belege = Beleg.list(params)
-        def foundRecords = Beleg.count()
+        def results
+        def foundRecords
         
-        println("** foundRecords: " + foundRecords)
-        
-        def formattedResults = belege.collect {
-            [
-                belegnummer: it.belegnummer,
-                kunde: it.kunde.toString(),
-                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
-                dataUrl: g.createLink(action:'show', id:it.id)
-            ]
+        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Beleg.findAllByKunde(kunde) //@todo try with id only (not fetching the kunde object first)
+            }
+            else {
+                results = Beleg.list()
+            }
+        }
+        else if(params.filter == g.message(code: Filter.NPB.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Beleg.unbeglichene.findAllByKunde(kunde)
+            }
+            else {
+                results = Beleg.unbeglichene.list();
+            }
+        }
+        else {
+            println("** params.filter not set or invalid value, showing all for $controllerName")
+            flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
+            results = Beleg.list()
         }
         
-        def data = [
-            totalRecords: foundRecords,
-            results: formattedResults
-        ]
+        foundRecords = results.size();
+        println("** results Class: " + results.getClass().toString())
+        println("** foundRecords: " + foundRecords)
+        println("** db query results: " + results)
+
+        def data = [aoData: results]
         
-        println("** db query results: " + belege)
-        println("** JSON: " + data)
+        println("** data before JSON rendering: " + data)
+        
         println("**** $controllerName.$actionName END")
-        
         render data as JSON
     }
-    
     
     def dataTableJSONByBelege = {
         println("**** $controllerName.$actionName START")
@@ -160,19 +184,11 @@ class BelegController {
                 println("****** $controllerName.$actionName chooseKunde.onSubmit")
                 println("*** params: " + params)
                 flow.chosenKunde = Kunde.get(params.id)
+                def belegInstance = new Beleg()
+                belegInstance.properties = params
+                [belegInstance: belegInstance]
             }.to "choosePositionen"            
         }
-        /*
-        getListKundePositionen {
-            action {
-                def results = Position.findAllByKundeAndBelegIsNull(flow.chosenKunde)
-                flow.kundePositionenList = results
-                flow.positionenTotal = results.count()
-            }
-            on("success").to "choosePositionen"
-            //@todo on(Exception).to "handleError"   
-        }
-        */
         choosePositionen {
             on("submit") {
                 println("****** $controllerName.$actionName choosePositionen.onSubmit")
@@ -207,7 +223,7 @@ class BelegController {
                 def brutto = new BigDecimal(netto.multiply(new BigDecimal(g.message(code:'default.tax.rate'))))
                 // brutto needs rounding because the scale maybe to long after multiplication
                 brutto = brutto.setScale(g.message(code:'default.scale').toInteger(), RoundingMode.valueOf(g.message(code:'default.rounding.mode')))
-                def betrag = k.mwst ? new BigDecimal(brutto) : new BigDecimal(netto)
+                def betrag = k.mwst ? new BigDecimal(brutto) : new BigDecimal(netto) //@todo da passiert ein nachkomma blödsinn, beleg mit allen positionen für HuberFranz erstellen zum anschauen
                 def sbz = new BigDecimal("0.00")
                 
                 def b = new Beleg(kunde:k, belegnummer:bnr, datum:d, netto:netto, brutto:brutto, betrag:betrag, summeBezahlt:sbz)
@@ -237,7 +253,8 @@ class BelegController {
             }
             on("success") {
                 println("****** $controllerName.$actionName saveCreatedBeleg.action.onSuccess")
-                println("*** created beleg: " + flow.createdBeleg)
+                String tmp = flow.createdBeleg.toStringDetailed()
+                println("*** created beleg: " + tmp)
             }.to "displayCreatedBeleg"
             on("error") {
                 println("*!*!* Error during $controllerName.$actionName saveCreatedBeleg.action")

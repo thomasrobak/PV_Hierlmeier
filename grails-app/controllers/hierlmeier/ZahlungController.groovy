@@ -20,48 +20,36 @@ class ZahlungController {
 	[zahlungInstanceList: Zahlung.list(params), zahlungInstanceTotal: Zahlung.count()]
     }
     
-    def zahlungCreationFlow = {
-        fetchPossibleKunden {
-            action {
-                def offeneBelegeList = Beleg.unbeglichene.list()
-                println(offeneBelegeList.class.toString() + " offeneBelegeList: " + offeneBelegeList)
-
-                def kundenList = []
-                offeneBelegeList.each {
-                    if(!kundenList.contains(it.kunde)) {
-                        kundenList.add(it.kunde)
-                    }
-                }
-                println(kundenList.class.toString() + " kundenList: " + kundenList)
-
-                flow.applicableKundenList = kundenList
-                flow.applicableKundenListTotal = kundenList.size()
-                flow.offeneBelegeList = offeneBelegeList
-            }
-            on("success").to "determineKunde"
-            //@todo on(Exception).to "handleError"   
-        }
-        determineKunde {
+    def create = {
+        redirect(action:"createZahlung")
+    }
+    
+    def createZahlungFlow = { //flow names must be unique for whole application
+        chooseKunde {
             on("submit") {
+                println("****** $controllerName.$actionName chooseKunde.onSubmit")
+                println("*** params: " + params)
                 flow.chosenKunde = Kunde.get(params.id)
-                
-            }.to "getListKundeOffeneBelege"
-            on("return").to "determineKunde"
+                def zahlungInstance = new Zahlung()
+                zahlungInstance.properties = params
+                [zahlungInstance: zahlungInstance]
+            }.to "chooseZahlungDetails"
+            on("return").to "chooseKunde"
         }
-        getListKundeOffeneBelege {
-            action {
-                def results = Beleg.unbeglichene.findAllByKunde(flow.chosenKunde)
-                flow.kundeOffeneBelegeList = results
-                flow.kundeOffeneBelegeTotal = results.size()
-            }
-            on("success").to "inputZahlungData"
-            //@todo on(Exception).to "handleError"   
-        }
-        inputZahlungData {
+        chooseZahlungDetails {
             on("submit") {
                 def k =  flow.chosenKunde
                 def b = params.betrag
                 def d = params.datum
+                
+                def selectedIds = [] 
+                params.selected.each {
+                    selectedIds.add(it.toInteger())
+                }
+                println("*** selectedIds: " + selectedIds)
+                def results = Beleg.getAll(selectedIds)
+                
+                flow.chosenBelege = results.sort { x, y -> x.compareTo(y) }
                 
                 def z = new Zahlung(kunde:k, betrag:b, datum:d)
                                 
@@ -69,23 +57,24 @@ class ZahlungController {
                     z.errors.each {
                         println it
                     }
-                    //flash.message = b.errors.fieldError
+                    flash.message = "Error: check input"
                     return error()
                 }     
+                flow.zahlungInstance = z
+            }.to "validateDistribution"
+            on("error").to "chooseZahlungDetails"
+            on("return").to "chooseKunde"
+        }
+        validateDistribution {
+            on("submit") {
                 z.save(flush: true)
-                flow.createdZahlung = z
-                [zahlungsInstance:z]
             }.to "displayCreatedZahlung"
-            on("error").to "inputZahlungData"
-            on("return").to "determineKunde"
+            on("error").to "chooseZahlungDetails"
+            on("return").to "chooseZahlungDetails"
         }
         displayCreatedZahlung {
-            redirect(action:"show", id:flow.createdZahlung.id)
+            redirect(action:"show", id:flow.zahlungInstance.id)
         }
-    }
-
-    def create = {
-        redirect(action:"zahlungCreation")
     }
 
     def save = {

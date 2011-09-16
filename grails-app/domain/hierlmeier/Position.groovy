@@ -38,4 +38,18 @@ class Position implements Serializable { //muss Seriazable implementieren für F
     def String toString() {
         return "Pos ${typ} for ${kunde} on ${datum}"
     }
+    
+    def String toStringDetailed() {
+        return "{ID: " + this.id +
+               ", Typ: " + this.typ + 
+               ", Datum: " + this.datum +
+               ", Tier: " + this.tier +
+               ", Anmerkung: " + this.anmerkung + 
+               ", Beleg: " + this.beleg + 
+               ", Kunde: " + this.kunde + 
+               ", Menge: " + this.menge +
+               ", Preis: " + this.preis +
+               ", Betrag: " + this.betrag +
+               "}"
+    }
 }

@@ -1,6 +1,6 @@
 package hierlmeier
 
-class Zahlung {
+class Zahlung implements Serializable { //muss Seriazable implementieren für Flows in Grails
     
     Kunde kunde
     BigDecimal betrag

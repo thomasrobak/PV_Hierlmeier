@@ -61,7 +61,7 @@
           <h2>Zahlungen</h2>
           <ul>
             <li class="controller">Zahlungen ansehen</li>
-            <li class="controller"><g:link controller="zahlung" action="zahlungCreation">Zahlung erfassen</g:link></li>   
+            <li class="controller"><g:link controller="zahlung" action="createZahlung">Zahlung erfassen</g:link></li>   
           </ul>
           <h2>Statistiken</h2>
           <ul>

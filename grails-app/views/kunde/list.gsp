@@ -16,7 +16,8 @@
   <table id="dt-kunde" class="display" 
          datasource="${createLink(controller:'kunde', action:'dataTableJSON')}"
          filter="${message(code: 'filter.NOFILTER')}"
-         rowclickaction="${createLink(controller:'kunde', action:'show', id:'_x_')}">
+         rowclickaction="${createLink(controller:'kunde', action:'show', id:'_x_')}"
+         >
     <thead>
       <tr>
         <th class="dt-kunde-th-nachname">Nachname</th>

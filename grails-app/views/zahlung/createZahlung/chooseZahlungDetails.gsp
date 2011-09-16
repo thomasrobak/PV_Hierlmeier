@@ -3,12 +3,11 @@
 <html>
   <head>
     <meta name="layout" content="main">
-    <gui:resources components="dataTable"/>
-    <title>Zahlung erfassen</title>
+    <title>Zahlung erfassen (hardcoded)</title>
   </head>
   <body>
     <div id="show-zahlung" class="content scaffold-show">
-      <h1>Neue Zahlung erfassen für Kunde:</h1>
+      <h1>Neue Zahlung erfassen für Kunde: (hardcoded)</h1>
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
       </g:if>
@@ -88,43 +87,52 @@
       </ol>
 
     </div>
-  <g:form action="zahlungCreation">
+  <g:form name="formZahlung" action="createZahlung">
     <div id="show-applicable-belege" class="content fieldset">
-      <h1>Neue Zahlung erfassen mit folgenden Daten:</h1>
+      <h1>Neue Zahlung erfassen mit folgenden Daten: (hardcoded)</h1>
 
       <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'betrag', 'error')} required">
         <label for="betrag">
           <g:message code="zahlung.betrag.label" default="Betrag €" />
           <span class="required-indicator">*</span>
         </label>
-        <g:textField name="betrag" value="${fieldValue(bean: zahlungInstance, field: 'betrag')}" />
-        
-        <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'datum', 'error')} required">
-          <label for="datum">
-		<g:message code="zahlung.datum.label" default="Datum" />
-		<span class="required-indicator">*</span>
-          </label>
-          <g:textField id="datepicker" name="datum" />
-        </div>
+        <span>
+          <g:textField name="betrag" value="${fieldValue(bean: zahlungInstance, field: 'betrag')}" />
+        </span>
+        <span>      
+            übrig:
+          <span id="remaining">
+            (hier den restbetrag anzeigen?)
+          </span>
+        </span>
+
+      </div>
+      <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'datum', 'error')} required">
+        <label for="datum">
+          <g:message code="zahlung.datum.label" default="Datum" />
+          <span class="required-indicator">*</span>
+        </label>
+        <g:textField id="datepicker" name="datum" />
+      </div>
 
       </div>
     </div>
-    <div class="yui-skin-sam">
-      <gui:dataTable
-        controller="beleg" action="dataTableJSONByBelege"
-        columnDefs="[
-        [key:'belegnummer', label:'Belegnummer'],
-        [key:'datum', label:'Datum']
-        ]"
-        params="[belege:kundeOffeneBelegeList]"
-        sortedBy="datum"
-        rowClickNavigation='true'
-        rowsPerPage="12"
-        paginatorConfig="[
-        template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
-        pageReportTemplate:'{totalRecords} results'
-        ]"
-        />
+    <div style="margin: 1em">
+      <table id="dt-beleg" class="display"
+             datasource="${createLink(controller:'beleg', action:'dataTableJSON')}"
+             filter="${message(code: 'filter.NPB')}"
+             kundeId="${chosenKunde.id}">
+        <thead>
+          <tr>
+            <th class="dt-beleg-th-checkbox"><input type="checkbox" disabled="disabled" name="selected" value="all" /></th>
+            <th class="dt-beleg-th-belegnummer">Belegnummer</th>
+            <th class="dt-beleg-th-datum">Datum</th>
+            <th class="dt-beleg-th-betrag">Betrag</th>
+            <th class="dt-beleg-th-summebezahlt">davon Bezahlt</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
     <div class="buttons">
       <span class="button">
@@ -133,6 +141,7 @@
     </div>
   </g:form>
 <g:javascript src="datepicker.js"/>
+<g:javascript src="datatable.js"/>
 <g:javascript src="jquery.ui.datepicker-de.js"/>
 </body>
 </html>
