@@ -5,6 +5,9 @@
     <meta name="layout" content="main">
   <g:set var="entityName" value="${message(code: 'position.label', default: 'Position')}" />
   <title><g:message code="default.create.label" args="[entityName]" /></title>
+  <script type="text/javascript">
+      var selectbox_datasource = '${createLink(controller:"positionstyp", action:"preisJSON")}'
+  </script>
 </head>
 <body>
   <div id="create-position" class="content scaffold-create">
@@ -28,7 +31,6 @@
       </fieldset>
     </g:form>
   </div>
-  <g:javascript src="datepicker.js"/>
-  <g:javascript src="jquery.ui.datepicker-de.js"/>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

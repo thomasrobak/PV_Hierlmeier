@@ -8,10 +8,15 @@ class Zahlungsteil implements Serializable { //muss Seriazable implementieren fÃ
     Beleg beleg
 
     static constraints = {
-        //betrag(scale:2) /*@todo checken wo ma wie die nachkommastellen checkt 
-        //weil hier in den constraints, bedeutet das nur das abgeschnitte wird,
-        //und kein fehler geschmissen
+        betrag(shared: "currencynumber")
     }
+    
+    /*
+    def afterInsert() { // Executed after an object is persisted to the database
+            beleg.betrag = beleg.betrag.add(betrag)
+            beleg.save()  
+    } 
+    */
     
     def String toString() {
         return "Zahlteil ${betrag} of ${zahlung}"

@@ -15,6 +15,16 @@ class PositionstypController {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	[positionstypInstanceList: Positionstyp.list(params), positionstypInstanceTotal: Positionstyp.count()]
     }
+    
+    def preisJSON = {
+        def typ = Positionstyp.get(params.id)
+        /*
+        BigDecimal p = new BigDecimal(typ?.preis.toString())
+        if (p.scale() < 2)
+            p = p.setScale(g.message(code:'default.scale').toInteger())
+        */
+	render typ as JSON
+    }
 
     def create = {
         def positionstypInstance = new Positionstyp()

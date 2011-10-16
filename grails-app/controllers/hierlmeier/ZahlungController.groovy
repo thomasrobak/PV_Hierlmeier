@@ -39,41 +39,120 @@ class ZahlungController {
         chooseZahlungDetails {
             on("submit") {
                 def k =  flow.chosenKunde
-                def b = params.betrag
+                def b = new BigDecimal(params.betrag)
                 def d = params.datum
                 
-                def selectedIds = [] 
-                params.selected.each {
-                    selectedIds.add(it.toInteger())
-                }
-                println("*** selectedIds: " + selectedIds)
-                def results = Beleg.getAll(selectedIds)
-                
-                flow.chosenBelege = results.sort { x, y -> x.compareTo(y) }
+                if(b.scale() < 2)
+                    b = b.setScale(g.message(code:'default.scale').toInteger())
                 
                 def z = new Zahlung(kunde:k, betrag:b, datum:d)
+                flow.zahlungInstance = z
+                
+                if(!z.validate()) {
+                    z.errors.each {
+                        println it
+                    }
+                    return error()
+                }
+                
+                def results = Beleg.unbeglichene.findAllByKunde(flow.chosenKunde, [sort:"datum", order:"asc"])
+                println("*** query result class: " + results.class.toString())
+                println("*** query result (Beleg.unbeglichene.findAllByKunde): " + results)
+                
+                    
+                
+                BigDecimal splitfromthis = new BigDecimal(b.toString())
+                def listzt = []
+                
+                for(int i=0; splitfromthis > 0; i++) {
+                    def blg = results.get(i)
+                    BigDecimal offen = blg.betrag.subtract(blg.summeBezahlt)
+                    if(offen < splitfromthis) {
+                        def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(offen.toString()))
+                        listzt.add(zt)
+                        blg.summeBezahlt = blg.summeBezahlt.add(offen)
+                        splitfromthis = splitfromthis.subtract(offen)
+                    }
+                    else {
+                        def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(splitfromthis.toString()))
+                        listzt.add(zt)
+                        blg.summeBezahlt = blg.summeBezahlt.add(splitfromthis)
+                        splitfromthis = new BigDecimal("0.00")
+                    }
+                }
+                
+                z.zahlungsteile = listzt
+                
+                if (z.save()) {
+                    flash.message = message(code: 'default.created.message', args: [message(code: 'zahlung.label', default: 'Zahlung'), z.id])
+                }
+                else {
+                    return error()
+                }
+            }.to "displayCreatedZahlung"
+            on("payall") {
                                 
+                def results = Beleg.unbeglichene.findAllByKunde(flow.chosenKunde, [sort:"datum", order:"asc"])
+                println("*** query result class: " + results.class.toString())
+                println("*** query result (Beleg.unbeglichene.findAllByKunde): " + results)
+                
+                def k =  flow.chosenKunde
+                def b = new BigDecimal("0.00")
+                def d = params.datum
+                
+                results.each {
+                    b = b.add(it.betrag.subtract(it.summeBezahlt))
+                }
+                
+                def z = new Zahlung(kunde:k, betrag:b, datum:d)
+                
+                
                 if(!z.validate()) {
                     z.errors.each {
                         println it
                     }
                     flash.message = "Error: check input"
                     return error()
-                }     
+                }
+                
+                BigDecimal splitfromthis = new BigDecimal(b.toString())
+                def listzt = []
+                
+                for(int i=0; splitfromthis > 0; i++) {
+                    def blg = results.get(i)
+                    BigDecimal offen = blg.betrag.subtract(blg.summeBezahlt)
+                    if(offen < splitfromthis) {
+                        def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(offen.toString()))
+                        listzt.add(zt)
+                        blg.summeBezahlt = blg.summeBezahlt.add(offen)
+                        splitfromthis = splitfromthis.subtract(offen)
+                    }
+                    else {
+                        def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(splitfromthis.toString()))
+                        listzt.add(zt)
+                        blg.summeBezahlt = blg.summeBezahlt.add(splitfromthis)
+                        splitfromthis = new BigDecimal("0.00")
+                    }
+                }
+                
+                z.zahlungsteile = listzt
+                
+                if (z.save()) {
+                    flash.message = message(code: 'default.created.message', args: [message(code: 'zahlung.label', default: 'Zahlung'), z.id])
+                }
+                else {
+                    return error()
+                }
                 flow.zahlungInstance = z
-            }.to "validateDistribution"
-            on("error").to "chooseZahlungDetails"
+                
+            }.to "displayCreatedZahlung"
+            on("error") {
+                //flash.message = "ASDADASDASDADSASDASDASD"
+            }.to "chooseZahlungDetails"
             on("return").to "chooseKunde"
         }
-        validateDistribution {
-            on("submit") {
-                z.save(flush: true)
-            }.to "displayCreatedZahlung"
-            on("error").to "chooseZahlungDetails"
-            on("return").to "chooseZahlungDetails"
-        }
         displayCreatedZahlung {
-            redirect(action:"show", id:flow.zahlungInstance.id)
+            redirect(action:"show", id: flow.zahlungInstance.id)
         }
     }
 

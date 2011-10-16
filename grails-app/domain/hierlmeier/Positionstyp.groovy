@@ -7,6 +7,7 @@ class Positionstyp implements Serializable { //muss Seriazable implementieren f√
 
     static constraints = {
         bezeichnung(blank:false)
+        preis(shared: "currencynumber")
     }
     
 }

@@ -5,9 +5,9 @@
 <div class="fieldcontain ${hasErrors(bean: leistungInstance, field: 'bezeichnung', 'error')} ">
 	<label for="bezeichnung">
 		<g:message code="leistung.bezeichnung.label" default="Bezeichnung" />
-		
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="bezeichnung" value="${leistungInstance?.bezeichnung}"/>
+	<g:textField name="bezeichnung" required="" value="${leistungInstance?.bezeichnung}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: leistungInstance, field: 'preis', 'error')} required">

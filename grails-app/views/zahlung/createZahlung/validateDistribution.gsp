@@ -39,6 +39,6 @@
         <g:submitButton name="submit" class="save" value="${message(code: 'default.beleg.create.label', default: 'Beleg Erstellen')}" />
       </span>
     </div>
-<g:javascript src="datatable.js"/>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

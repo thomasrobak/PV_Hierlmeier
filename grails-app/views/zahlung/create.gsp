@@ -28,7 +28,5 @@
       </fieldset>
     </g:form>
   </div>
-<g:javascript src="datepicker.js"/>
-<g:javascript src="jquery.ui.datepicker-de.js"/>
 </body>
 </html>

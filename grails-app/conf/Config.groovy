@@ -26,6 +26,10 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       form: 'application/x-www-form-urlencoded',
                       multipartForm: 'multipart/form-data'
                     ]
+                    
+grails.gorm.default.constraints = {
+    currencynumber(validator: {if (it.scale() != 2) return "invalid.scale"})
+}
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000

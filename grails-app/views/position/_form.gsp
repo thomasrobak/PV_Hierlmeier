@@ -41,7 +41,7 @@
 		<g:message code="position.anmerkung.label" default="Anmerkung" />
 		
 	</label>
-	<g:textField name="anmerkung" value="${positionInstance?.anmerkung}"/>
+	<g:textField name="anmerkung" value="${fieldValue(bean: positionInstance, field: 'anmerkung')}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'datum', 'error')} required">
@@ -49,7 +49,7 @@
 		<g:message code="position.datum.label" default="Datum" />
 		<span class="required-indicator">*</span>
         </label>
-        <g:textField id="datepicker" name="datum" value="${positionInstance?.datum}" />
+        <g:textField id="datepicker" name="datum" value="${fieldValue(bean: positionInstance, field: 'datum')}" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'menge', 'error')} ">

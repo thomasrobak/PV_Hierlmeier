@@ -30,6 +30,6 @@
     <tbody></tbody>
   </table>
 </div>
-<g:javascript src="datatable.js"/>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

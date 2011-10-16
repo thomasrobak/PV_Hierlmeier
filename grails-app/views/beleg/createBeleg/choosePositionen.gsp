@@ -90,7 +90,13 @@
   <g:form name="formBeleg" action="createBeleg">
     <div id="show-applicable-positionen" class="content fieldset">
       <h1>Neuen Beleg erstellen mit folgenden Daten: (hardcoded)</h1>
-      
+      <g:hasErrors bean="${belegInstance}">
+      <ul class="errors" role="alert">
+        <g:eachError bean="${belegInstance}" var="error">
+          <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
+        </g:eachError>
+      </ul>
+      </g:hasErrors>
       <div class="fieldcontain ${hasErrors(bean: belegInstance, field: 'belegnummer', 'error')} required">
         <label for="belegnummer">
           <g:message code="beleg.belegnummer.label" default="Belegnummer" />
@@ -104,12 +110,12 @@
           <g:message code="beleg.datum.label" default="Datum" />
           <span class="required-indicator">*</span>
         </label>
-        <g:textField id="datepicker" name="datum" />
+        <g:textField id="datepicker" name="datum" value="${fieldValue(bean: belegInstance, field: 'datum')}"/>
       </div>
       
     </div>
     <div style="margin: 1em">
-      <table id="dt-position-interactive" class="display"
+      <table id="dt-position" class="display"
              datasource="${createLink(controller:'position', action:'dataTableJSON')}"
              filter="${message(code: 'filter.UPP')}"
              kundeId="${chosenKunde.id}">
@@ -120,7 +126,7 @@
             <th class="dt-position-th-anmerkung">Anmerkung</th>
             <th class="dt-position-th-tier">Tier</th>
             <th class="dt-position-th-menge">Menge</th>
-            <th class="dt-position-th-preis">Preis</th>
+            <th class="dt-position-th-preis">Preis (€)</th>
             <th class="dt-position-th-datum">Datum</th>
           </tr>
         </thead>
@@ -133,8 +139,6 @@
       </span>
     </div>
   </g:form>
-<g:javascript src="datepicker.js"/>
-<g:javascript src="datatable.js"/>
-<g:javascript src="jquery.ui.datepicker-de.js"/>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

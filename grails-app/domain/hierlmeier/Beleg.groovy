@@ -3,7 +3,7 @@ package hierlmeier
 class Beleg implements Serializable { //muss Serializable implementieren für Flows in Grails
     
     String belegnummer
-    Date datum
+    Date datum  = new Date()
     Kunde kunde
     BigDecimal brutto
     BigDecimal netto
@@ -17,6 +17,10 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
         belegnummer(blank:false, unique:true, nullable:false)
         zahlungsteile(nullable:true)
         positionen(nullable:true) //@todo eigentlich false aber bootstrap spinnt sonst für dev env
+        brutto(shared: "currencynumber")
+        netto(shared: "currencynumber")
+        betrag(shared: "currencynumber")
+        summeBezahlt(shared: "currencynumber")
     }
     
     static namedQueries = {

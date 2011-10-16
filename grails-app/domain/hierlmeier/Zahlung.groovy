@@ -4,13 +4,14 @@ class Zahlung implements Serializable { //muss Seriazable implementieren für Fl
     
     Kunde kunde
     BigDecimal betrag
-    Date datum
+    Date datum = new Date()
     
     static hasMany = [zahlungsteile:Zahlungsteil]
     
 
     static constraints = {
         zahlungsteile(nullable:true)
+        betrag(shared: "currencynumber")
     }
     
     def String toString() {

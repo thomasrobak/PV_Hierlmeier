@@ -64,8 +64,16 @@ class BelegController {
         println("** results Class: " + results.getClass().toString())
         println("** foundRecords: " + foundRecords)
         println("** db query results: " + results)
+        
+        BigDecimal opensum = new BigDecimal("0.00") 
+        BigDecimal paidsum = new BigDecimal("0.00")
+        
+        results.each {
+            opensum = opensum.add(it.betrag)
+            paidsum = paidsum.add(it.summeBezahlt)
+        }
 
-        def data = [aoData: results]
+        def data = [remaining: opensum.subtract(paidsum), aoData: results]
         
         println("** data before JSON rendering: " + data)
         
@@ -184,9 +192,7 @@ class BelegController {
                 println("****** $controllerName.$actionName chooseKunde.onSubmit")
                 println("*** params: " + params)
                 flow.chosenKunde = Kunde.get(params.id)
-                def belegInstance = new Beleg()
-                belegInstance.properties = params
-                [belegInstance: belegInstance]
+                flow.belegInstance = new Beleg(datum: new Date(), kunde: flow.chosenKunde)
             }.to "choosePositionen"            
         }
         choosePositionen {
@@ -199,11 +205,10 @@ class BelegController {
                 }
                 println("*** selectedIds: " + selectedIds)
                 def results = Position.getAll(selectedIds)
-                flow.kundePositionenList = results
+                flow.chosenPositionList = results
             }.to "saveCreatedBeleg"
             on("error") {
                 println("*!*!* Error during $controllerName.$actionName choosePositionen.onSubmit")
-                flash.message = "irgendein fehler während createBelegFlow.choosePositionen"
             }.to "choosePositionen"
             on("return").to "chooseKunde"
         }
@@ -211,58 +216,56 @@ class BelegController {
             action {
                 println("****** $controllerName.$actionName saveCreatedBeleg.action")
                 println("*** params: " + params)
-                def k =  flow.chosenKunde
-                def p = flow.kundePositionenList
+                
+                def p = flow.chosenPositionList
                 def bnr = params.belegnummer
                 def d = params.datum
-                //@todo berechnung checken da passt was net mit den nachkommastellen, siehe Beleg.print() console output
-                def netto = new BigDecimal("0.00")
+                flow.belegInstance.properties = this.params
+
+                def netto = new BigDecimal("0.00").setScale(g.message(code:'default.scale').toInteger())
                 p.each {
                     netto = netto.add(it.betrag)   
                 }
                 def brutto = new BigDecimal(netto.multiply(new BigDecimal(g.message(code:'default.tax.rate'))))
                 // brutto needs rounding because the scale maybe to long after multiplication
                 brutto = brutto.setScale(g.message(code:'default.scale').toInteger(), RoundingMode.valueOf(g.message(code:'default.rounding.mode')))
-                def betrag = k.mwst ? new BigDecimal(brutto) : new BigDecimal(netto) //@todo da passiert ein nachkomma blödsinn, beleg mit allen positionen für HuberFranz erstellen zum anschauen
+                def betrag = flow.chosenKunde.mwst ? new BigDecimal(brutto.toString()) : new BigDecimal(netto.toString())
                 def sbz = new BigDecimal("0.00")
                 
-                def b = new Beleg(kunde:k, belegnummer:bnr, datum:d, netto:netto, brutto:brutto, betrag:betrag, summeBezahlt:sbz)
+                flow.belegInstance.netto = netto
+                flow.belegInstance.brutto = brutto
+                flow.belegInstance.betrag = betrag
+                flow.belegInstance.summeBezahlt = sbz
                 
-                p.each {
-                    it.beleg = b    
-                }
-                
-                /*
-                if(!b.validate()) {
-                    b.errors.each {
+                if(!flow.belegInstance.validate()) {
+                    flow.belegInstance.errors.each {
                         println it
-                        
                     }
-                    //@todo flash.message = b.errors.fieldError
                     return error()
                 }
-                */
-                if (b.save()) {
-                    flash.message = message(code: 'default.created.message', args: [message(code: 'beleg.label', default: 'Beleg'), b.id])
+                
+                p.each {
+                    it.beleg = flow.belegInstance
+                }
+                                
+                if (flow.belegInstance.save()) {
+                    flash.message = message(code: 'default.created.message', args: [message(code: 'beleg.label', default: 'Beleg'), flow.belegInstance.id])
                 }
                 else {
                     return error()
                 }
-                flow.createdBeleg = b //@todo check if needed weil siehe drunter
-                [belegInstance:b]
             }
             on("success") {
                 println("****** $controllerName.$actionName saveCreatedBeleg.action.onSuccess")
-                String tmp = flow.createdBeleg.toStringDetailed()
+                String tmp = flow.belegInstance.toStringDetailed()
                 println("*** created beleg: " + tmp)
             }.to "displayCreatedBeleg"
             on("error") {
                 println("*!*!* Error during $controllerName.$actionName saveCreatedBeleg.action")
-                flash.message = "irgendein fehler während createBelegFlow.saveCreatedBeleg"
             }.to "choosePositionen"
         }
         displayCreatedBeleg {
-            redirect(action:"show", belegInstance:flow.createdBeleg)
+            redirect(action:"show", id: flow.createdBeleg.id)
         }
     }
 

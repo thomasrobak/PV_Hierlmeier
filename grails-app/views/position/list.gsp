@@ -18,7 +18,7 @@
   <span>Bis:</span>
   <span><input type="text" id="to-date"/></span>
 </div>
-<table id="dt-position-list" class="display" 
+<table id="dt-position" class="display" 
        datasource="${createLink(controller:'position', action:'dataTableJSON')}"
        filter="${message(code: 'filter.NOFILTER')}"
        rowclickaction="${createLink(controller:'position', action:'show', id:'_x_')}"
@@ -29,14 +29,13 @@
       <th class="dt-position-th-anmerkung">Anmerkung</th>
       <th class="dt-position-th-tier">Tier</th>
       <th class="dt-position-th-menge">Menge</th>
-      <th class="dt-position-th-preis">Preis</th>
+      <th class="dt-position-th-preis">Preis (€)</th>
       <th id="dt-datum-column" class="dt-position-th-datum">Datum</th>
       <th class="dt-position-th-beleg">Beleg</th>
     </tr>
   </thead>
   <tbody></tbody>
 </table>
-<g:javascript src="datepicker.js"/>
-<g:javascript src="datatable.js"/>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

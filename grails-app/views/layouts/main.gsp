@@ -20,7 +20,6 @@
     <g:javascript src="jquery-ui-1.8.16.custom.min.js"/>
     <g:javascript src="jquery.dataTables.js"/>
     <g:javascript src="jquery.menubar.js"/>
-    <g:javascript src="application.js"/>
     <script type="text/javascript">
       var app_locale = '${message(code: "application.language")}'
       var app_base_dir = '${createLink(uri:"/")}'
@@ -96,7 +95,7 @@
             },{
               name: "Drucken",
               items: [{ 
-                  name: "Belege drucken", 
+                  name: "Beleg", 
                   attr: { title: "Erstelle neuen Beleg." },
                   selecton: function(){window.location.href='${createLink(controller:"beleg", action:"list")}'} 
               }]              

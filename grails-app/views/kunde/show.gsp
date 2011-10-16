@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta name="layout" content="main">
-    <gui:resources components="dataTable, accordion"/>
     <g:set var="entityName" value="${message(code: 'kunde.label', default: 'Kunde')}" />
     <title><g:message code="default.show.label" args="[entityName]" /></title>
   </head>
@@ -14,11 +13,7 @@
   </g:if>
   <div id="show-kunde" class="content scaffold-show">
     <h1><g:message code="default.show.label" args="[entityName]" /></h1>
-    <div class="yui-skin-sam">
-        <gui:accordion multiple="true">
-
-        <gui:accordionElement title="${message(code: 'kunde.details', default: 'Hardcoded Stammdaten Label')}" 
-                              selected="true">
+    
           <ol class="property-list kunde">
 
             <g:if test="${kundeInstance?.nachname}">
@@ -93,56 +88,51 @@
               </li>
             </g:if>
           </ol>
-        </gui:accordionElement>
-
-        <gui:accordionElement title="${message(code: 'kunde.positionen', default: 'Positionen Hardcoded Label')}">
+        
+          <h1><g:message code="default.show.label" args="[entityName]" /></h1>
           <g:if test="${kundeInstance?.positionen}">
-            <div id="list-positionen">
-              <gui:dataTable
-                controller="position" action="dataTableJSONByKunde"
-                columnDefs="[
-                [key:'datum', label:'Datum'],
-                [key:'typ', label:'Typ'],
-                [key:'tier', label:'Tier'],
-                [key:'menge', label:'Menge'],
-                [key:'beleg', label:'Beleg']
-                ]"
-                params="[kundeId:kundeInstance.id]"
-                sortedBy="datum"
-                rowsPerPage="12"
-                paginatorConfig="[
-                template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
-                pageReportTemplate:'{totalRecords} results'
-                ]"
-                />
+            <table id="dt-position" class="display"
+                   datasource="${createLink(controller:'position', action:'dataTableJSON')}"
+                   filter="${message(code: 'filter.NOFILTER')}"
+                   kundeId="${kundeInstance.id}"
+                   rowclickaction="${createLink(controller:'position', action:'show', id:'_x_')}"
+                   >
+              <thead>
+                <tr>
+                  <th class="dt-position-th-typ">Typ</th>
+                  <th class="dt-position-th-anmerkung">Anmerkung</th>
+                  <th class="dt-position-th-tier">Tier</th>
+                  <th class="dt-position-th-menge">Menge</th>
+                  <th class="dt-position-th-preis">Preis (€)</th>
+                  <th class="dt-position-th-datum">Datum</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
             </div>
           </g:if>
           <g:else>Kunde ${kundeInstance?.nachname} ${kundeInstance?.vorname} hat keine Positionen!</g:else>
-        </gui:accordionElement>
-
-        <gui:accordionElement title="${message(code: 'kunde.belege', default: 'Belege Hardcoded Label')}">
+        
           <g:if test="${kundeInstance?.belege}">
-            <div id="list-belege">
-              <gui:dataTable
-                controller="beleg" action="dataTableJSONByKunde"
-                columnDefs="[
-                [key:'datum', label:'Datum'],
-                [key:'belegnummer', label:'Belegnummer']
-                ]"
-                params="[kundeId:kundeInstance.id]"
-                sortedBy="datum"
-                rowsPerPage="12"
-                paginatorConfig="[
-                template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
-                pageReportTemplate:'{totalRecords} results'
-                ]"
-                />
-            </div>
+            <table id="dt-beleg" class="display"
+                   datasource="${createLink(controller:'beleg', action:'dataTableJSON')}"
+                   filter="${message(code: 'filter.NOFILTER')}"
+                   kundeId="${kundeInstance.id}"
+                   rowclickaction="${createLink(controller:'beleg', action:'show', id:'_x_')}"
+                   >
+              <thead>
+                <tr>
+                  <th class="dt-beleg-th-belegnummer">Belegnummer</th>
+                  <th class="dt-beleg-th-datum">Datum</th>
+                  <th class="dt-beleg-th-betrag">Betrag</th>
+                  <th class="dt-beleg-th-summebezahlt">davon Bezahlt</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </g:if>
           <g:else>Kunde ${kundeInstance?.nachname} ${kundeInstance?.vorname} hat keine Belege!</g:else>
-        </gui:accordionElement>
-
-        <gui:accordionElement title="${message(code: 'kunde.zahlungen', default: 'Zahlungen Hardcoded Label')}">
+        
           <g:if test="${kundeInstance?.zahlungen}">
             <div id="list-zahlungen">
               <g:each in="${kundeInstance.zahlungen}" var="z">
@@ -151,10 +141,6 @@
             </div>
           </g:if>
           <g:else>Kunde ${kundeInstance?.nachname} ${kundeInstance?.vorname} hat keine Zahlungen!</g:else>
-        </gui:accordionElement>
-
-      </gui:accordion>
-    </div>
 
     <g:form>
       <fieldset class="buttons">
@@ -164,5 +150,6 @@
       </fieldset>
     </g:form>
   </div>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

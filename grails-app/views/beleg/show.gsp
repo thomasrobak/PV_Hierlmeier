@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta name="layout" content="main">
-  <gui:resources components="dataTable"/>
   <g:set var="entityName" value="${message(code: 'beleg.label', default: 'Beleg')}" />
   <title><g:message code="default.show.label" args="[entityName]" /></title>
 </head>
@@ -14,7 +13,7 @@
     <g:if test="${flash.message}">
       <div class="message" role="status">${flash.message}</div>
     </g:if>
-      <ol class="property-list beleg">
+    <ol class="property-list beleg">
 
       <g:if test="${belegInstance?.belegnummer}">
         <li class="fieldcontain">
@@ -34,33 +33,26 @@
         </li>
       </g:if>
 
-      <g:if test="${belegInstance?.positionen}">
-        <div id="list-positionen" class="yui-skin-sam">
-          <gui:dataTable
-            controller="position" action="dataTableJSONByBeleg"
-            columnDefs="[
-            [key:'datum', label:'Datum'],
-            [key:'typ', label:'Typ'],
-            [key:'tier', label:'Tier'],
-            [key:'menge', label:'Menge'],
-            [key:'beleg', label:'Beleg']
-            ]"
-            params="[belegId:belegInstance.id]"
-            sortedBy="datum"
-            rowsPerPage="12"
-            paginatorConfig="[
-            template:'{PreviousPageLink} {PageLinks} {NextPageLink} {CurrentPageReport}',
-            pageReportTemplate:'{totalRecords} results'
-            ]"
-            />
-        </div>
-      </g:if>
-      <g:else>
-        <li class="fieldcontain">
-          Beleg mit der Nummer ${belegInstance?.belegnummer} hat keine Positionen!
-        </li>
-      </g:else>
-
+      <div style="margin: 1em">
+        <table id="dt-position" class="display"
+               datasource="${createLink(controller:'position', action:'dataTableJSON')}"
+               filter="${message(code: 'filter.NOFILTER')}"
+               belegId="${belegInstance.id}"
+               rowclickaction="${createLink(controller:'position', action:'show', id:'_x_')}"
+               >
+          <thead>
+            <tr>
+              <th class="dt-position-th-typ">Typ</th>
+              <th class="dt-position-th-anmerkung">Anmerkung</th>
+              <th class="dt-position-th-tier">Tier</th>
+              <th class="dt-position-th-menge">Menge</th>
+              <th class="dt-position-th-preis">Preis (€)</th>
+              <th class="dt-position-th-datum">Datum</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </ol>
     <g:form>
       <fieldset class="buttons">
@@ -71,5 +63,6 @@
       </fieldset>
     </g:form>
   </div>
+  <g:javascript src="pvhm.js"/>
 </body>
 </html>

@@ -11,6 +11,7 @@
       <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
       </g:if>
+      
       <ol class="property-list kunde">
 
         <g:if test="${chosenKunde?.nachname}">
@@ -90,19 +91,25 @@
   <g:form name="formZahlung" action="createZahlung">
     <div id="show-applicable-belege" class="content fieldset">
       <h1>Neue Zahlung erfassen mit folgenden Daten: (hardcoded)</h1>
-
+      <g:hasErrors bean="${zahlungInstance}">
+      <ul class="errors" role="alert">
+        <g:eachError bean="${zahlungInstance}" var="error">
+          <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
+        </g:eachError>
+      </ul>
+      </g:hasErrors>
       <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'betrag', 'error')} required">
         <label for="betrag">
-          <g:message code="zahlung.betrag.label" default="Betrag €" />
+          <g:message code="zahlung.betrag.label" default="Betrag (€)" />
           <span class="required-indicator">*</span>
         </label>
         <span>
           <g:textField name="betrag" value="${fieldValue(bean: zahlungInstance, field: 'betrag')}" />
         </span>
         <span>      
-            übrig:
+          insgesamt zu Zahlen:
           <span id="remaining">
-            (hier den restbetrag anzeigen?)
+            Restbetrag missing!
           </span>
         </span>
 
@@ -112,7 +119,7 @@
           <g:message code="zahlung.datum.label" default="Datum" />
           <span class="required-indicator">*</span>
         </label>
-        <g:textField id="datepicker" name="datum" />
+        <g:textField id="datepicker" name="datum" value="${fieldValue(bean: zahlungInstance, field: 'datum')}"/>
       </div>
 
       </div>
@@ -124,7 +131,6 @@
              kundeId="${chosenKunde.id}">
         <thead>
           <tr>
-            <th class="dt-beleg-th-checkbox"><input type="checkbox" disabled="disabled" name="selected" value="all" /></th>
             <th class="dt-beleg-th-belegnummer">Belegnummer</th>
             <th class="dt-beleg-th-datum">Datum</th>
             <th class="dt-beleg-th-betrag">Betrag</th>
@@ -136,12 +142,13 @@
     </div>
     <div class="buttons">
       <span class="button">
-        <g:submitButton name="submit" class="save" value="${message(code: 'default.zahlung.create.label', default: 'Zahlung Erfassen')}" />
+        <g:submitButton name="submit" class="save" value="${message(code: 'default.zahlung.create.label', default: 'Zahlung erfassen')}" />
+      </span>
+      <span class="button" style="right: 0">
+        <g:submitButton name="payall" class="save" value="${message(code: 'zahlung.pay.all.label', default: 'ALLE OFFENEN BEZAHLEN')}" />
       </span>
     </div>
   </g:form>
-<g:javascript src="datepicker.js"/>
-<g:javascript src="datatable.js"/>
-<g:javascript src="jquery.ui.datepicker-de.js"/>
+<g:javascript src="pvhm.js"/>
 </body>
 </html>

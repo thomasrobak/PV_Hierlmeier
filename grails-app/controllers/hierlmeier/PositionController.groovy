@@ -34,6 +34,10 @@ class PositionController {
                 def kunde = Kunde.get(params.kundeId)
                 results = Position.findAllByKunde(kunde)
             }
+            if(params.belegId) {
+                def beleg = Beleg.get(params.belegId)
+                results = Position.findAllByBeleg(beleg)
+            }
             else {
                 results = Position.list()
             }
