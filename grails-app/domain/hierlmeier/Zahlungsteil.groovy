@@ -6,6 +6,8 @@ class Zahlungsteil implements Serializable { //muss Seriazable implementieren f√
     
     Zahlung zahlung
     Beleg beleg
+    Date dateCreated  //automatically maintained by GORM
+    Date lastUpdated  //automatically maintained by GORM
 
     static constraints = {
         betrag(shared: "currencynumber")

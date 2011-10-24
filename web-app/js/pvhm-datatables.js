@@ -14,100 +14,30 @@ $.fn.dataTableExt.oSort['numeric-comma-desc'] = function(a,b) {
     return ((x < y) ?  1 : ((x > y) ? -1 : 0));
 };
 
-dt_formatDate = function(parsethis) {
-    if(parsethis == null)
-        return null;
-    if(app_locale == 'de')
-        return $.datepicker.formatDate($.datepicker.regional['de'].dateFormat, new Date(Date.parse(parsethis)));
-    else
-        return $.datepicker.formatDate($.datepicker.regional[''].dateFormat, new Date(Date.parse(parsethis)));
-}
+$.fn.dataTableExt.oApi.fnGetFilteredNodes = function ( oSettings )
+{
+    var anRows = [];
+    for ( var i=0, iLen=oSettings.aiDisplay.length ; i<iLen ; i++ )
+    {
+        var nRow = oSettings.aoData[ oSettings.aiDisplay[i] ].nTr;
+        anRows.push( nRow );
+    }
+    return anRows;
+};
 
 $(function() {
-
- /**************
- * Datepicker Config and init
- *************/
-
-    $.datepicker.regional['de'] = {
-        closeText: 'schließen',
-        prevText: '&#x3c;zurück',
-        nextText: 'Vor&#x3e;',
-        currentText: 'heute',
-        monthNames: ['Januar','Februar','März','April','Mai','Juni',
-        'Juli','August','September','Oktober','November','Dezember'],
-        monthNamesShort: ['Jan','Feb','Mär','Apr','Mai','Jun',
-        'Jul','Aug','Sep','Okt','Nov','Dez'],
-        dayNames: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
-        dayNamesShort: ['So','Mo','Di','Mi','Do','Fr','Sa'],
-        dayNamesMin: ['So','Mo','Di','Mi','Do','Fr','Sa'],
-        weekHeader: 'Wo',
-        dateFormat: 'dd.mm.yy',
-        firstDay: 1,
-        isRTL: false,
-        showMonthAfterYear: false,
-        yearSuffix: ''
-    };
-   
-    var datepicker_locale
-
-    switch(app_locale) {
-        case 'de':
-            datepicker_locale = $.datepicker.regional['de'];
-            break;
-        case 'en':
-            datepicker_locale = $.datepicker.regional[''];
-            break;
-        default:
-            datepicker_locale = $.datepicker.regional['de'];
-            break;
-    }
     
-    $.datepicker.setDefaults({
-        showOn: 'both'
-    });
-    $.datepicker.setDefaults(datepicker_locale);
-    
-    if ($("#datepicker").length) {
-        $("#datepicker").datepicker();
-    }
-    
- /**************
- * misc configs and inits
- *************/
-    if ($("#typ").length) {
-        if ($("#preis").val() == "" || $("#preis").val() == null) {
-            $("#typ").change(function() {
-                $.ajax({
-                    "dataType": 'json', 
-                    "type": "GET", 
-                    "url": selectbox_datasource,
-                    "data": {
-                        id: $("#typ").val()
-                        },
-                    "success": function(json) {
-                        $("#preis").val(json.preis)
-                    }
-                });
-            });
-        }
-    }
-    
-
  /********************
  * datatable config vars
  **********/
-    var dt_locale_file = app_base_dir + "txt/datatable_?.txt".replace("?", app_locale);
     var table_datasource
     var table_row_click_action
     var table_filter
     var table_request_params
 
     
-    /**********************************
- *
- *  DataTable Konfiguration für Kunden Table
- *                                
+ /**********************************
+ * *  DataTable Konfiguration für Kunden Table
  *********************************/
     
     if ($("#dt-kunde").length) {
@@ -198,9 +128,7 @@ $(function() {
     
     
     /**********************************
- *
- *  DataTable Konfiguration für Positionen Table
- *                                
+ * *  DataTable Konfiguration für Positionen Table
  *********************************/
     if ($("#dt-position").length) {
         table_datasource = $("#dt-position").attr("datasource");
@@ -256,7 +184,6 @@ $(function() {
                 "aTargets": ["dt-position-th-id"]
             },
             {   /* position.checkbox */
-                "mDataProp": "checkbox",
                 "sWidth": "20px",
                 "bSearchable": false,
                 "sSortDataType": "dom-checkbox",
@@ -283,11 +210,25 @@ $(function() {
                 "sWidth": "30px", 
                 "aTargets": ["dt-position-th-menge"]
             },
-            { /* position.preis */
+            { /* position.preis (einzelpreis) */
                 "mDataProp": "preis", 
                 "bSortable": false,
                 "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['preis'])
+                },
                 "aTargets": ["dt-position-th-preis"]
+            },
+            { /* position.betrag (menge*einzelpreis) */
+                "mDataProp": "betrag", 
+                "bSortable": false,
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
+                },
+                "aTargets": ["dt-position-th-betrag"]
             },
             { /* position.tier */
                 "mDataProp": "tier.bezeichnung", 
@@ -301,7 +242,7 @@ $(function() {
                 "bUseRendered": false,
                 "sWidth": "40px",
                 "fnRender": function(oObj){
-                    return dt_formatDate(oObj.aData['datum'])
+                    return pvhm_formatDate(oObj.aData['datum'])
                 },
                 "aTargets": ["dt-position-th-datum"]
             },
@@ -326,12 +267,18 @@ $(function() {
         
         if ($("#formBeleg").length) {
             $('#formBeleg').submit( function() {
-                $("input", table_position_interactive.fnGetNodes()).each(function(){
+                $("input", table_position.fnGetNodes()).each(function(){
                     if($(this).is(':checked')) {
                         $(this).appendTo('#formBeleg');
                     }
                 });
             });
+        }
+        
+        if ($("#checkall").length) {
+            $('#checkall').click( function() {
+                $('input', table_position.fnGetFilteredNodes()).attr('checked',this.checked);
+            } );
         }
         
         if(table_row_click_action != null) {   
@@ -388,10 +335,8 @@ $(function() {
     }
     
             
-    /**********************************
- *
- *  DataTable Konfiguration für Belege Table
- *                                
+ /**********************************
+ * *  DataTable Konfiguration für Belege Table
  *********************************/
     
     if ($("#dt-beleg").length) {
@@ -438,7 +383,7 @@ $(function() {
             "fnInitComplete": function(oSettings, json) {
                 if ($("#remaining").length) {
                     if(json.remaining) {
-                        $("#remaining").html(json.remaining)
+                        $("#remaining").html(pvhm_formatNumber(json.remaining))
                     }
                 }
             },
@@ -449,10 +394,12 @@ $(function() {
                 "aTargets": ["dt-beleg-th-id"]
             },
             {   /* beleg.checkbox */
-                "mDataProp": "checkbox",
                 "sWidth": "20px",
                 "bSearchable": false,
                 "sSortDataType": "dom-checkbox",
+                "fnRender": function(oObj){
+                    return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
+                },
                 "aTargets": ["dt-beleg-th-checkbox"]
             },
             {   /* beleg.belegnummer */
@@ -463,12 +410,29 @@ $(function() {
             { /* beleg.betrag */
                 "mDataProp": "betrag",
                 "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
+                },
                 "aTargets": ["dt-beleg-th-betrag"]
             },
-            { /* beleg.summeBezahlt */
-                "mDataProp": "summeBezahlt", 
-                "sWidth": "30px", 
-                "aTargets": ["dt-beleg-th-summebezahlt"]
+            { /* beleg.bezahlt */
+                "mDataProp": "bezahlt", 
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['bezahlt'])
+                },
+                "aTargets": ["dt-beleg-th-bezahlt"]
+            },
+            { /* beleg.offen (derived; not in model) */
+                "sWidth": "30px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    var blgzbzln = parseFloat(oObj.aData['betrag']).toFixed(2) - parseFloat(oObj.aData['bezahlt']).toFixed(2)
+                    return pvhm_formatNumber(blgzbzln.toString())
+                },
+                "aTargets": ["dt-beleg-th-offen"]
             },
             { /* beleg.datum */
                 "mDataProp": "datum", 
@@ -477,13 +441,16 @@ $(function() {
                 "bUseRendered": false,
                 "sWidth": "40px", 
                 "fnRender": function(oObj){
-                    return dt_formatDate(oObj.aData['datum'])
+                    return pvhm_formatDate(oObj.aData['datum'])
                 },
                 "aTargets": ["dt-beleg-th-datum"]
             },
             { /* beleg.kunde */
-                "mDataProp": "kunde", 
-                "sWidth": "60px", 
+                "sWidth": "60px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return oObj.aData['kunde']['nachname'] + " " + oObj.aData['kunde']['vorname']
+                },
                 "aTargets": ["dt-beleg-th-kunde"]
             }
             ]
@@ -509,6 +476,269 @@ $(function() {
             });
         }
     }
+    
+    
+/**********************************
+ *  DataTable Konfiguration für Zahlung Table
+ *********************************/
+    
+    if ($("#dt-zahlung").length) {
+        table_datasource = $("#dt-zahlung").attr("datasource");
+        table_row_click_action = $("#dt-zahlung").attr("rowclickaction");
+        table_filter = $("#dt-zahlung").attr("filter");
+        table_request_params = []
+        table_request_params.push({
+            "name": "filter", 
+            "value": table_filter
+        }); 
+        if($("#dt-zahlung").attr("kundeId")) {
+            table_request_params.push({
+                "name": "kundeId", 
+                "value": $("#dt-zahlung").attr("kundeId")
+            });
+        }
+
+        var table_zahlung = $("#dt-zahlung").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "sAjaxSource": table_datasource,
+            "sAjaxDataProp": "aoData",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+                table_request_params.forEach(function(value){
+                    aoData.push(value)
+                });
+                $.ajax( {
+                    "dataType": 'json', 
+                    "type": "POST", 
+                    "url": sSource, 
+                    "data": aoData, 
+                    "success": fnCallback
+                } );
+            },
+            "fnInitComplete": function(oSettings, json) {
+                if ($("#paid").length) {
+                    if(json.paid) {
+                        $("#paid").html(pvhm_formatNumber(json.paid))
+                    }
+                }
+            },
+            "aoColumnDefs": [
+            {   /* zahlung.id */
+                "mDataProp": "id",
+                "bSearchable": false,
+                "aTargets": ["dt-zahlung-th-id"]
+            },
+            {   /* zahlung.checkbox */
+                "sWidth": "20px",
+                "bSearchable": false,
+                "sSortDataType": "dom-checkbox",
+                "fnRender": function(oObj){
+                    return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
+                },
+                "aTargets": ["dt-zahlung-th-checkbox"]
+            },
+            { /* zahlung.betrag */
+                "mDataProp": "betrag",
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
+                },
+                "aTargets": ["dt-zahlung-th-betrag"]
+            },
+            { /* zahlung.datum */
+                "mDataProp": "datum", 
+                "sType": "date",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px", 
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['datum'])
+                },
+                "aTargets": ["dt-zahlung-th-datum"]
+            },
+            { /* zahlung.kunde */
+                "sWidth": "60px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return oObj.aData['kunde']['nachname'] + " " + oObj.aData['kunde']['vorname']
+                },
+                "aTargets": ["dt-zahlung-th-kunde"]
+            }
+            ]
+        });
+       
+        if(table_row_click_action != null) {   
+            $("#dt-zahlung tbody tr").live("click",function(){
+                var row_obj = table_zahlung.fnGetData(this);
+                var link = table_row_click_action.replace("_x_", row_obj.id);
+                window.location.href = link;
+            });
+        }
+    }
+    
+    
+ /**********************************
+ *  DataTable Konfigurationen für Statistik "Erbrachte Leistungen/Medikamente"
+ *********************************/
+    
+    if ($("#dt-erbracht-medikament").length) {
+        var table_erbracht_medikament = $("#dt-erbracht-medikament").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "aaData": table_medikament_data,
+            "bFilter": false,
+            "bLengthChange": false,
+            "bScrollInfinite": true,
+            "bScrollCollapse": true,
+            "sScrollY": "400px",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "aoColumnDefs": [
+            {
+                "mDataProp": 2,
+                "bSearchable": true,
+                "aTargets": ["dt-erbracht-medikament-th-typ"]
+            },
+            {
+                "mDataProp": 0,
+                "bSortable": true,
+                "sWidth": "70px", 
+                "aTargets": ["dt-erbracht-medikament-th-menge"]
+            },
+            {
+                "mDataProp": 1, 
+                "bSortable": true,
+                "sWidth": "150px", 
+                "aTargets": ["dt-erbracht-medikament-th-summe"]
+            }]
+        });
+    
+        var table_erbracht_leistung = $("#dt-erbracht-leistung").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "aaData": table_leistung_data,
+            "bFilter": false,
+            "bLengthChange": false,
+            "bScrollInfinite": true,
+            "bScrollCollapse": true,
+            "sScrollY": "400px",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "aoColumnDefs": [
+            {
+                "mDataProp": 2,
+                "bSearchable": true,
+                "aTargets": ["dt-erbracht-leistung-th-typ"]
+            },
+            {
+                "mDataProp": 0,
+                "bSortable": true,
+                "sWidth": "70px", 
+                "aTargets": ["dt-erbracht-leistung-th-menge"]
+            },
+            {
+                "mDataProp": 1, 
+                "bSortable": true,
+                "sWidth": "150px", 
+                "aTargets": ["dt-erbracht-leistung-th-summe"]
+            }]
+        });
+    }
+    
+ /**********************************
+ *  DataTable Konfigurationen für Statistik "Tagesbericht"
+ *********************************/
+
+    if ($("#dt-tagesbericht-position").length) {
+        var table_tb_position = $("#dt-tagesbericht-position").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "aaData": data_tagesbericht_position,
+            "bFilter": false,
+            "bLengthChange": false,
+            "bScrollInfinite": true,
+            "bScrollCollapse": true,
+            "sScrollY": "400px",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "aoColumnDefs": [
+            {
+                "mDataProp": 1,
+                "bSearchable": true,
+                "aTargets": ["dt-tagesbericht-position-th-typ"]
+            },
+            {
+                "mDataProp": 0,
+                "bSortable": true, 
+                "aTargets": ["dt-tagesbericht-position-th-kunde"]
+            },
+            {
+                "mDataProp": 2, 
+                "bSortable": true,
+                "sWidth": "70px", 
+                "aTargets": ["dt-tagesbericht-position-th-betrag"]
+            }]
+        });
+    
+        var table_tb_zahlung = $("#dt-tagesbericht-zahlung").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "aaData": data_tagesbericht_zahlung,
+            "bFilter": false,
+            "bLengthChange": false,
+            "bScrollInfinite": true,
+            "bScrollCollapse": true,
+            "sScrollY": "400px",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "aoColumnDefs": [
+            {
+                "mDataProp": 0,
+                "bSearchable": true,
+                "aTargets": ["dt-tagesbericht-zahlung-th-kunde"]
+            },
+            {
+                "mDataProp": 1,
+                "bSortable": true,
+                "sWidth": "70px", 
+                "aTargets": ["dt-tagesbericht-zahlung-th-betrag"]
+            }]
+        });
+    }
+
 });
 
 

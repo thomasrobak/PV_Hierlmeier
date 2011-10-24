@@ -121,12 +121,12 @@
              kundeId="${chosenKunde.id}">
         <thead>
           <tr>
-            <th class="dt-position-th-checkbox"><input type="checkbox" disabled="disabled" name="selected" value="all" /></th>
+            <th class="dt-position-th-checkbox"><input id="checkall" type="checkbox" /></th>
             <th class="dt-position-th-typ">Typ</th>
             <th class="dt-position-th-anmerkung">Anmerkung</th>
             <th class="dt-position-th-tier">Tier</th>
             <th class="dt-position-th-menge">Menge</th>
-            <th class="dt-position-th-preis">Preis (€)</th>
+            <th class="dt-position-th-betrag">Betrag (€)</th>
             <th class="dt-position-th-datum">Datum</th>
           </tr>
         </thead>
@@ -139,6 +139,7 @@
       </span>
     </div>
   </g:form>
-<g:javascript src="pvhm.js"/>
+<g:javascript src="pvhm-datatables.js"/>
+<g:javascript src="pvhm-datepicker.js"/>
 </body>
 </html>

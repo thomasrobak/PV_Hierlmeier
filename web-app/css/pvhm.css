@@ -1,7 +1,8 @@
 /* FONT STACK */
 body,
-input, select, textarea {
+input, button, select, textarea {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 1em;
 }
 
 /* BASE LAYOUT */
@@ -527,6 +528,7 @@ th:hover, tr:hover {
 }
 
 .buttons input,
+.buttons button,
 .buttons a {
     background-color: transparent;
     border: 0;
@@ -544,6 +546,7 @@ th:hover, tr:hover {
 }
 
 .buttons input:hover, .buttons input:focus,
+.buttons button:hover, .buttons button:focus,
 .buttons a:hover, .buttons a:focus {
     background-color: #999999;
     color: #ffffff;
@@ -555,13 +558,14 @@ th:hover, tr:hover {
 }
 
 .no-borderradius .buttons input:hover, .no-borderradius .buttons input:focus,
+.no-borderradius .buttons button:hover, .no-borderradius .buttons button:focus,
 .no-borderradius .buttons a:hover, .no-borderradius .buttons a:focus {
     background-color: transparent;
     color: #444444;
     text-decoration: underline;
 }
 
-.buttons .delete, .buttons .edit, .buttons .save {
+.buttons .delete, .buttons .edit, .buttons .save, .buttons .print {
     background-position: 0.7em center;
     background-repeat: no-repeat;
     text-indent: 25px;
@@ -578,6 +582,10 @@ th:hover, tr:hover {
 .buttons .save {
     background-image: url(../images/skin/database_save.png);
 }
+
+.buttons .print {
+}
+
 
 a.skip {
     position: absolute;

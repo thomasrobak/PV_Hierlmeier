@@ -4,28 +4,33 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
     
     String belegnummer
     Date datum  = new Date()
+    Date dateCreated  //automatically maintained by GORM
+    Date lastUpdated  //automatically maintained by GORM
     Kunde kunde
     BigDecimal brutto
     BigDecimal netto
     BigDecimal betrag
-    BigDecimal summeBezahlt
-    //Boolean bezahlt //@todo das flag doch behalten?
+    BigDecimal bezahlt
         
     static hasMany = [positionen:Position, zahlungsteile:Zahlungsteil]
 
     static constraints = {
         belegnummer(blank:false, unique:true, nullable:false)
         zahlungsteile(nullable:true)
-        positionen(nullable:true) //@todo eigentlich false aber bootstrap spinnt sonst für dev env
+        positionen(nullable:false, minSize:1)
         brutto(shared: "currencynumber")
         netto(shared: "currencynumber")
         betrag(shared: "currencynumber")
-        summeBezahlt(shared: "currencynumber")
+        bezahlt(shared: "currencynumber")
+    }
+    
+    static mapping = {
+        datum type:"date"
     }
     
     static namedQueries = {
         unbeglichene {
-            gtProperty 'betrag', 'summeBezahlt'
+            gtProperty 'betrag', 'bezahlt'
         }
         
     }
@@ -88,7 +93,7 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
                ", Brutto: " + this.brutto +
                ", Netto: " + this.netto +
                ", Betrag: " + this.betrag +
-               ", SummeBezahlt: " + this.summeBezahlt +
+               ", Bezahlt: " + this.bezahlt +
                "}"
     }
 }

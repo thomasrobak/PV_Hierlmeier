@@ -31,6 +31,6 @@
       </fieldset>
     </g:form>
   </div>
-<g:javascript src="pvhm.js"/>
+<g:javascript src="pvhm-datepicker.js"/>
 </body>
 </html>

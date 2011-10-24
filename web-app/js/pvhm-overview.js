@@ -2,7 +2,7 @@ $(function() {
     $.ajax({
         "dataType": 'json', 
         "type": "GET", 
-        "url": statistik_overview, 
+        "url": datasource, 
         "cache": false,
         "success": function(json) {
             $("#kundecount").html(json.kundeTotal)

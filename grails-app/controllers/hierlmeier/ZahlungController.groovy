@@ -1,4 +1,4 @@
-package hierlmeier
+package hierlmeier //Maybe NetBeans shows an java.lang.Enum related error here (IDE Bug)
 
 import grails.converters.JSON
 
@@ -10,9 +10,62 @@ class ZahlungController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     static defaultAction = "index"
+    
+    enum Filter {  // possible filters for the dataTableJSON method, filter is set in the view and submitted by the ajax call
+        NOFILTER("filter.NOFILTER")    //value is a message.properties code (no filter at all)
+
+        private final String value 
+        Filter(String value) { this.value = value }
+        String toString() { value }
+        String value() { value }
+        String getKey() { name() }
+    }
 
     def index = {
         redirect(action: "list", params: params)
+    }
+    
+    def dataTableJSON = {
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
+        
+        def results
+        def foundRecords
+        
+        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Zahlung.findAllByKunde(kunde) //@todo try with id only (not fetching the kunde object first)
+            }
+            else {
+                results = Zahlung.list()
+            }
+        }
+        else {
+            println("** params.filter not set or invalid value, showing all for $controllerName")
+            flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
+            results = Zahlung.list()
+        }
+        
+        foundRecords = results.size();
+        println("** results Class: " + results.getClass().toString())
+        println("** foundRecords: " + foundRecords)
+        println("** db query results: " + results)
+        
+        BigDecimal paidsum = new BigDecimal("0.00")
+        
+        results.each {
+            paidsum = paidsum.add(it.betrag)
+        }
+        if(paidsum.scale() < 2)
+            paidsum = paidsum.setScale(g.message(code:'default.scale').toInteger())
+
+        def data = [paid: paidsum.toString(), aoData: results]
+        
+        println("** data before JSON rendering: " + data)
+        
+        println("**** $controllerName.$actionName END")
+        render JSON.use("deep"){data as JSON}  //@todo performacetechnisch net optimal evtl, besser eager fetching in der domain class von position?
     }
 
     def list = {
@@ -30,23 +83,14 @@ class ZahlungController {
                 println("****** $controllerName.$actionName chooseKunde.onSubmit")
                 println("*** params: " + params)
                 flow.chosenKunde = Kunde.get(params.id)
-                def zahlungInstance = new Zahlung()
-                zahlungInstance.properties = params
-                [zahlungInstance: zahlungInstance]
+                flow.zahlungInstance = new Zahlung(kunde:flow.chosenKunde)
             }.to "chooseZahlungDetails"
             on("return").to "chooseKunde"
         }
         chooseZahlungDetails {
             on("submit") {
-                def k =  flow.chosenKunde
-                def b = new BigDecimal(params.betrag)
-                def d = params.datum
-                
-                if(b.scale() < 2)
-                    b = b.setScale(g.message(code:'default.scale').toInteger())
-                
-                def z = new Zahlung(kunde:k, betrag:b, datum:d)
-                flow.zahlungInstance = z
+                def z = flow.zahlungInstance
+                z.properties = params
                 
                 if(!z.validate()) {
                     z.errors.each {
@@ -58,25 +102,23 @@ class ZahlungController {
                 def results = Beleg.unbeglichene.findAllByKunde(flow.chosenKunde, [sort:"datum", order:"asc"])
                 println("*** query result class: " + results.class.toString())
                 println("*** query result (Beleg.unbeglichene.findAllByKunde): " + results)
-                
-                    
-                
-                BigDecimal splitfromthis = new BigDecimal(b.toString())
+
+                BigDecimal splitfromthis = new BigDecimal(z.betrag.toString())
                 def listzt = []
                 
                 for(int i=0; splitfromthis > 0; i++) {
                     def blg = results.get(i)
-                    BigDecimal offen = blg.betrag.subtract(blg.summeBezahlt)
+                    BigDecimal offen = blg.betrag.subtract(blg.bezahlt)
                     if(offen < splitfromthis) {
                         def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(offen.toString()))
                         listzt.add(zt)
-                        blg.summeBezahlt = blg.summeBezahlt.add(offen)
+                        blg.bezahlt = blg.bezahlt.add(offen)
                         splitfromthis = splitfromthis.subtract(offen)
                     }
                     else {
                         def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(splitfromthis.toString()))
                         listzt.add(zt)
-                        blg.summeBezahlt = blg.summeBezahlt.add(splitfromthis)
+                        blg.bezahlt = blg.bezahlt.add(splitfromthis)//.setScale(g.message(code:'default.scale').toInteger())
                         splitfromthis = new BigDecimal("0.00")
                     }
                 }
@@ -91,21 +133,20 @@ class ZahlungController {
                 }
             }.to "displayCreatedZahlung"
             on("payall") {
-                                
+                def z = flow.zahlungInstance
+                
                 def results = Beleg.unbeglichene.findAllByKunde(flow.chosenKunde, [sort:"datum", order:"asc"])
                 println("*** query result class: " + results.class.toString())
                 println("*** query result (Beleg.unbeglichene.findAllByKunde): " + results)
                 
-                def k =  flow.chosenKunde
                 def b = new BigDecimal("0.00")
-                def d = params.datum
-                
+
                 results.each {
-                    b = b.add(it.betrag.subtract(it.summeBezahlt))
+                    b = b.add(it.betrag.subtract(it.bezahlt))
                 }
+                params.betrag = b
                 
-                def z = new Zahlung(kunde:k, betrag:b, datum:d)
-                
+                z.properties = params
                 
                 if(!z.validate()) {
                     z.errors.each {
@@ -120,17 +161,17 @@ class ZahlungController {
                 
                 for(int i=0; splitfromthis > 0; i++) {
                     def blg = results.get(i)
-                    BigDecimal offen = blg.betrag.subtract(blg.summeBezahlt)
+                    BigDecimal offen = blg.betrag.subtract(blg.bezahlt)
                     if(offen < splitfromthis) {
                         def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(offen.toString()))
                         listzt.add(zt)
-                        blg.summeBezahlt = blg.summeBezahlt.add(offen)
+                        blg.bezahlt = blg.bezahlt.add(offen)
                         splitfromthis = splitfromthis.subtract(offen)
                     }
                     else {
                         def zt = new Zahlungsteil(zahlung:z, beleg:blg, betrag:new BigDecimal(splitfromthis.toString()))
                         listzt.add(zt)
-                        blg.summeBezahlt = blg.summeBezahlt.add(splitfromthis)
+                        blg.bezahlt = blg.bezahlt.add(splitfromthis)//.setScale(g.message(code:'default.scale').toInteger())
                         splitfromthis = new BigDecimal("0.00")
                     }
                 }
@@ -143,7 +184,6 @@ class ZahlungController {
                 else {
                     return error()
                 }
-                flow.zahlungInstance = z
                 
             }.to "displayCreatedZahlung"
             on("error") {

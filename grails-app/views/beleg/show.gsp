@@ -46,7 +46,7 @@
               <th class="dt-position-th-anmerkung">Anmerkung</th>
               <th class="dt-position-th-tier">Tier</th>
               <th class="dt-position-th-menge">Menge</th>
-              <th class="dt-position-th-preis">Preis (€)</th>
+              <th class="dt-position-th-betrag">Betrag (€)</th>
               <th class="dt-position-th-datum">Datum</th>
             </tr>
           </thead>
@@ -59,10 +59,12 @@
         <g:hiddenField name="id" value="${belegInstance?.id}" />
         <g:link class="edit" action="edit" id="${belegInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
         <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-        <g:actionSubmit class="print" action="print" value="${message(code: 'default.button.print.label', default: 'Drucken')}" />
+        <button class="print ui-button-text-icon-primary" type="submit" name="_action_print">
+          <span class="ui-icon ui-icon-print"></span>Drucken
+        </button>
       </fieldset>
     </g:form>
   </div>
-  <g:javascript src="pvhm.js"/>
+  <g:javascript src="pvhm-datatables.js"/>
 </body>
 </html>

@@ -63,99 +63,13 @@ class PositionController {
         println("** foundRecords: " + foundRecords)
         println("** db query results: " + results)
         
-        def data
-        JSON.use("deep"){ data = [aoData: results] as JSON }
+        def data = [aoData: results]
         
-        println("** data after JSON rendering: " + data)
+        
+        //println("** data after JSON rendering: " + data)
         
         println("**** $controllerName.$actionName END")
-        render data
-    }  
-    
-    def dataTableJSONByKunde = {
-        println("**** $controllerName.$actionName START")
-        println("params: " + params)
-        
-        def kunde = Kunde.get(params.kundeId)
-        
-        /*
-        def criteria = Positionen.createCriteria()
-        def poslist = criteria.listDistinct {
-            isNotEmpty("positionen")
-            positionen {
-                isNull("beleg")
-            }
-        }
-        */
-        
-        def positionen = Position.findAllByKunde(kunde, params)
-        def foundRecords = Position.countByKunde(kunde)
-        
-        println("foundRecords: " + foundRecords)
-        
-        def formattedResults = positionen.collect {
-            [
-                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
-                typ: it.typ.toString(),
-                tier: it.tier.toString(),
-                menge: it.menge.toString(),
-                beleg: it.beleg.toString()
-            ]
-        }
-        
-        def data = [
-            totalRecords: foundRecords,
-            results: formattedResults
-        ]
-        
-        println("db query results: " + positionen)
-        println("JSON: " + data)
-        println("**** $controllerName.$actionName END")
-        
-        render data as JSON
-    }
-    
-    def dataTableJSONByBeleg = {
-        println("**** $controllerName.$actionName START")
-        println("params: " + params)
-        
-        def beleg = Beleg.get(params.belegId)
-        
-        /*
-        def criteria = Positionen.createCriteria()
-        def poslist = criteria.listDistinct {
-        isNotEmpty("positionen")
-        positionen {
-        isNull("beleg")
-        }
-        }
-         */
-        
-        def positionen = Position.findAllByBeleg(beleg, params)
-        def foundRecords = Position.countByBeleg(beleg)
-        
-        println("foundRecords: " + foundRecords)
-        
-        def formattedResults = positionen.collect {
-            [
-                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
-                typ: it.typ.toString(),
-                tier: it.tier.toString(),
-                menge: it.menge.toString(),
-                beleg: it.beleg.toString()
-            ]
-        }
-        
-        def data = [
-            totalRecords: foundRecords,
-            results: formattedResults
-        ]
-        
-        println("db query results: " + positionen)
-        println("JSON: " + data)
-        println("**** $controllerName.$actionName END")
-        
-        render data as JSON
+        render JSON.use("deep"){data as JSON}  //@todo performacetechnisch net optimal evtl, besser eager fetching in der domain class von position?
     }
 
     def list = {
@@ -173,7 +87,7 @@ class PositionController {
         def positionInstance = new Position(params)
         if (positionInstance.save(flush: true)) {
             flash.message = message(code: 'default.created.message', args: [message(code: 'position.label', default: 'Position'), positionInstance.id])
-            redirect(action: "show", id: positionInstance.id)
+            redirect(action: "create") //@todo create seite braucht noch eine liste (gerade angelegt oder tagesansicht
         }
         else {
             render(view: "create", model: [positionInstance: positionInstance])

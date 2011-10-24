@@ -7,6 +7,7 @@
 	</label>
 	<g:select id="kunde" name="kunde.id" from="${hierlmeier.Kunde.list()}" 
                   optionKey="id" required="" 
+                  noSelection="${['null':'']}"
                   value="${positionInstance?.kunde?.id}" 
                   class="many-to-one"/>
 </div>
@@ -18,9 +19,11 @@
 	</label>
 	<g:select id="typ" name="typ.id" from="${hierlmeier.Positionstyp.list()}" 
                   optionKey="id" required="" 
-                  noSelection="${['null':'Select One...']}" 
+                  noSelection="${['null':'']}" 
                   value="${positionInstance?.typ?.id}" 
                   class="many-to-one"/>
+        <span>Standardpreis (€):</span>
+        <g:textField name="typ-preis" style="text-align: center" size="6" readonly="readonly" value="-"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'tier', 'error')} required">
@@ -30,18 +33,10 @@
 	</label>
 	<g:select id="tier" name="tier.id" from="${hierlmeier.Tier.list()}"
                   optionKey="id" required=""
-                  noSelection="${['null':'Select One...']}"
+                  noSelection="${['null':'']}"
                   value="${positionInstance?.tier?.id}" 
                   class="many-to-one"
                   />
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'anmerkung', 'error')} ">
-	<label for="anmerkung">
-		<g:message code="position.anmerkung.label" default="Anmerkung" />
-		
-	</label>
-	<g:textField name="anmerkung" value="${fieldValue(bean: positionInstance, field: 'anmerkung')}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'datum', 'error')} required">
@@ -68,3 +63,10 @@
 	<g:field type="number" name="preis" required="" value="${fieldValue(bean: positionInstance, field: 'preis')}"/>
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: positionInstance, field: 'anmerkung', 'error')} ">
+	<label for="anmerkung">
+		<g:message code="position.anmerkung.label" default="Anmerkung" />
+		
+	</label>
+	<g:textArea name="anmerkung" value="${fieldValue(bean: positionInstance, field: 'anmerkung')}"/>
+</div>

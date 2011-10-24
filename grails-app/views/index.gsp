@@ -5,7 +5,7 @@
     <meta name="layout" content="main"/>
     <title>Patientenverwaltung Hierlmeier</title>
     <script type="text/javascript">
-      var statistik_overview = '${createLink(controller:"statistik", action:"overviewJSON")}'
+      var datasource = '${createLink(controller:"statistik", action:"overviewJSON")}'
     </script>
   </head>
   <body>
@@ -47,6 +47,6 @@
       <span id="tiercount" class="property-value"></span>
     </li>
   </ol>
-  <g:javascript src="statistiken.js"/>
+  <g:javascript src="pvhm-overview.js"/>
 </body>
 </html>

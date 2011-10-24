@@ -10,6 +10,8 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
     String beruf            //optional
     Boolean mwst
     String bemerkung        //optional
+    Date dateCreated  //automatically maintained by GORM
+    Date lastUpdated  //automatically maintained by GORM
     
     static hasMany = [positionen:Position, belege:Beleg, zahlungen:Zahlung]
     
@@ -34,7 +36,7 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
         withUnpaidBelege {
             isNotEmpty("belege")
             belege {
-                gtProperty 'betrag', 'summeBezahlt'
+                gtProperty 'betrag', 'bezahlt'
             }
         }
     }

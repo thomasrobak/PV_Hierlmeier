@@ -83,21 +83,24 @@ class BootStrap {
             }
             if (!Beleg.count()) {
                 beleg1 = new Beleg(datum: new Date(Calendar.getInstance().getTimeInMillis()), belegnummer: "1111111", kunde: huber,
-                    netto: "184.34", brutto: "221.21", betrag: "221.21", summeBezahlt: "0.00").save(failOnError: true)
+                    netto: "184.34", brutto: "221.21", betrag: "221.21", bezahlt: "0.00")
                 
                 
             }
             if (!Position.count()) {
-                // 2 Positionen in Beleg für Kunde Huber
+                // Positionen in Beleg für Kunde Huber
                 pos1 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: kuh,
                     typ: wurmkur, preis: "34.23", menge: "5", kunde: huber, beleg: beleg1).save(failOnError: true)
                 pos2 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: kuh,
                     typ: krallen, preis: "13.19", menge: "1", kunde: huber, beleg: beleg1).save(failOnError: true)
                 
-                // 2 Positionen ohne Beleg für Kunde Huber
-                pos7 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: katze,
+                beleg1.positionen = [pos1, pos2]
+                beleg1.save(failOnError: true)
+                
+                // Positionen ohne Beleg für Kunde Huber
+                new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Mitzi die Kuh", tier: katze,
                     typ: appendix, preis: "9.99", menge: "1", kunde: huber).save(failOnError: true)
-                pos8 = new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: hund,
+                new Position(datum: new Date(Calendar.getInstance().getTimeInMillis()), anmerkung: "Oskar der oarge Ochs", tier: hund,
                     typ: scrotum, preis: "8.79", menge: "1", kunde: huber).save(failOnError: true)
                 
                 // Positionen ohne Beleg für Kunde VielePositionen

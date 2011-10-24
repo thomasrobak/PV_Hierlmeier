@@ -103,7 +103,7 @@
                   <th class="dt-position-th-anmerkung">Anmerkung</th>
                   <th class="dt-position-th-tier">Tier</th>
                   <th class="dt-position-th-menge">Menge</th>
-                  <th class="dt-position-th-preis">Preis (€)</th>
+                  <th class="dt-position-th-betrag">Betrag (€)</th>
                   <th class="dt-position-th-datum">Datum</th>
                 </tr>
               </thead>
@@ -125,7 +125,7 @@
                   <th class="dt-beleg-th-belegnummer">Belegnummer</th>
                   <th class="dt-beleg-th-datum">Datum</th>
                   <th class="dt-beleg-th-betrag">Betrag</th>
-                  <th class="dt-beleg-th-summebezahlt">davon Bezahlt</th>
+                  <th class="dt-beleg-th-bezahlt">davon Bezahlt</th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -150,6 +150,6 @@
       </fieldset>
     </g:form>
   </div>
-<g:javascript src="pvhm.js"/>
+<g:javascript src="pvhm-datatables.js"/>
 </body>
 </html>

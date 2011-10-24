@@ -29,13 +29,13 @@
       <th class="dt-position-th-anmerkung">Anmerkung</th>
       <th class="dt-position-th-tier">Tier</th>
       <th class="dt-position-th-menge">Menge</th>
-      <th class="dt-position-th-preis">Preis (€)</th>
+      <th class="dt-position-th-betrag">Betrag (€)</th>
       <th id="dt-datum-column" class="dt-position-th-datum">Datum</th>
       <th class="dt-position-th-beleg">Beleg</th>
     </tr>
   </thead>
   <tbody></tbody>
 </table>
-<g:javascript src="pvhm.js"/>
+<g:javascript src="pvhm-datatables.js"/>
 </body>
 </html>

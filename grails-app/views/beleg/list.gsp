@@ -20,14 +20,16 @@
     <thead>
       <tr>
         <th class="dt-beleg-th-belegnummer">Belegnummer</th>
+        <th class="dt-beleg-th-kunde">Kunde</th>
         <th class="dt-beleg-th-datum">Datum</th>
-        <th class="dt-beleg-th-betrag">Betrag</th>
-        <th class="dt-beleg-th-summebezahlt">davon Bezahlt</th>
+        <th class="dt-beleg-th-betrag">Betrag (€)</th>
+        <th class="dt-beleg-th-bezahlt">Bezahlt (€)</th>
+        <th class="dt-beleg-th-offen">Offen (€)</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 </div>
-<g:javascript src="pvhm.js"/>
+<g:javascript src="pvhm-datatables.js"/>
 </body>
 </html>

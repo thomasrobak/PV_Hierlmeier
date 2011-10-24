@@ -4,6 +4,8 @@ class Positionstyp implements Serializable { //muss Seriazable implementieren f√
     
     BigDecimal preis
     String bezeichnung
+    Date dateCreated  //automatically maintained by GORM
+    Date lastUpdated  //automatically maintained by GORM
 
     static constraints = {
         bezeichnung(blank:false)

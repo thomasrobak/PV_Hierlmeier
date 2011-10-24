@@ -28,6 +28,6 @@
       <tbody></tbody>
     </table>
   </div>
-  <g:javascript src="pvhm.js"/>
+  <g:javascript src="pvhm-datatables.js"/>
   </body>
 </html>

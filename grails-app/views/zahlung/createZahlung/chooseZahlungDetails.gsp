@@ -107,9 +107,12 @@
           <g:textField name="betrag" value="${fieldValue(bean: zahlungInstance, field: 'betrag')}" />
         </span>
         <span>      
-          insgesamt zu Zahlen:
+          Gesamt offen: 
           <span id="remaining">
             Restbetrag missing!
+          </span>
+          <span class="buttons button">
+             <g:submitButton name="payall" class="save" value="${message(code: 'zahlung.pay.all.label', default: 'Alles Bezahlen')}" />
           </span>
         </span>
 
@@ -134,7 +137,7 @@
             <th class="dt-beleg-th-belegnummer">Belegnummer</th>
             <th class="dt-beleg-th-datum">Datum</th>
             <th class="dt-beleg-th-betrag">Betrag</th>
-            <th class="dt-beleg-th-summebezahlt">davon Bezahlt</th>
+            <th class="dt-beleg-th-bezahlt">davon Bezahlt</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -144,11 +147,9 @@
       <span class="button">
         <g:submitButton name="submit" class="save" value="${message(code: 'default.zahlung.create.label', default: 'Zahlung erfassen')}" />
       </span>
-      <span class="button" style="right: 0">
-        <g:submitButton name="payall" class="save" value="${message(code: 'zahlung.pay.all.label', default: 'ALLE OFFENEN BEZAHLEN')}" />
-      </span>
     </div>
   </g:form>
-<g:javascript src="pvhm.js"/>
+<g:javascript src="pvhm-datatables.js"/>
+<g:javascript src="pvhm-datepicker.js"/>
 </body>
 </html>

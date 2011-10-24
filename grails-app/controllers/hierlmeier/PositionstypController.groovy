@@ -18,11 +18,6 @@ class PositionstypController {
     
     def preisJSON = {
         def typ = Positionstyp.get(params.id)
-        /*
-        BigDecimal p = new BigDecimal(typ?.preis.toString())
-        if (p.scale() < 2)
-            p = p.setScale(g.message(code:'default.scale').toInteger())
-        */
 	render typ as JSON
     }
 

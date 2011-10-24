@@ -517,7 +517,7 @@ table.display tbody tr.even:hover, table.display tbody tr.even td.highlighted {
                 cursor: pointer;
 }
 
-table.display tr.odd:hover, table.display tr.odd td.highlighted {
+table.display tbody tr.odd:hover, table.display tbody tr.odd td.highlighted {
 	background-color: #E6FF99;
                 cursor: pointer;
 }

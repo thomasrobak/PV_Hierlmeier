@@ -70,88 +70,15 @@ class BelegController {
         
         results.each {
             opensum = opensum.add(it.betrag)
-            paidsum = paidsum.add(it.summeBezahlt)
+            paidsum = paidsum.add(it.bezahlt)
         }
 
-        def data = [remaining: opensum.subtract(paidsum), aoData: results]
+        def data = [remaining: opensum.subtract(paidsum).toString(), aoData: results]
         
         println("** data before JSON rendering: " + data)
         
         println("**** $controllerName.$actionName END")
-        render data as JSON
-    }
-    
-    def dataTableJSONByBelege = {
-        println("**** $controllerName.$actionName START")
-        println("** params: " + params)
-        
-        def belegIds
-        params.belege.each {
-            belegIds.add(it.id)
-        }
-        def belege = Beleg.getAll(belegIds)
-        println("** belege: " + belege)
-        
-        def foundRecords = belegIds.size()
-        println("** foundRecords: " + foundRecords)
-        
-        def formattedResults = belege.collect {
-            [
-                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
-                belegnummer: it.belegnummer
-            ]
-        }
-        
-        def data = [
-            totalRecords: foundRecords,
-            results: formattedResults
-        ]
-        
-        println("** no db query done, list supplied: " + belege)
-        println("** JSON: " + data)
-        println("**** $controllerName.$actionName END")
-        
-        render data as JSON
-    }
-    
-    def dataTableJSONByKunde = {
-        println("**** $controllerName.$actionName START")
-        println("** params: " + params)
-        
-        def kunde = Kunde.get(params.kundeId)
-        
-        /*
-        def criteria = Positionen.createCriteria()
-        def poslist = criteria.listDistinct {
-            isNotEmpty("positionen")
-            positionen {
-                isNull("beleg")
-            }
-        }
-        */
-        
-        def belege = Beleg.findAllByKunde(kunde, params)
-        def foundRecords = Beleg.countByKunde(kunde)
-        
-        println("** foundRecords: " + foundRecords)
-        
-        def formattedResults = belege.collect {
-            [
-                datum: new java.text.SimpleDateFormat(message(code:"default.date.format")).format(it.datum),
-                belegnummer: it.belegnummer
-            ]
-        }
-        
-        def data = [
-            totalRecords: foundRecords,
-            results: formattedResults
-        ]
-        
-        println("** db query results: " + belege)
-        println("** JSON: " + data)
-        println("**** $controllerName.$actionName END")
-        
-        render data as JSON
+        render JSON.use("deep"){data as JSON}  //@todo performacetechnisch net optimal evtl, besser eager fetching in der domain class von position?
     }
     
     def print = {
@@ -193,13 +120,13 @@ class BelegController {
                 println("*** params: " + params)
                 flow.chosenKunde = Kunde.get(params.id)
                 flow.belegInstance = new Beleg(datum: new Date(), kunde: flow.chosenKunde)
-            }.to "choosePositionen"            
+            }.to "choosePositionen"           
         }
         choosePositionen {
             on("submit") {
                 println("****** $controllerName.$actionName choosePositionen.onSubmit")
                 println("*** params: " + params)
-                def selectedIds = [] 
+                def selectedIds = []
                 params.selected.each {
                     selectedIds.add(it.toInteger())
                 }
@@ -221,6 +148,7 @@ class BelegController {
                 def bnr = params.belegnummer
                 def d = params.datum
                 flow.belegInstance.properties = this.params
+                flow.belegInstance.positionen = p
 
                 def netto = new BigDecimal("0.00").setScale(g.message(code:'default.scale').toInteger())
                 p.each {
@@ -230,12 +158,12 @@ class BelegController {
                 // brutto needs rounding because the scale maybe to long after multiplication
                 brutto = brutto.setScale(g.message(code:'default.scale').toInteger(), RoundingMode.valueOf(g.message(code:'default.rounding.mode')))
                 def betrag = flow.chosenKunde.mwst ? new BigDecimal(brutto.toString()) : new BigDecimal(netto.toString())
-                def sbz = new BigDecimal("0.00")
+                def bez = new BigDecimal("0.00")
                 
                 flow.belegInstance.netto = netto
                 flow.belegInstance.brutto = brutto
                 flow.belegInstance.betrag = betrag
-                flow.belegInstance.summeBezahlt = sbz
+                flow.belegInstance.bezahlt = bez
                 
                 if(!flow.belegInstance.validate()) {
                     flow.belegInstance.errors.each {
@@ -265,7 +193,7 @@ class BelegController {
             }.to "choosePositionen"
         }
         displayCreatedBeleg {
-            redirect(action:"show", id: flow.createdBeleg.id)
+            redirect(action:"show", id: flow.belegInstance.id)
         }
     }
 
