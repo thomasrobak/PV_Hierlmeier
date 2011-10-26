@@ -16,10 +16,8 @@ var pvhm_formatNumber = function(parsethis) {
     else
         return parseFloat(parsethis).toFixed(2).toString()
 }
+  
 
-$(function() {
-
-   
  /**************
  *
  * Misc Configs and Inits
@@ -27,7 +25,7 @@ $(function() {
  *************/
 
 /**************
- * Datepicker Config and init
+ * Widget Locales Config and init
  *************/
 
     $.datepicker.regional['de'] = {
@@ -49,8 +47,9 @@ $(function() {
         showMonthAfterYear: false,
         yearSuffix: ''
     };
-   
-    var datepicker_locale
+
+var dt_locale_file = app_base_dir + "txt/datatable_?.txt".replace("?", app_locale);
+var datepicker_locale
 
     switch(app_locale) {
         case 'de':
@@ -63,10 +62,14 @@ $(function() {
             datepicker_locale = $.datepicker.regional['de'];
             break;
     }
+    
+
 
     /**************
  ** position erstellen, selectbox für typ ändert ein feld das den katalogpreis anzeigt
  **************/
+
+$(function() {
     if ($("#typ").length) {        
         $("#typ").change(function() {
             $.ajax({

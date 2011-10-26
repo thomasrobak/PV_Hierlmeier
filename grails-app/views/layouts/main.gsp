@@ -14,13 +14,11 @@
     <link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery.menubar.css')}" type="text/css"/>
     <g:javascript library="jquery" plugin="jquery"/>
     <g:javascript src="jquery-ui-1.8.16.custom.min.js"/>
-    <g:javascript src="jquery.dataTables.min.js"/>
+    <g:javascript src="jquery.dataTables.scrollfix.js"/>
     <g:javascript src="jquery.menubar.js"/>
-    <g:javascript src="pvhm-common.js"/>
     <script type="text/javascript">
       var app_locale = '${message(code: "application.language")}'
       var app_base_dir = '${createLink(uri:"/")}'
-      var dt_locale_file = app_base_dir + "txt/datatable_?.txt".replace("?", app_locale);
       $(function(){
         $("#navbar").menubar({
           items: [
@@ -130,5 +128,6 @@
     <div class="footer" role="contentinfo"></div>
     <div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
   </div>
+  <g:javascript src="pvhm-common.js"/>
 </body>
   </html>

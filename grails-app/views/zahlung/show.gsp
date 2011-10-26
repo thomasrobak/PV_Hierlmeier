@@ -38,13 +38,11 @@
       <li class="fieldcontain">
         <h1>Gesamtbetrag aufgeteilt auf folgende Belege:</h1>
         <table>
-          <thead>
-            <tr>
+          <tr>
           <g:sortableColumn property="zahlungsteil.betrag" titleKey="zahlungsteil.betrag" />
           <g:sortableColumn property="zahlungsteil.beleg" titleKey="zahlungsteil.beleg" />
           <g:sortableColumn property="zahlungsteil.beleg.datum" titleKey="beleg.datum" />
           </tr>
-          </thead>
           <tbody>
           <g:each in="${zahlungInstance.zahlungsteile}" status="i" var="zt">
             <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">

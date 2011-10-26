@@ -15,7 +15,7 @@
       <div class="message" role="status">${flash.message}</div>
     </g:if>
   <g:form name="form" action="erbracht">
-    <div class="content fieldset">
+    <fieldset class="form">
       <div class="fieldcontain required">
         <label>
           <g:message code="default.date.range.label" default="Zeitraum" />
@@ -25,7 +25,7 @@
         <g:select name="listrange.monat" value="${listrange.monat}" from="${selectbox.monatliste}" noSelection="${['':'-Alle Monate-']}"/>
         </span>
       </div>
-    </div>
+    </fieldset>
     
     <div class="buttons">
       <span class="button">
@@ -33,8 +33,6 @@
       </span>
     </div>
   </g:form>
-  
-  <div style="margin: 1em 0">
     <table>
       <thead>
         <tr>
@@ -45,33 +43,36 @@
       <tbody>
         <tr>
           <td>
-            <table id="dt-erbracht-medikament" class="display">
-              <thead>
-                <tr>
-                  <th class="dt-erbracht-medikament-th-typ">Bezeichnung</th>
-                  <th class="dt-erbracht-medikament-th-menge">Menge</th>
-                  <th class="dt-erbracht-medikament-th-summe">Summe (€)</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+            <div style="width: 100%">
+              <table id="dt-erbracht-medikament" class="display">
+                <thead>
+                  <tr>
+                    <th class="dt-erbracht-medikament-th-typ">Bezeichnung</th>
+                    <th class="dt-erbracht-medikament-th-menge">Menge</th>
+                    <th class="dt-erbracht-medikament-th-summe">Summe (€)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </td>
           <td>
-            <table id="dt-erbracht-leistung" class="display">
-              <thead>
-                <tr>
-                  <th class="dt-erbracht-leistung-th-typ">Bezeichnung</th>
-                  <th class="dt-erbracht-leistung-th-menge">Menge</th>
-                  <th class="dt-erbracht-leistung-th-summe">Summe (€)</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+            <div style="width: 100%">
+              <table id="dt-erbracht-leistung" class="display">
+                <thead>
+                  <tr>
+                    <th class="dt-erbracht-leistung-th-typ">Bezeichnung</th>
+                    <th class="dt-erbracht-leistung-th-menge">Menge</th>
+                    <th class="dt-erbracht-leistung-th-summe">Summe (€)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
   <g:javascript src="pvhm-datatables.js"/>
 </body>
 </html>

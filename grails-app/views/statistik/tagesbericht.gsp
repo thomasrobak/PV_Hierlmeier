@@ -15,7 +15,7 @@
       <div class="message" role="status">${flash.message}</div>
     </g:if>
   <g:form name="form" action="tagesbericht">
-    <div class="content fieldset">
+    <fieldset class="form">
       <div class="fieldcontain required">
         <label>
           <g:message code="default.date.label" default="Datum" />
@@ -24,7 +24,7 @@
         <g:textField id="datepicker" name="datum" value="${datum}"/>
         </span>
       </div>
-    </div>
+    </fieldset>
     <div class="buttons">
       <span class="button">
         <g:submitButton name="submit" class="search" value="${message(code: 'default.search.label', default: 'Suchen')}" />

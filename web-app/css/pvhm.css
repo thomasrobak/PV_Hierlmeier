@@ -394,32 +394,40 @@ input:invalid:focus, select:invalid:focus, textarea:invalid:focus {
 /* TABLES */
 
 table {
+    position: relative;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+table.grails {
     border-top: 1px solid #DFDFDF;
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 1em;
 }
 
-tr {
+table.grails tr {
     border: 0;
 }
 
-tr>td:first-child, tr>th:first-child {
+table.grails tr>td:first-child, table.grails tr>th:first-child {
     padding-left: 1.25em;
 }
 
-tr>td:last-child, tr>th:last-child {
+table.grails tr>td:last-child, table.grails tr>th:last-child {
     padding-right: 1.25em;
 }
 
-td, th {
+table.grails td, table.grails th {
     line-height: 1.5em;
     padding: 0.5em 0.6em;
     text-align: left;
     vertical-align: top;
 }
 
-th {
+table.grails th {
     background-color: #efefef;
     background-image: -moz-linear-gradient(top, #ffffff, #eaeaea);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #eaeaea));
@@ -431,46 +439,46 @@ th {
     padding: 0.2em 0.6em;
 }
 
-thead th {
+table.grails thead th {
     white-space: nowrap;
 }
 
-th a {
+table.grails th a {
     display: block;
     text-decoration: none;
 }
 
-th a:link, th a:visited {
+table.grails th a:link, table.grails th a:visited {
     color: #666666;
 }
 
-th a:hover, th a:focus {
+table.grails th a:hover, table.grails th a:focus {
     color: #333333;
 }
 
-th.sortable a {
+table.grails th.sortable a {
     background-position: right;
     background-repeat: no-repeat;
     padding-right: 1.1em;
 }
 
-th.asc a {
+table.grails th.asc a {
     background-image: url(../images/skin/sorted_asc.gif);
 }
 
-th.desc a {
+table.grails th.desc a {
     background-image: url(../images/skin/sorted_desc.gif);
 }
 
-.odd {
+table.grails .odd {
     background: #f7f7f7;
 }
 
-.even {
+table.grails .even {
     background: #ffffff;
 }
 
-th:hover, tr:hover {
+table.grails th:hover, table.grails tr:hover {
     background: #E1F2B6;
 }
 
