@@ -7,6 +7,6 @@ class Leistung extends Positionstyp {
     }
     
     def String toString() {
-        return "Leistung: $bezeichnung"
+        return "Lstng $bezeichnung"
     }
 }

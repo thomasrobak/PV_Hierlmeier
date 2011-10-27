@@ -7,6 +7,6 @@ class Medikament extends Positionstyp {
     }
     
     def String toString() {
-        return "Medikament: $bezeichnung"
+        return "Mdkmnt $bezeichnung"
     }
 }

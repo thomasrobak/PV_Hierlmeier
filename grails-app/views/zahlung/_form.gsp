@@ -23,7 +23,7 @@
 		<g:message code="zahlung.datum.label" default="Datum" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:datePicker name="datum" precision="day" value="${zahlungInstance?.datum}"  />
+	<g:textField id="datepicker" name="datum" value="${zahlungInstance?.datum}" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: zahlungInstance, field: 'zahlungsteile', 'error')} ">

@@ -34,7 +34,8 @@ class PrintService {
         
         // convert Beleg to XML String
         def obj2xmlconverter
-        XML.use("deep"){ obj2xmlconverter = printThisDomainClass as XML }
+        XML.use("deep"){ obj2xmlconverter = printThisDomainClass as XML }  //@todo "deep" führt dazu das ALLE anderen Belege des entsprechenden Kunden auch ausgelesen werden
+                                                                           // führt zwar zu keinem fehlerhaften verhalten, aber joa ... großer xml string oida
         def xmlstring = obj2xmlconverter.toString()
         Source src = new StreamSource(new StringReader(xmlstring))
                     

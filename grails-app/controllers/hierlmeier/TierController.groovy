@@ -26,7 +26,7 @@ class TierController {
         def tierInstance = new Tier(params)
         if (tierInstance.save(flush: true)) {
             flash.message = message(code: 'default.created.message', args: [message(code: 'tier.label', default: 'Tier'), tierInstance.id])
-            redirect(action: "show", id: tierInstance.id)
+            redirect(action: "create")
         }
         else {
             render(view: "create", model: [tierInstance: tierInstance])

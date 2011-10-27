@@ -26,14 +26,23 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       form: 'application/x-www-form-urlencoded',
                       multipartForm: 'multipart/form-data'
                     ]
+                    
+grails.gorm.default.constraints = {
+    currencynumber(validator: {if (it.scale() != 2) return "invalid.scale"})
+}
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
+
+grails.views.javascript.library="jquery" 
 
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
+grails.converters.json.circular.reference.behaviour = "INSERT_NULL"
+//grails.converters.json.date = "javascript"
+
 // enable Sitemesh preprocessing of GSP pages
 grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
@@ -50,20 +59,6 @@ grails.spring.bean.packages = []
 
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
-
-// set per-environment serverURL stem for creating absolute links
-environments {
-    production {
-        grails.serverURL = "http://hhimac/pvhierlmeier/"
-    }
-    development {
-        grails.serverURL = "http://localhost:8080/${appName}"
-    }
-    test {
-        grails.serverURL = "http://localhost:8080/${appName}"
-    }
-
-}
 
 // log4j configuration
 log4j = {
@@ -87,4 +82,18 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+}
+
+// set per-environment serverURL stem for creating absolute links
+environments {
+    production {
+        grails.serverURL = "http://hhimac/pvhierlmeier/"
+    }
+    development {
+        grails.serverURL = "http://localhost:8080/${appName}"
+    }
+    test {
+        grails.serverURL = "http://localhost:8080/${appName}"
+    }
+
 }
