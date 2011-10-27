@@ -1,32 +1,80 @@
-package hierlmeier
+package hierlmeier   //Maybe NetBeans shows an java.lang.Enum related error here (IDE Bug)
 
 import grails.converters.JSON
 
 class PositionController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", dataTableJSON:"POST"]
     static defaultAction = "index"
+        
+    enum Filter {  // possible filters for the dataTableJSON method, filter is set in the view and submitted by the ajax call
+        NOFILTER("filter.NOFILTER"),
+        UPP("filter.UPP")
 
+        private final String value //value is a message.properties code
+        Filter(String value) { this.value = value }
+        String toString() { value }
+        String value() { value }
+        String getKey() { name() }
+    }
+    
     def index = {
         redirect(action: "list", params: params)
+    }
+    
+    def dataTableJSON = {
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
+        
+        def results
+        def foundRecords
+        
+        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Position.findAllByKunde(kunde)
+            }
+            if(params.belegId) {
+                def beleg = Beleg.get(params.belegId)
+                results = Position.findAllByBeleg(beleg)
+            }
+            else {
+                results = Position.list()
+            }
+        }
+        else if(params.filter == g.message(code: Filter.UPP.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Position.findAllByKundeAndBelegIsNull(kunde)
+            }
+            else {
+                results = Position.findAllByBelegIsNull();
+            }
+        }
+        else {
+            println("** params.filter not set or invalid value, showing all for $controllerName")
+            flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
+            results = Position.list()
+        }
+
+        foundRecords = results.size();
+        
+        println("** results Class: " + results.getClass().toString())
+        println("** foundRecords: " + foundRecords)
+        println("** db query results: " + results)
+        
+        def data = [aoData: results]
+        
+        
+        //println("** data after JSON rendering: " + data)
+        
+        println("**** $controllerName.$actionName END")
+        render JSON.use("deep"){data as JSON}  //@todo performacetechnisch net optimal evtl, besser eager fetching in der domain class von position?
     }
 
     def list = {
 	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	[positionInstanceList: Position.list(params), positionInstanceTotal: Position.count()]
-    }
-    
-    def listBelegCanditates = {
-        def criteria = Position.createCriteria()
-        def results = criteria.list {
-            isNotEmpty("positionen")
-            positionen {
-                isNull("beleg")
-            }
-            //@todo order("nachname", "asc")
-        }
-        
-        return results
     }
 
     def create = {
@@ -39,7 +87,7 @@ class PositionController {
         def positionInstance = new Position(params)
         if (positionInstance.save(flush: true)) {
             flash.message = message(code: 'default.created.message', args: [message(code: 'position.label', default: 'Position'), positionInstance.id])
-            redirect(action: "show", id: positionInstance.id)
+            redirect(action: "create") //@todo create seite braucht noch eine liste (gerade angelegt oder tagesansicht
         }
         else {
             render(view: "create", model: [positionInstance: positionInstance])

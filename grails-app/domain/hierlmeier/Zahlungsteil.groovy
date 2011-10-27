@@ -1,19 +1,26 @@
 package hierlmeier
 
-class Zahlungsteil {
+class Zahlungsteil implements Serializable { //muss Seriazable implementieren für Flows in Grails
     
     BigDecimal betrag      // == teilbetrag einer Zahlung
     
     Zahlung zahlung
     Beleg beleg
+    Date dateCreated  //automatically maintained by GORM
+    Date lastUpdated  //automatically maintained by GORM
 
     static constraints = {
-        //betrag(scale:2) /*@todo checken wo ma wie die nachkommastellen checkt 
-        //weil hier in den constraints, bedeutet das nur das abgeschnitte wird,
-        //und kein fehler geschmissen
+        betrag(shared: "currencynumber")
     }
     
+    /*
+    def afterInsert() { // Executed after an object is persisted to the database
+            beleg.betrag = beleg.betrag.add(betrag)
+            beleg.save()  
+    } 
+    */
+    
     def String toString() {
-        return "zahlteil:$betrag von zahlung:$zahlung.betrag"
+        return "Zahlteil ${betrag} of ${zahlung}"
     }
 }

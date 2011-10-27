@@ -26,7 +26,7 @@ class LeistungController {
         def leistungInstance = new Leistung(params)
         if (leistungInstance.save(flush: true)) {
             flash.message = message(code: 'default.created.message', args: [message(code: 'leistung.label', default: 'Leistung'), leistungInstance.id])
-            redirect(action: "show", id: leistungInstance.id)
+            redirect(action: "create")
         }
         else {
             render(view: "create", model: [leistungInstance: leistungInstance])

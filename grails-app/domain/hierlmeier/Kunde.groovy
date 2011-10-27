@@ -10,6 +10,8 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
     String beruf            //optional
     Boolean mwst
     String bemerkung        //optional
+    Date dateCreated  //automatically maintained by GORM
+    Date lastUpdated  //automatically maintained by GORM
     
     static hasMany = [positionen:Position, belege:Beleg, zahlungen:Zahlung]
     
@@ -23,6 +25,22 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
         beruf(blank:true)
         bemerkung(blank:true)
     }
+    
+    static namedQueries = { 
+        withUnprocessedPositionen {
+            isNotEmpty("positionen")
+            positionen {
+                isNull("beleg")
+            }
+        }
+        withUnpaidBelege {
+            isNotEmpty("belege")
+            belege {
+                gtProperty 'betrag', 'bezahlt'
+            }
+        }
+    }
+
     
     def String toString () {
         return "${nachname} ${vorname}"

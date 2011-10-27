@@ -1,0 +1,18 @@
+{
+	"sProcessing":   "Bitte warten...",
+	"sLengthMenu":   "_MENU_ Eintr\u00e4ge anzeigen",
+	"sZeroRecords":  "Keine Eintr\u00e4ge vorhanden.",
+	"sInfo":         "_START_ bis _END_ von _TOTAL_ Eintr\u00e4gen",
+	"sInfoEmpty":    "0 bis 0 von 0 Eintr\u00e4gen",
+	"sInfoFiltered": "(gefiltert von _MAX_  Eintr\u00e4gen)",
+	"sInfoPostFix":  "",
+	"sSearch":       "Suchen",
+	"sUrl":          "",
+        "dateFormat":    "dd.MM.yyyy",
+	"oPaginate": {
+		"sFirst":    "Erster",
+		"sPrevious": "Zur\u00fcck",
+		"sNext":     "N\u00e4chster",
+		"sLast":     "Letzter"
+	}
+}

@@ -26,7 +26,7 @@ class MedikamentController {
         def medikamentInstance = new Medikament(params)
         if (medikamentInstance.save(flush: true)) {
             flash.message = message(code: 'default.created.message', args: [message(code: 'medikament.label', default: 'Medikament'), medikamentInstance.id])
-            redirect(action: "show", id: medikamentInstance.id)
+            redirect(action: "create")
         }
         else {
             render(view: "create", model: [medikamentInstance: medikamentInstance])
