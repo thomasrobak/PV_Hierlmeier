@@ -3,7 +3,7 @@ package hierlmeier //Maybe NetBeans shows an java.lang.Enum related error here (
 import grails.converters.JSON
 import grails.converters.XML
 
-import hierlmeier.PrintService
+import hierlmeier.PdfService
 
 import java.math.RoundingMode
 
@@ -12,7 +12,7 @@ class BelegController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     static defaultAction = "index"
     
-    PrintService printService
+    PdfService pdfService
     
     enum Filter {  // possible filters for the dataTableJSON method, filter is set in the view and submitted by the ajax call
         NOFILTER("filter.NOFILTER"),    //value is a message.properties code (no filter at all)
@@ -82,6 +82,9 @@ class BelegController {
     }
     
     def print = {
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
+        
         def belegInstance = Beleg.get(params.id)
         
         if (!belegInstance) {
@@ -94,7 +97,7 @@ class BelegController {
         def xslfile = servletContext.getAttribute("BelegStyleSheet")
                 
         try {
-            out = printService.generatePDF(belegInstance, xslfile)
+            out = pdfService.generatePDF(belegInstance, xslfile)
             
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment;filename=Beleg_${belegInstance.belegnummer}")
@@ -107,6 +110,8 @@ class BelegController {
         finally {
             out.close();
         }
+        
+        println("**** $controllerName.$actionName END")
     }
     
     def create = {
@@ -157,11 +162,20 @@ class BelegController {
                 def brutto = new BigDecimal(netto.multiply(new BigDecimal(g.message(code:'default.tax.rate'))))
                 // brutto needs rounding because the scale maybe to long after multiplication
                 brutto = brutto.setScale(g.message(code:'default.scale').toInteger(), RoundingMode.valueOf(g.message(code:'default.rounding.mode')))
-                def betrag = flow.chosenKunde.mwst ? new BigDecimal(brutto.toString()) : new BigDecimal(netto.toString())
-                def bez = new BigDecimal("0.00")
+                def betrag = new BigDecimal("0.00").setScale(g.message(code:'default.scale').toInteger())
+                def mwst = new BigDecimal("0.00").setScale(g.message(code:'default.scale').toInteger())
+                if(flow.chosenKunde.mwst) {
+                    mwst = brutto.subtract(netto)
+                    betrag = new BigDecimal(brutto.toString())
+                } else {
+                    mwst = new BigDecimal("0.00").setScale(g.message(code:'default.scale').toInteger())
+                    betrag = new BigDecimal(netto.toString())
+                }
+                def bez = new BigDecimal("0.00").setScale(g.message(code:'default.scale').toInteger())
                 
                 flow.belegInstance.netto = netto
                 flow.belegInstance.brutto = brutto
+//              flow.belegInstance.mwst = mwst
                 flow.belegInstance.betrag = betrag
                 flow.belegInstance.bezahlt = bez
                 

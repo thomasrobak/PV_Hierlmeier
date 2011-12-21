@@ -27,7 +27,7 @@ $.fn.dataTableExt.oApi.fnGetFilteredNodes = function ( oSettings )
 
 $(function() {
     
- /********************
+    /********************
  * datatable config vars
  **********/
     var table_datasource
@@ -36,7 +36,7 @@ $(function() {
     var table_request_params
 
     
- /**********************************
+    /**********************************
  * *  DataTable Konfiguration für Kunden Table
  *********************************/
     
@@ -49,6 +49,29 @@ $(function() {
             "name": "filter", 
             "value": table_filter
         });
+        var usethisfor_sDom = 'lfrtip'
+        
+        if ($("#minzahllast").length) {
+            $.fn.dataTableExt.afnFiltering.push(
+                function( oSettings, aData, iDataIndex ) {
+                    var minzahllast
+                    var mzl = $("#minzahllast").val()
+                    if(mzl == null || mzl == "")
+                        minzahllast = 0
+                    else 
+                        minzahllast = parseFloat(mzl.replace(",", "."))
+                    if(!pvhm_isNumber(minzahllast))
+                        minzahllast = 0
+                    
+                    if (minzahllast <= parseFloat(aData[5]))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                );
+                usethisfor_sDom = 'lrtip'
+        }
         
         var table_kunde = $("#dt-kunde").dataTable({
             "bAutoWidth": true,
@@ -68,6 +91,7 @@ $(function() {
             "oLanguage": {
                 "sUrl": dt_locale_file
             },
+            "sDom": usethisfor_sDom,
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 table_request_params.forEach(function(value){
                     aoData.push(value)
@@ -112,6 +136,17 @@ $(function() {
                 "sWidth": "10px",
                 "aTargets": ["dt-kunde-th-mwst"]
             },
+            
+            { /* kunde.zahllast */
+                "mDataProp": "zahllast", 
+                "bSortable": true,
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['zahllast'])
+                },
+                "aTargets": ["dt-kunde-th-zahllast"]
+            },
 
             { /* kunde.telefonnummer */
                 "mDataProp": "telefonnummer", 
@@ -121,6 +156,10 @@ $(function() {
             }      
             ]
         });
+    
+        if ($("#minzahllast").length) {
+            $('#minzahllast').keyup( function() { table_kunde.fnDraw(); } );
+        }
     
         if(table_row_click_action != null) {   
             $("#dt-kunde tbody tr").live("click",function(){
@@ -187,90 +226,90 @@ $(function() {
                 } );
             },
             "aoColumnDefs": [
-                {   /* position.id */
-                    "mDataProp": "id",
-                    "bSearchable": false,
-                    "aTargets": ["dt-position-th-id"]
+            {   /* position.id */
+                "mDataProp": "id",
+                "bSearchable": false,
+                "aTargets": ["dt-position-th-id"]
+            },
+            {   /* position.checkbox */
+                "sWidth": "20px",
+                "bSearchable": false,
+                "sSortDataType": "dom-checkbox",
+                "fnRender": function(oObj){
+                    return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
                 },
-                {   /* position.checkbox */
-                    "sWidth": "20px",
-                    "bSearchable": false,
-                    "sSortDataType": "dom-checkbox",
-                    "fnRender": function(oObj){
-                        return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
-                    },
-                    "aTargets": ["dt-position-th-checkbox"]
+                "aTargets": ["dt-position-th-checkbox"]
+            },
+            {   /* position.typ */
+                "mDataProp": "typ.bezeichnung", 
+                "sWidth": "70px", 
+                "aTargets": ["dt-position-th-typ"]
+            },
+            { /* position.anmerkung */
+                "mDataProp": "anmerkung", 
+                "bSortable": false,
+                "sWidth": "150px", 
+                "aTargets": ["dt-position-th-anmerkung"]
+            },
+            { /* position.menge */
+                "mDataProp": "menge", 
+                "bSortable": false,
+                "bSearchable": false,
+                "sWidth": "30px", 
+                "aTargets": ["dt-position-th-menge"]
+            },
+            { /* position.preis (einzelpreis) */
+                "mDataProp": "preis", 
+                "bSortable": false,
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['preis'])
                 },
-                {   /* position.typ */
-                    "mDataProp": "typ.bezeichnung", 
-                    "sWidth": "70px", 
-                    "aTargets": ["dt-position-th-typ"]
+                "aTargets": ["dt-position-th-preis"]
+            },
+            { /* position.betrag (menge*einzelpreis) */
+                "mDataProp": "betrag", 
+                "bSortable": false,
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
                 },
-                { /* position.anmerkung */
-                    "mDataProp": "anmerkung", 
-                    "bSortable": false,
-                    "sWidth": "150px", 
-                    "aTargets": ["dt-position-th-anmerkung"]
+                "aTargets": ["dt-position-th-betrag"]
+            },
+            { /* position.tier */
+                "mDataProp": "tier.bezeichnung", 
+                "sWidth": "50px", 
+                "aTargets": ["dt-position-th-tier"]
+            },
+            { /* position.datum */
+                "mDataProp": "datum", 
+                "sType": "date",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px",
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['datum'])
                 },
-                { /* position.menge */
-                    "mDataProp": "menge", 
-                    "bSortable": false,
-                    "bSearchable": false,
-                    "sWidth": "30px", 
-                    "aTargets": ["dt-position-th-menge"]
+                "aTargets": ["dt-position-th-datum"]
+            },
+            { /* position.beleg */
+                "mDataProp": "beleg",
+                "sDefaultContent": "keiner",
+                "sWidth": "50px",
+                "fnRender": function(oObj){
+                    if(oObj.aData['beleg'] == null)
+                        return null
+                    return oObj.aData['beleg']['belegnummer'];
                 },
-                { /* position.preis (einzelpreis) */
-                    "mDataProp": "preis", 
-                    "bSortable": false,
-                    "sWidth": "30px",
-                    "bUseRendered": false,
-                    "fnRender": function(oObj){
-                        return pvhm_formatNumber(oObj.aData['preis'])
-                    },
-                    "aTargets": ["dt-position-th-preis"]
-                },
-                { /* position.betrag (menge*einzelpreis) */
-                    "mDataProp": "betrag", 
-                    "bSortable": false,
-                    "sWidth": "30px",
-                    "bUseRendered": false,
-                    "fnRender": function(oObj){
-                        return pvhm_formatNumber(oObj.aData['betrag'])
-                    },
-                    "aTargets": ["dt-position-th-betrag"]
-                },
-                { /* position.tier */
-                    "mDataProp": "tier.bezeichnung", 
-                    "sWidth": "50px", 
-                    "aTargets": ["dt-position-th-tier"]
-                },
-                { /* position.datum */
-                    "mDataProp": "datum", 
-                    "sType": "date",
-                    "bSortable": true,
-                    "bUseRendered": false,
-                    "sWidth": "40px",
-                    "fnRender": function(oObj){
-                        return pvhm_formatDate(oObj.aData['datum'])
-                    },
-                    "aTargets": ["dt-position-th-datum"]
-                },
-                { /* position.beleg */
-                    "mDataProp": "beleg",
-                    "sDefaultContent": "keiner",
-                    "sWidth": "50px",
-                    "fnRender": function(oObj){
-                        if(oObj.aData['beleg'] == null)
-                            return null
-                        return oObj.aData['beleg']['belegnummer'];
-                    },
-                    "aTargets": ["dt-position-th-beleg"]
-                },
-                { /* position.kunde */
-                    "mDataProp": "kunde.name", 
-                    "sWidth": "60px", 
-                    "aTargets": ["dt-position-th-kunde"]
-                }
+                "aTargets": ["dt-position-th-beleg"]
+            },
+            { /* position.kunde */
+                "mDataProp": "kunde.name", 
+                "sWidth": "60px", 
+                "aTargets": ["dt-position-th-kunde"]
+            }
             ]
         });
         
@@ -315,36 +354,36 @@ $(function() {
                 var datum_column_index = $("#dt-datum-column").index("th")
                 
                 $.fn.dataTableExt.afnFiltering.push(
-                function (oSettings, aData, iDataIndex) {
-                    var dStartDate = from_date.datepicker("getDate");
-                    var dEndDate = to_date.datepicker("getDate");
-                    var dCellDate = new Date(Date.parse(aData[datum_column_index]));
-                    //var dCellDate = $.datepicker.parseDate(datepicker_locale.dateFormat, aData[datum_column_index]);
+                    function (oSettings, aData, iDataIndex) {
+                        var dStartDate = from_date.datepicker("getDate");
+                        var dEndDate = to_date.datepicker("getDate");
+                        var dCellDate = new Date(Date.parse(aData[datum_column_index]));
+                        //var dCellDate = $.datepicker.parseDate(datepicker_locale.dateFormat, aData[datum_column_index]);
                     
-                    if (dCellDate == null)
+                        if (dCellDate == null)
+                            return false;
+                    
+                        if (dStartDate == null && dEndDate == null) {
+                            return true;
+                        }
+                        else if (dStartDate == null && dCellDate < dEndDate) {
+                            return true;
+                        }
+                        else if (dStartDate < dCellDate && dEndDate == null) {
+                            return true;
+                        }
+                        else if (dStartDate < dCellDate && dCellDate < dEndDate) {
+                            return true;
+                        }
                         return false;
-                    
-                    if (dStartDate == null && dEndDate == null) {
-                        return true;
                     }
-                    else if (dStartDate == null && dCellDate < dEndDate) {
-                        return true;
-                    }
-                    else if (dStartDate < dCellDate && dEndDate == null) {
-                        return true;
-                    }
-                    else if (dStartDate < dCellDate && dCellDate < dEndDate) {
-                        return true;
-                    }
-                    return false;
-                }
-            );
+                    );
             }
         }
     }
     
             
- /**********************************
+    /**********************************
  * *  DataTable Konfiguration für Belege Table
  *********************************/
     
@@ -472,8 +511,8 @@ $(function() {
         
         if ($("#formZahlung").length) {
             $('#formZahlung').submit(function() {
-                var betraginput = $("#betrag").val()
-                var offenbetrag = $("#remaining").text()
+                var betraginput = parseFloat($("#betrag").val().replace( ",", "." ))
+                var offenbetrag = parseFloat($("#remaining").text().replace( ",", "." ))
                 if(betraginput > offenbetrag) {
                     alert('Zahlungsbetrag ist größer als der offene Gesamtbetrag!');
                     return false;
@@ -492,7 +531,7 @@ $(function() {
     }
     
     
-/**********************************
+    /**********************************
  *  DataTable Konfiguration für Zahlung Table
  *********************************/
     
@@ -605,7 +644,7 @@ $(function() {
     }
     
     
- /**********************************
+    /**********************************
  *  DataTable Konfigurationen für Statistik "Erbrachte Leistungen/Medikamente"
  *********************************/
     
@@ -687,7 +726,7 @@ $(function() {
         });
     }
     
- /**********************************
+    /**********************************
  *  DataTable Konfigurationen für Statistik "Tagesbericht"
  *********************************/
 

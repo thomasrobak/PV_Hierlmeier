@@ -56,7 +56,7 @@ class KundeController {
         def data = [aoData: results]
         
         println("** data before JSON rendering: " + data)
-        
+                
         println("**** $controllerName.$actionName END")
         render data as JSON
     }

@@ -59,8 +59,8 @@
         <g:hiddenField name="id" value="${belegInstance?.id}" />
         <g:link class="edit" action="edit" id="${belegInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
         <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-        <button class="print ui-button-text-icon-primary" type="submit" name="_action_print">
-          <span class="ui-icon ui-icon-print"></span>Drucken
+        <button class="print" type="submit" name="_action_print">
+          Drucken
         </button>
       </fieldset>
     </g:form>

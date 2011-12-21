@@ -60,7 +60,7 @@ class CustomBigDecimalEditor extends PropertyEditorSupport {
 
     void setValue(Object value) {
         if(value.scale() < 2)
-        value = value.setScale(2)
+        value = value.setScale(2)  //@todo rounding mode missing?
         super.setValue(value)
     }
 }
