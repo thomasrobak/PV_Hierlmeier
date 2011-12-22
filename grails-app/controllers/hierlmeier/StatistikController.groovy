@@ -1,4 +1,4 @@
-package hierlmeier  //Netbeans IDE Bug
+package hierlmeier  //ignore error message -> Netbeans IDE Bug
 
 import grails.converters.JSON
 import org.springframework.context.i18n.LocaleContextHolder; 
@@ -174,11 +174,11 @@ class StatistikController {
 
         def resultsPos = Position.findAllByDatum(searchDate)
         println("** Positionen results Class: " + resultsPos.getClass().toString())
-        println("** db query results: " + resultsPos)
+        println("** Positionen query results: " + resultsPos)
         
         def resultsZal = Zahlung.findAllByDatum(searchDate)
-        println("** Positionen results Class: " + resultsZal.getClass().toString())
-        println("** db query results: " + resultsZal)
+        println("** Zahlungen results Class: " + resultsZal.getClass().toString())
+        println("** Zahlungen query results: " + resultsZal)
         
         def sumPos = new BigDecimal("0.00")
         def sumZal = new BigDecimal("0.00")
@@ -188,14 +188,14 @@ class StatistikController {
         
         resultsPos.each {
             sumPos = sumPos.add(new BigDecimal(it.betrag.toString()))
-            arrayPos.add(['"' + it.kunde.nachname.toString() + " " + it.kunde.vorname.toString() + '"', 
+            arrayPos.add(['"' + it.kunde.name.toString() + '"', 
                          '"' + it.typ.bezeichnung.toString() + '"',
                          it.betrag.toString()])
         }
         
         resultsZal.each {
             sumZal = sumZal.add(new BigDecimal(it.betrag.toString()))
-            arrayZal.add([it.kunde.vorname.toString() + " " + it.kunde.nachname.toString(), 
+            arrayZal.add(['"' + it.kunde.name.toString() + '"', 
                          it.betrag.toString()])
         }
         

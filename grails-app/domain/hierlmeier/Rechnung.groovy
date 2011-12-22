@@ -7,6 +7,7 @@ class Rechnung implements Serializable {
     Date dateCreated  //automatically maintained by GORM
     Date lastUpdated  //automatically maintained by GORM
     Kunde kunde
+    BigDecimal betrag
     
     static hasMany = [belege:Beleg, zahlungsteile:Zahlungsteil]
 

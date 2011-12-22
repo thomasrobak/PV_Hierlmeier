@@ -27,7 +27,7 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
         bemerkung(blank:true)
     }   
     
-    static transients = ['zahllast', 'letztesrechnungsdatum']
+    static transients = ['zahllast', 'letztesrechnungsdatum', 'name']
     
     BigDecimal getZahllast() {
         def result = Beleg.aktuelleZahllastSpecificKunde(this).list()
@@ -61,6 +61,10 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
         } else { // (size < 1) => Kunde has no Transactions whatsoever (yet)
             return null
         }
+    }
+    
+    String getName() {
+        return new String(this.nachname + " " + this.vorname)
     }
 
     

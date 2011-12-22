@@ -35,6 +35,32 @@ class RechnungController {
         def results
         def foundRecords
         
+        if(params.filter == g.message(code: Filter.NOFILTER.value())) {
+            if(params.kundeId) {
+                def kunde = Kunde.get(params.kundeId)
+                results = Rechnung.findAllByKunde(kunde) //@todo try with id only (not fetching the kunde object first)
+            }
+            else {
+                results = Rechnung.list()
+            }
+        }
+        else {
+            println("** params.filter not set or invalid value, showing all for $controllerName")
+            flash.message = "Filter not found. Showing all records (same as 'Filter.NOFILTER')."  //@todo message code dafür fehlt
+            results = Rechnung.list()
+        }
+        
+        foundRecords = results.size();
+        println("** results Class: " + results.getClass().toString())
+        println("** foundRecords: " + foundRecords)
+        println("** db query results: " + results)
+        
+        def data = [aoData: results]
+        
+        println("** data before JSON rendering: " + data)
+        
+        println("**** $controllerName.$actionName END")
+        render JSON.use("deep"){data as JSON}
         
     }
     
@@ -220,7 +246,8 @@ class RechnungController {
                 flow.kundeList.each {
                     def b = Beleg.unbeglichene.findAllByKunde(it, [sort:"datum", order:"asc"])
                     def zt = Zahlungsteil.findAllByBelegInList(b)
-                    def rechnung = new Rechnung(kunde: it, rechnungnummer: rn.toString(), belege: b, zahlungsteile: zt)
+                    def betrag = new BigDecimal(it.zahllast.toString()).setScale(g.message(code:'default.scale').toInteger())
+                    def rechnung = new Rechnung(kunde: it, rechnungnummer: rn.toString(), betrag: betrag, belege: b, zahlungsteile: zt)
                     
                     if(!rechnung.validate()) {
                         rechnung.errors.each {

@@ -530,6 +530,122 @@ $(function() {
         }
     }
     
+        /**********************************
+ * *  DataTable Konfiguration für Rechnungen Table
+ *********************************/
+    
+    if ($("#dt-rechnung").length) {
+        table_datasource = $("#dt-rechnung").attr("datasource");
+        table_row_click_action = $("#dt-rechnung").attr("rowclickaction");
+        table_filter = $("#dt-rechnung").attr("filter");
+        table_request_params = []
+        table_request_params.push({
+            "name": "filter", 
+            "value": table_filter
+        }); 
+        if($("#dt-rechnung").attr("kundeId")) {
+            table_request_params.push({
+                "name": "kundeId", 
+                "value": $("#dt-rechnung").attr("kundeId")
+            });
+        }
+
+        var table_rechnung = $("#dt-rechnung").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "sAjaxSource": table_datasource,
+            "sAjaxDataProp": "aoData",
+            "bLengthChange": false,
+            "iDisplayLength": -1,
+            "bScrollInfinite": true,
+            "bScrollCollapse": true,
+            "sScrollY": "400px",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+                table_request_params.forEach(function(value){
+                    aoData.push(value)
+                });
+                $.ajax( {
+                    "dataType": 'json', 
+                    "type": "POST", 
+                    "url": sSource, 
+                    "data": aoData, 
+                    "success": fnCallback
+                } );
+            },
+            "fnInitComplete": function(oSettings, json) {
+                if ($("#remaining").length) {
+                    if(json.remaining) {
+                        $("#remaining").html(pvhm_formatNumber(json.remaining))
+                    }
+                }
+            },
+            "aoColumnDefs": [
+            {   /* rechnung.id */
+                "mDataProp": "id",
+                "bSearchable": false,
+                "aTargets": ["dt-rechnung-th-id"]
+            },
+            {   /* rechnung.checkbox */
+                "sWidth": "20px",
+                "bSearchable": false,
+                "sSortDataType": "dom-checkbox",
+                "fnRender": function(oObj){
+                    return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
+                },
+                "aTargets": ["dt-rechnung-th-checkbox"]
+            },
+            {   /* rechnung.rechnungnummer */
+                "mDataProp": "rechnungnummer", 
+                "sWidth": "30px", 
+                "aTargets": ["dt-rechnung-th-rechnungnummer"]
+            },
+            { /* rechnung.betrag */
+                "mDataProp": "betrag",
+                "sWidth": "30px",
+                "bUseRendered": false,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
+                },
+                "aTargets": ["dt-rechnung-th-betrag"]
+            },
+            { /* rechnung.datum */
+                "mDataProp": "datum", 
+                "sType": "date",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px", 
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['datum'])
+                },
+                "aTargets": ["dt-rechnung-th-datum"]
+            },
+            { /* rechnung.kunde */
+                "sWidth": "60px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return oObj.aData['kunde']['nachname'] + " " + oObj.aData['kunde']['vorname']
+                },
+                "aTargets": ["dt-rechnung-th-kunde"]
+            }
+            ]
+        });
+        
+        if(table_row_click_action != null) {   
+            $("#dt-rechnung tbody tr").live("click",function(){
+                var row_obj = table_rechnung.fnGetData(this);
+                var link = table_row_click_action.replace("_x_", row_obj.id);
+                window.location.href = link;
+            });
+        }
+    }
     
     /**********************************
  *  DataTable Konfiguration für Zahlung Table
