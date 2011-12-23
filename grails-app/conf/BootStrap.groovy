@@ -13,7 +13,7 @@ class BootStrap {
                 
         // read the servletContext path and add the /xml directory to it
         // this is needed because dev and prod environments have different paths
-        def xslstylesheetdir = new String(servletContext.getRealPath("/") + "xml/") 
+        def xslstylesheetdir = new String(servletContext.getRealPath(File.separator) + "xml" + File.separator) 
         println("*** xsl-stylesheets directory: " + xslstylesheetdir)
         
         // add the xsl stylesheet names to the path we got above
@@ -48,6 +48,7 @@ class BootStrap {
             returnArray['id'] = it.id
             returnArray['nachname'] = it.nachname
             returnArray['vorname'] = it.vorname
+            returnArray['name'] = it.name
             returnArray['adresse'] = it.adresse
             returnArray['wohnort'] = it.wohnort
             returnArray['telefonnummer'] = it.telefonnummer
@@ -58,6 +59,24 @@ class BootStrap {
             returnArray['letztesrechnungsdatum'] = it.letztesrechnungsdatum
             return returnArray
         }
+        JSON.use("deep"){
+            JSON.registerObjectMarshaller(Kunde) {
+                def returnArray = [:]
+                returnArray['id'] = it.id
+                returnArray['nachname'] = it.nachname
+                returnArray['vorname'] = it.vorname
+                returnArray['name'] = it.name
+                returnArray['adresse'] = it.adresse
+                returnArray['wohnort'] = it.wohnort
+                returnArray['telefonnummer'] = it.telefonnummer
+                returnArray['beruf'] = it.beruf
+                returnArray['mwst'] = it.mwst
+                returnArray['bemerkung'] = it.bemerkung
+                returnArray['zahllast'] = it.zahllast
+                returnArray['letztesrechnungsdatum'] = it.letztesrechnungsdatum
+                return returnArray
+            }
+        }
         println("****** Register Custom Marshaller for XML rendering of Object Kunde")
         XML.use("deep"){
             XML.registerObjectMarshaller(Kunde) { kunde, converter ->
@@ -65,6 +84,7 @@ class BootStrap {
                 converter.build {
                     nachname(kunde.nachname)
                     vorname(kunde.vorname)
+                    name(kunde.name)
                     adresse(kunde.adresse)
                     wohnort(kunde.wohnort)
                     telefonnummer(kunde.telefonnummer)
@@ -80,6 +100,7 @@ class BootStrap {
             converter.build {
                 nachname(kunde.nachname)
                 vorname(kunde.vorname)
+                name(kunde.name)
                 adresse(kunde.adresse)
                 wohnort(kunde.wohnort)
                 telefonnummer(kunde.telefonnummer)

@@ -26,5 +26,12 @@ class Rechnung implements Serializable {
                 groupProperty "kunde"
             }
         }
+        zuletztErstellteRechnungSpecificKunde { kunde ->
+            eq 'kunde', kunde
+            projections {
+                max "datum"
+                groupProperty "kunde"
+            }
+        }
     }
 }

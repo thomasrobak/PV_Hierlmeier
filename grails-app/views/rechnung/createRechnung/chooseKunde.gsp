@@ -23,6 +23,13 @@
         <g:textField name="minzahllast" value="0" />
         </span>
       </div>
+      <div class="fieldcontain required">
+        <label>
+          <g:message code="default.maximum.debt.label" default="Zahllast maximal (€)" />
+        </label>
+        <g:textField name="maxzahllast" value="10000" />
+        </span>
+      </div>
     </fieldset>
 
     <div class="buttons">
@@ -44,6 +51,7 @@
           <th class="dt-kunde-th-mwst">MwSt</th>
           <th class="dt-kunde-th-telefonnummer">Telefonnummer</th>
           <th class="dt-kunde-th-zahllast">Zahllast (€)</th>
+          <th class="dt-kunde-th-letztesrechnungsdatum">Letzte Rechnung</th>
         </tr>
       </thead>
       <tbody></tbody>

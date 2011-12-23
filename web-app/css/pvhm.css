@@ -573,7 +573,7 @@ table.grails th:hover, table.grails tr:hover {
     text-decoration: underline;
 }
 
-.buttons .delete, .buttons .edit, .buttons .save, .buttons .print {
+.buttons .delete, .buttons .edit, .buttons .save, .buttons .print, .buttons .search {
     background-position: 0.7em center;
     background-repeat: no-repeat;
     text-indent: 25px;
@@ -593,6 +593,10 @@ table.grails th:hover, table.grails tr:hover {
 
 .buttons .print {
     background-image: url(../images/skin/print.png);
+}
+
+.buttons .search {
+    background-image: url(../images/skin/search.png);
 }
 
 

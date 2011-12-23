@@ -47,12 +47,11 @@ class Kunde implements Serializable { //muss Seriazable implementieren für Flow
     }
     
     Date getLetztesrechnungsdatum() {
-        def result = Rechnung.zuletztErstellteRechnungPerKunde.findByKunde(this)
+        def result = Rechnung.zuletztErstellteRechnungSpecificKunde(this).list()
         if(result == null) { // => Kunde has no Rechnung whatsoever (yet)
             return null
         } else if(result.size() == 1) {
-            def rechnung = result[0]
-            def datum = rechnung.datum
+            def datum = result[0][0]
             return datum
         } else if(result.size() > 1) { //sanity check, should be only 1 result
             println("*** Error during Marshalling of Kunde Object (transient value letztesRechnungsDatum) query returned too many results (should have been only 1 result)")

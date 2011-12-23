@@ -34,6 +34,7 @@ $(function() {
     var table_row_click_action
     var table_filter
     var table_request_params
+    var usethisfor_sDom = 'lfrtip'
 
     
     /**********************************
@@ -49,7 +50,6 @@ $(function() {
             "name": "filter", 
             "value": table_filter
         });
-        var usethisfor_sDom = 'lfrtip'
         
         if ($("#minzahllast").length) {
             $.fn.dataTableExt.afnFiltering.push(
@@ -70,7 +70,28 @@ $(function() {
                     return false;
                 }
                 );
-                usethisfor_sDom = 'lrtip'
+            usethisfor_sDom = 'lrtip'
+        }
+        if ($("#maxzahllast").length) {
+            $.fn.dataTableExt.afnFiltering.push(
+                function( oSettings, aData, iDataIndex ) {
+                    var maxzahllast
+                    var mzl = $("#maxzahllast").val()
+                    if(mzl == null || mzl == "")
+                        return true;
+                    else 
+                        maxzahllast = parseFloat(mzl.replace(",", "."))
+                    if(!pvhm_isNumber(maxzahllast))
+                        return true;
+                    
+                    if (maxzahllast >= parseFloat(aData[5]))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                );
+            usethisfor_sDom = 'lrtip'
         }
         
         var table_kunde = $("#dt-kunde").dataTable({
@@ -141,13 +162,24 @@ $(function() {
                 "mDataProp": "zahllast", 
                 "bSortable": true,
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['zahllast'])
                 },
                 "aTargets": ["dt-kunde-th-zahllast"]
             },
-
+            { /* kunde.letztesrechnungsdatum */
+                "mDataProp": "letztesrechnungsdatum", 
+                "sType": "date",
+                "sDefaultContent": "-",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px",
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['letztesrechnungsdatum'])
+                },
+                "aTargets": ["dt-kunde-th-letztesrechnungsdatum"]
+            },
             { /* kunde.telefonnummer */
                 "mDataProp": "telefonnummer", 
                 "bSortable": false, 
@@ -158,7 +190,15 @@ $(function() {
         });
     
         if ($("#minzahllast").length) {
-            $('#minzahllast').keyup( function() { table_kunde.fnDraw(); } );
+            $('#minzahllast').keyup( function() {
+                table_kunde.fnDraw();
+            } );
+        }
+        
+        if ($("#maxzahllast").length) {
+            $('#maxzahllast').keyup( function() {
+                table_kunde.fnDraw();
+            } );
         }
     
         if(table_row_click_action != null) {   
@@ -262,7 +302,7 @@ $(function() {
                 "mDataProp": "preis", 
                 "bSortable": false,
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['preis'])
                 },
@@ -272,7 +312,7 @@ $(function() {
                 "mDataProp": "betrag", 
                 "bSortable": false,
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['betrag'])
                 },
@@ -463,7 +503,7 @@ $(function() {
             { /* beleg.betrag */
                 "mDataProp": "betrag",
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['betrag'])
                 },
@@ -472,7 +512,7 @@ $(function() {
             { /* beleg.bezahlt */
                 "mDataProp": "bezahlt", 
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['bezahlt'])
                 },
@@ -530,7 +570,7 @@ $(function() {
         }
     }
     
-        /**********************************
+    /**********************************
  * *  DataTable Konfiguration für Rechnungen Table
  *********************************/
     
@@ -610,7 +650,7 @@ $(function() {
             { /* rechnung.betrag */
                 "mDataProp": "betrag",
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['betrag'])
                 },
@@ -631,7 +671,7 @@ $(function() {
                 "sWidth": "60px",
                 "bUseRendered": true,
                 "fnRender": function(oObj){
-                    return oObj.aData['kunde']['nachname'] + " " + oObj.aData['kunde']['vorname']
+                    return oObj.aData['kunde']['name']
                 },
                 "aTargets": ["dt-rechnung-th-kunde"]
             }
@@ -722,7 +762,7 @@ $(function() {
             { /* zahlung.betrag */
                 "mDataProp": "betrag",
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['betrag'])
                 },
@@ -743,7 +783,7 @@ $(function() {
                 "sWidth": "60px",
                 "bUseRendered": true,
                 "fnRender": function(oObj){
-                    return oObj.aData['kunde']['nachname'] + " " + oObj.aData['kunde']['vorname']
+                    return oObj.aData['kunde']['name']
                 },
                 "aTargets": ["dt-zahlung-th-kunde"]
             }
@@ -798,8 +838,12 @@ $(function() {
             {
                 "mDataProp": 1, 
                 "bSortable": true,
+                "bUseRendered": true,
                 "sWidth": "150px", 
-                "aTargets": ["dt-erbracht-medikament-th-summe"]
+                "aTargets": ["dt-erbracht-medikament-th-summe"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[1])
+                }
             }]
         });
     
@@ -836,8 +880,12 @@ $(function() {
             {
                 "mDataProp": 1, 
                 "bSortable": true,
+                "bUseRendered": true,
                 "sWidth": "150px", 
-                "aTargets": ["dt-erbracht-leistung-th-summe"]
+                "aTargets": ["dt-erbracht-leistung-th-summe"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[1])
+                }
             }]
         });
     }
@@ -879,11 +927,15 @@ $(function() {
             {
                 "mDataProp": 2, 
                 "bSortable": true,
-                "aTargets": ["dt-tagesbericht-position-th-betrag"]
+                "bUseRendered": true,
+                "aTargets": ["dt-tagesbericht-position-th-betrag"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[2])
+                }
             }]
         });
         
-        table_tb_position.fnAdjustColumnSizing();
+        //table_tb_position.fnAdjustColumnSizing();
     
         var table_tb_zahlung = $("#dt-tagesbericht-zahlung").dataTable({
             "bAutoWidth": true,
@@ -912,11 +964,15 @@ $(function() {
             {
                 "mDataProp": 1,
                 "bSortable": true,
-                "aTargets": ["dt-tagesbericht-zahlung-th-betrag"]
+                "bUseRendered": true,
+                "aTargets": ["dt-tagesbericht-zahlung-th-betrag"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[1])
+                }
             }]
         });
         
-        table_tb_zahlung.fnAdjustColumnSizing();
+    //table_tb_zahlung.fnAdjustColumnSizing();
     }
 
 });

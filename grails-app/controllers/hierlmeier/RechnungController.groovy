@@ -64,6 +64,20 @@ class RechnungController {
         
     }
     
+    private String pdfOutputPath() {
+        String path
+        
+        def pathAbsolute = g.message(code: 'application.pdf.output.dir.absolute', default: "null")
+        if(pathAbsolute != null && pathAbsolute != "null") {
+            path = new String(pathAbsolute)
+        } else {
+            path = new String(servletContext.getRealPath(File.separator) + g.message(code: 'application.pdf.output.path.relative', default: "pdf/"))
+        }
+        
+        return path
+    }
+            
+    
     private String generatePrintXML(String id) {
         def rechnungInstance = Rechnung.get(id)
         
@@ -141,7 +155,7 @@ class RechnungController {
         
         println("**** generatePrintXML for Rechnung - END - Result: " + writer.toString())
         
-        return writer.toString()
+        return new String(writer.toString())
     }
     
     
@@ -165,14 +179,8 @@ class RechnungController {
         }
         
         def xslfile = servletContext.getAttribute("RechnungStyleSheet")
-        String pdfOutputDir
-        
-        def pdfOutputDirAbsolute = g.message(code: 'application.pdf.output.dir.absolute', default: "null")
-        if(pdfOutputDirAbsolute != null && pdfOutputDirAbsolute != "null") {
-            pdfOutputDir = new String(pdfOutputDirAbsolute)
-        } else {
-            pdfOutputDir = new String(servletContext.getRealPath("/") + g.message(code: 'application.pdf.output.dir', default: "pdf/"))
-        }
+        String pdfOutputDir = pdfOutputPath()
+
         new File(pdfOutputDir).mkdirs()
         println("** PDF Output Directory set to: " + pdfOutputDir)
         
@@ -216,9 +224,23 @@ class RechnungController {
                 
                 def results = Kunde.withUnpaidBelege.listDistinct()
                 def kl = []
-                results.each {
-                    if(it.zahllast >= minimumZahllast) {
-                        kl.add(it)
+                if(params.maxzahllast == null || params.maxzahllast == "") {
+                    results.each {
+                        if(it.zahllast >= minimumZahllast) {
+                            kl.add(it)
+                        }
+                    }
+                } else {
+                    def maximumZahllast
+                    try {
+                        maximumZahllast = new BigDecimal(params.maxzahllast.toString())
+                    } catch (NumberFormatException nfe) {
+                        return error()
+                    }
+                    results.each {
+                        if(it.zahllast >= minimumZahllast && it.zahllast <= maximumZahllast) {
+                            kl.add(it)
+                        }
                     }
                 }
                 flow.kundeList = kl
@@ -301,14 +323,38 @@ class RechnungController {
     }
 
     def show = {
+        println("**** $controllerName.$actionName START")
+        println("** params: " + params)
+        
         def rechnungInstance = Rechnung.get(params.id)
+        
         if (!rechnungInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'rechnung.label', default: 'Rechnung'), params.id])
-            redirect(action: "list")
+            redirect("list")
         }
-        else {
-            [rechnungInstance: rechnungInstance]
+        
+        def xslfile = servletContext.getAttribute("RechnungStyleSheet")
+        File pdf = new File(new String(pdfOutputPath() + "Rechnung_" + rechnungInstance.rechnungnummer + ".pdf"))
+        
+        
+        if(pdf.exists()) {
+            println("** PDF File for given Rechnung ID[" + params.id + "] found: " + pdf.getAbsolutePath())   
+        } else {
+            pdf = pdfService.generatePDF(generatePrintXML(rechnungInstance), xslfile, new String(pdfOutputPath + "Rechnung_" + rechnungInstance.rechnungnummer + ".pdf"))
         }
+        
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment;filename=Rechnung_${rechnungInstance.rechnungnummer}")
+        response.setContentLength((int) pdf.length());
+        FileInputStream fileInputStream = new FileInputStream(pdf);
+		OutputStream responseOutputStream = response.getOutputStream();
+		int bytes;
+		while ((bytes = fileInputStream.read()) != -1) {
+			responseOutputStream.write(bytes);
+		}
+        responseOutputStream.flush();
+        
+        println("**** $controllerName.$actionName END")
     }
 
     def edit = {

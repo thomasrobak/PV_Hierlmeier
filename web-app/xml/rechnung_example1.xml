@@ -1,25 +1,24 @@
-
 <rechnung id='1'>
-    <rechnungnummer>12345</rechnungnummer>
-    <datum>2011-12-15</datum>
-    <summe>221.21</summe>
-    <mwst>36.87</mwst>
-    <netto>184.34</netto>
-    <rechnungbelege>
-        <beleg id='1'>
-            <belegtext>Restbetrag Beleg 1111111</belegtext>
-            <datum>2011-12-15</datum>
-            <offen>221.21</offen>
-        </beleg>
-    </rechnungbelege>
-    <kunde id='1'>
-        <nachname>Huber</nachname>
-        <vorname>Franz</vorname>
-        <adresse>Landweg 12</adresse>
-        <wohnort>Mistelbach</wohnort>
-        <telefonnummer>0-555-123456</telefonnummer>
-        <beruf></beruf>
-        <mwst>true</mwst>
-        <bemerkung>da Franz is a guada Spezl</bemerkung>
-    </kunde>
+  <rechnungnummer>10001</rechnungnummer>
+  <datum>2011-12-22</datum>
+  <summe>221.21</summe>
+  <mwst>36.87</mwst>
+  <netto>184.34</netto>
+  <rechnungbelege>
+    <beleg id='1'>
+      <belegtext>Restbetrag Beleg 1111111</belegtext>
+      <datum>2011-12-22</datum>
+      <offen>221.21</offen>
+    </beleg>
+  </rechnungbelege>
+  <kunde id='1'>
+    <nachname>Huber</nachname>
+    <vorname>Franz</vorname>
+    <adresse>Landweg 12</adresse>
+    <wohnort>Mistelbach</wohnort>
+    <telefonnummer>0-555-123456</telefonnummer>
+    <beruf></beruf>
+    <mwst>true</mwst>
+    <bemerkung>da Franz is a guada Spezl</bemerkung>
+  </kunde>
 </rechnung>
