@@ -16,15 +16,12 @@ var pvhm_formatNumber = function(parsethis) {
     else
         return parseFloat(parsethis).toFixed(2).toString()
 }
-  
+ 
+var pvhm_isNumber = function(parseThis) {
+    return !isNaN(parseFloat(parseThis)) && isFinite(parseThis);
+}
 
  /**************
- *
- * Misc Configs and Inits
- * 
- *************/
-
-/**************
  * Widget Locales Config and init
  *************/
 
@@ -65,8 +62,8 @@ var datepicker_locale
     
 
 
-    /**************
- ** position erstellen, selectbox für typ ändert ein feld das den katalogpreis anzeigt
+/**************
+ ** position anlegen selectbox für typ ändert ein feld das den katalogpreis anzeigt
  **************/
 
 $(function() {

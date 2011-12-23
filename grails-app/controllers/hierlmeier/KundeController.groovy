@@ -35,7 +35,7 @@ class KundeController {
                 results = Kunde.list()  
             }
             else if(params.filter == g.message(code: Filter.UPP.value())) {
-                results = Kunde.withUnprocessedPositionen.listDistinct(); //listDistinct als projection in der namedquery behandeln
+                results = Kunde.withUnprocessedPositionen.listDistinct(); //@todo listDistinct als projection in der namedquery behandeln
             }
             else if(params.filter == g.message(code: Filter.NPB.value())) {
                 results = Kunde.withUnpaidBelege.listDistinct();
@@ -56,7 +56,7 @@ class KundeController {
         def data = [aoData: results]
         
         println("** data before JSON rendering: " + data)
-        
+                
         println("**** $controllerName.$actionName END")
         render data as JSON
     }

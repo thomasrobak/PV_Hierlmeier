@@ -22,7 +22,7 @@
           <span class="required-indicator">*</span>
         </label>
         <g:select name="listrange.jahr" value="${listrange.jahr}" from="${selectbox.jahrliste}" />
-        <g:select name="listrange.monat" value="${listrange.monat}" from="${selectbox.monatliste}" noSelection="${['':'-Alle Monate-']}"/>
+        <g:select name="listrange.monat" value="${listrange.monat}" from="${selectbox.monatliste}" noSelection="${['':'- Alle Monate -']}"/>
         </span>
       </div>
     </fieldset>

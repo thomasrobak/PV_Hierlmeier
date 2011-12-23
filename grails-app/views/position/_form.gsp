@@ -22,7 +22,7 @@
                   noSelection="${['null':'']}" 
                   value="${positionInstance?.typ?.id}" 
                   class="many-to-one"/>
-        <span>Standardpreis (€):</span>
+        <span>Standard Einzelpreis (€):</span>
         <g:textField name="typ-preis" style="text-align: center" size="6" readonly="readonly" value="-"/>
 </div>
 

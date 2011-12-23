@@ -27,16 +27,17 @@ $.fn.dataTableExt.oApi.fnGetFilteredNodes = function ( oSettings )
 
 $(function() {
     
- /********************
+    /********************
  * datatable config vars
  **********/
     var table_datasource
     var table_row_click_action
     var table_filter
     var table_request_params
+    var usethisfor_sDom = 'lfrtip'
 
     
- /**********************************
+    /**********************************
  * *  DataTable Konfiguration für Kunden Table
  *********************************/
     
@@ -49,6 +50,49 @@ $(function() {
             "name": "filter", 
             "value": table_filter
         });
+        
+        if ($("#minzahllast").length) {
+            $.fn.dataTableExt.afnFiltering.push(
+                function( oSettings, aData, iDataIndex ) {
+                    var minzahllast
+                    var mzl = $("#minzahllast").val()
+                    if(mzl == null || mzl == "")
+                        minzahllast = 0
+                    else 
+                        minzahllast = parseFloat(mzl.replace(",", "."))
+                    if(!pvhm_isNumber(minzahllast))
+                        minzahllast = 0
+                    
+                    if (minzahllast <= parseFloat(aData[5]))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                );
+            usethisfor_sDom = 'lrtip'
+        }
+        if ($("#maxzahllast").length) {
+            $.fn.dataTableExt.afnFiltering.push(
+                function( oSettings, aData, iDataIndex ) {
+                    var maxzahllast
+                    var mzl = $("#maxzahllast").val()
+                    if(mzl == null || mzl == "")
+                        return true;
+                    else 
+                        maxzahllast = parseFloat(mzl.replace(",", "."))
+                    if(!pvhm_isNumber(maxzahllast))
+                        return true;
+                    
+                    if (maxzahllast >= parseFloat(aData[5]))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                );
+            usethisfor_sDom = 'lrtip'
+        }
         
         var table_kunde = $("#dt-kunde").dataTable({
             "bAutoWidth": true,
@@ -68,6 +112,7 @@ $(function() {
             "oLanguage": {
                 "sUrl": dt_locale_file
             },
+            "sDom": usethisfor_sDom,
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 table_request_params.forEach(function(value){
                     aoData.push(value)
@@ -112,7 +157,29 @@ $(function() {
                 "sWidth": "10px",
                 "aTargets": ["dt-kunde-th-mwst"]
             },
-
+            
+            { /* kunde.zahllast */
+                "mDataProp": "zahllast", 
+                "bSortable": true,
+                "sWidth": "30px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['zahllast'])
+                },
+                "aTargets": ["dt-kunde-th-zahllast"]
+            },
+            { /* kunde.letztesrechnungsdatum */
+                "mDataProp": "letztesrechnungsdatum", 
+                "sType": "date",
+                "sDefaultContent": "-",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px",
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['letztesrechnungsdatum'])
+                },
+                "aTargets": ["dt-kunde-th-letztesrechnungsdatum"]
+            },
             { /* kunde.telefonnummer */
                 "mDataProp": "telefonnummer", 
                 "bSortable": false, 
@@ -121,6 +188,18 @@ $(function() {
             }      
             ]
         });
+    
+        if ($("#minzahllast").length) {
+            $('#minzahllast').keyup( function() {
+                table_kunde.fnDraw();
+            } );
+        }
+        
+        if ($("#maxzahllast").length) {
+            $('#maxzahllast').keyup( function() {
+                table_kunde.fnDraw();
+            } );
+        }
     
         if(table_row_click_action != null) {   
             $("#dt-kunde tbody tr").live("click",function(){
@@ -187,90 +266,90 @@ $(function() {
                 } );
             },
             "aoColumnDefs": [
-                {   /* position.id */
-                    "mDataProp": "id",
-                    "bSearchable": false,
-                    "aTargets": ["dt-position-th-id"]
+            {   /* position.id */
+                "mDataProp": "id",
+                "bSearchable": false,
+                "aTargets": ["dt-position-th-id"]
+            },
+            {   /* position.checkbox */
+                "sWidth": "20px",
+                "bSearchable": false,
+                "sSortDataType": "dom-checkbox",
+                "fnRender": function(oObj){
+                    return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
                 },
-                {   /* position.checkbox */
-                    "sWidth": "20px",
-                    "bSearchable": false,
-                    "sSortDataType": "dom-checkbox",
-                    "fnRender": function(oObj){
-                        return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
-                    },
-                    "aTargets": ["dt-position-th-checkbox"]
+                "aTargets": ["dt-position-th-checkbox"]
+            },
+            {   /* position.typ */
+                "mDataProp": "typ.bezeichnung", 
+                "sWidth": "70px", 
+                "aTargets": ["dt-position-th-typ"]
+            },
+            { /* position.anmerkung */
+                "mDataProp": "anmerkung", 
+                "bSortable": false,
+                "sWidth": "150px", 
+                "aTargets": ["dt-position-th-anmerkung"]
+            },
+            { /* position.menge */
+                "mDataProp": "menge", 
+                "bSortable": false,
+                "bSearchable": false,
+                "sWidth": "30px", 
+                "aTargets": ["dt-position-th-menge"]
+            },
+            { /* position.preis (einzelpreis) */
+                "mDataProp": "preis", 
+                "bSortable": false,
+                "sWidth": "30px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['preis'])
                 },
-                {   /* position.typ */
-                    "mDataProp": "typ.bezeichnung", 
-                    "sWidth": "70px", 
-                    "aTargets": ["dt-position-th-typ"]
+                "aTargets": ["dt-position-th-preis"]
+            },
+            { /* position.betrag (menge*einzelpreis) */
+                "mDataProp": "betrag", 
+                "bSortable": false,
+                "sWidth": "30px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
                 },
-                { /* position.anmerkung */
-                    "mDataProp": "anmerkung", 
-                    "bSortable": false,
-                    "sWidth": "150px", 
-                    "aTargets": ["dt-position-th-anmerkung"]
+                "aTargets": ["dt-position-th-betrag"]
+            },
+            { /* position.tier */
+                "mDataProp": "tier.bezeichnung", 
+                "sWidth": "50px", 
+                "aTargets": ["dt-position-th-tier"]
+            },
+            { /* position.datum */
+                "mDataProp": "datum", 
+                "sType": "date",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px",
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['datum'])
                 },
-                { /* position.menge */
-                    "mDataProp": "menge", 
-                    "bSortable": false,
-                    "bSearchable": false,
-                    "sWidth": "30px", 
-                    "aTargets": ["dt-position-th-menge"]
+                "aTargets": ["dt-position-th-datum"]
+            },
+            { /* position.beleg */
+                "mDataProp": "beleg",
+                "sDefaultContent": "keiner",
+                "sWidth": "50px",
+                "fnRender": function(oObj){
+                    if(oObj.aData['beleg'] == null)
+                        return null
+                    return oObj.aData['beleg']['belegnummer'];
                 },
-                { /* position.preis (einzelpreis) */
-                    "mDataProp": "preis", 
-                    "bSortable": false,
-                    "sWidth": "30px",
-                    "bUseRendered": false,
-                    "fnRender": function(oObj){
-                        return pvhm_formatNumber(oObj.aData['preis'])
-                    },
-                    "aTargets": ["dt-position-th-preis"]
-                },
-                { /* position.betrag (menge*einzelpreis) */
-                    "mDataProp": "betrag", 
-                    "bSortable": false,
-                    "sWidth": "30px",
-                    "bUseRendered": false,
-                    "fnRender": function(oObj){
-                        return pvhm_formatNumber(oObj.aData['betrag'])
-                    },
-                    "aTargets": ["dt-position-th-betrag"]
-                },
-                { /* position.tier */
-                    "mDataProp": "tier.bezeichnung", 
-                    "sWidth": "50px", 
-                    "aTargets": ["dt-position-th-tier"]
-                },
-                { /* position.datum */
-                    "mDataProp": "datum", 
-                    "sType": "date",
-                    "bSortable": true,
-                    "bUseRendered": false,
-                    "sWidth": "40px",
-                    "fnRender": function(oObj){
-                        return pvhm_formatDate(oObj.aData['datum'])
-                    },
-                    "aTargets": ["dt-position-th-datum"]
-                },
-                { /* position.beleg */
-                    "mDataProp": "beleg",
-                    "sDefaultContent": "keiner",
-                    "sWidth": "50px",
-                    "fnRender": function(oObj){
-                        if(oObj.aData['beleg'] == null)
-                            return null
-                        return oObj.aData['beleg']['belegnummer'];
-                    },
-                    "aTargets": ["dt-position-th-beleg"]
-                },
-                { /* position.kunde */
-                    "mDataProp": "kunde.name", 
-                    "sWidth": "60px", 
-                    "aTargets": ["dt-position-th-kunde"]
-                }
+                "aTargets": ["dt-position-th-beleg"]
+            },
+            { /* position.kunde */
+                "mDataProp": "kunde.name", 
+                "sWidth": "60px", 
+                "aTargets": ["dt-position-th-kunde"]
+            }
             ]
         });
         
@@ -315,36 +394,36 @@ $(function() {
                 var datum_column_index = $("#dt-datum-column").index("th")
                 
                 $.fn.dataTableExt.afnFiltering.push(
-                function (oSettings, aData, iDataIndex) {
-                    var dStartDate = from_date.datepicker("getDate");
-                    var dEndDate = to_date.datepicker("getDate");
-                    var dCellDate = new Date(Date.parse(aData[datum_column_index]));
-                    //var dCellDate = $.datepicker.parseDate(datepicker_locale.dateFormat, aData[datum_column_index]);
+                    function (oSettings, aData, iDataIndex) {
+                        var dStartDate = from_date.datepicker("getDate");
+                        var dEndDate = to_date.datepicker("getDate");
+                        var dCellDate = new Date(Date.parse(aData[datum_column_index]));
+                        //var dCellDate = $.datepicker.parseDate(datepicker_locale.dateFormat, aData[datum_column_index]);
                     
-                    if (dCellDate == null)
+                        if (dCellDate == null)
+                            return false;
+                    
+                        if (dStartDate == null && dEndDate == null) {
+                            return true;
+                        }
+                        else if (dStartDate == null && dCellDate < dEndDate) {
+                            return true;
+                        }
+                        else if (dStartDate < dCellDate && dEndDate == null) {
+                            return true;
+                        }
+                        else if (dStartDate < dCellDate && dCellDate < dEndDate) {
+                            return true;
+                        }
                         return false;
-                    
-                    if (dStartDate == null && dEndDate == null) {
-                        return true;
                     }
-                    else if (dStartDate == null && dCellDate < dEndDate) {
-                        return true;
-                    }
-                    else if (dStartDate < dCellDate && dEndDate == null) {
-                        return true;
-                    }
-                    else if (dStartDate < dCellDate && dCellDate < dEndDate) {
-                        return true;
-                    }
-                    return false;
-                }
-            );
+                    );
             }
         }
     }
     
             
- /**********************************
+    /**********************************
  * *  DataTable Konfiguration für Belege Table
  *********************************/
     
@@ -424,7 +503,7 @@ $(function() {
             { /* beleg.betrag */
                 "mDataProp": "betrag",
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['betrag'])
                 },
@@ -433,7 +512,7 @@ $(function() {
             { /* beleg.bezahlt */
                 "mDataProp": "bezahlt", 
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['bezahlt'])
                 },
@@ -472,8 +551,8 @@ $(function() {
         
         if ($("#formZahlung").length) {
             $('#formZahlung').submit(function() {
-                var betraginput = $("#betrag").val()
-                var offenbetrag = $("#remaining").text()
+                var betraginput = parseFloat($("#betrag").val().replace( ",", "." ))
+                var offenbetrag = parseFloat($("#remaining").text().replace( ",", "." ))
                 if(betraginput > offenbetrag) {
                     alert('Zahlungsbetrag ist größer als der offene Gesamtbetrag!');
                     return false;
@@ -491,8 +570,124 @@ $(function() {
         }
     }
     
+    /**********************************
+ * *  DataTable Konfiguration für Rechnungen Table
+ *********************************/
     
-/**********************************
+    if ($("#dt-rechnung").length) {
+        table_datasource = $("#dt-rechnung").attr("datasource");
+        table_row_click_action = $("#dt-rechnung").attr("rowclickaction");
+        table_filter = $("#dt-rechnung").attr("filter");
+        table_request_params = []
+        table_request_params.push({
+            "name": "filter", 
+            "value": table_filter
+        }); 
+        if($("#dt-rechnung").attr("kundeId")) {
+            table_request_params.push({
+                "name": "kundeId", 
+                "value": $("#dt-rechnung").attr("kundeId")
+            });
+        }
+
+        var table_rechnung = $("#dt-rechnung").dataTable({
+            "bAutoWidth": true,
+            "bDeferRender": true,
+            //"bStateSave": true,  @todo this enables the cookie
+            "bProcessing": true,
+            "sPaginationType": "two_button",
+            "iCookieDuration": 60*60*12,
+            "sCookiePrefix": "pvhm_datatable_",
+            "sAjaxSource": table_datasource,
+            "sAjaxDataProp": "aoData",
+            "bLengthChange": false,
+            "iDisplayLength": -1,
+            "bScrollInfinite": true,
+            "bScrollCollapse": true,
+            "sScrollY": "400px",
+            "oLanguage": {
+                "sUrl": dt_locale_file
+            },
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+                table_request_params.forEach(function(value){
+                    aoData.push(value)
+                });
+                $.ajax( {
+                    "dataType": 'json', 
+                    "type": "POST", 
+                    "url": sSource, 
+                    "data": aoData, 
+                    "success": fnCallback
+                } );
+            },
+            "fnInitComplete": function(oSettings, json) {
+                if ($("#remaining").length) {
+                    if(json.remaining) {
+                        $("#remaining").html(pvhm_formatNumber(json.remaining))
+                    }
+                }
+            },
+            "aoColumnDefs": [
+            {   /* rechnung.id */
+                "mDataProp": "id",
+                "bSearchable": false,
+                "aTargets": ["dt-rechnung-th-id"]
+            },
+            {   /* rechnung.checkbox */
+                "sWidth": "20px",
+                "bSearchable": false,
+                "sSortDataType": "dom-checkbox",
+                "fnRender": function(oObj){
+                    return "<input type='checkbox' name='selected' value='" + oObj.aData['id'] + "' />"
+                },
+                "aTargets": ["dt-rechnung-th-checkbox"]
+            },
+            {   /* rechnung.rechnungnummer */
+                "mDataProp": "rechnungnummer", 
+                "sWidth": "30px", 
+                "aTargets": ["dt-rechnung-th-rechnungnummer"]
+            },
+            { /* rechnung.betrag */
+                "mDataProp": "betrag",
+                "sWidth": "30px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData['betrag'])
+                },
+                "aTargets": ["dt-rechnung-th-betrag"]
+            },
+            { /* rechnung.datum */
+                "mDataProp": "datum", 
+                "sType": "date",
+                "bSortable": true,
+                "bUseRendered": false,
+                "sWidth": "40px", 
+                "fnRender": function(oObj){
+                    return pvhm_formatDate(oObj.aData['datum'])
+                },
+                "aTargets": ["dt-rechnung-th-datum"]
+            },
+            { /* rechnung.kunde */
+                "sWidth": "60px",
+                "bUseRendered": true,
+                "fnRender": function(oObj){
+                    return oObj.aData['kunde']['name']
+                },
+                "aTargets": ["dt-rechnung-th-kunde"]
+            }
+            ]
+        });
+        
+        if(table_row_click_action != null) {   
+            $("#dt-rechnung tbody tr").live("click",function(){
+                var row_obj = table_rechnung.fnGetData(this);
+                var link = table_row_click_action.replace("_x_", row_obj.id);
+                window.location.href = link;
+            });
+        }
+    }
+    
+    /**********************************
  *  DataTable Konfiguration für Zahlung Table
  *********************************/
     
@@ -567,7 +762,7 @@ $(function() {
             { /* zahlung.betrag */
                 "mDataProp": "betrag",
                 "sWidth": "30px",
-                "bUseRendered": false,
+                "bUseRendered": true,
                 "fnRender": function(oObj){
                     return pvhm_formatNumber(oObj.aData['betrag'])
                 },
@@ -588,7 +783,7 @@ $(function() {
                 "sWidth": "60px",
                 "bUseRendered": true,
                 "fnRender": function(oObj){
-                    return oObj.aData['kunde']['nachname'] + " " + oObj.aData['kunde']['vorname']
+                    return oObj.aData['kunde']['name']
                 },
                 "aTargets": ["dt-zahlung-th-kunde"]
             }
@@ -605,7 +800,7 @@ $(function() {
     }
     
     
- /**********************************
+    /**********************************
  *  DataTable Konfigurationen für Statistik "Erbrachte Leistungen/Medikamente"
  *********************************/
     
@@ -643,8 +838,12 @@ $(function() {
             {
                 "mDataProp": 1, 
                 "bSortable": true,
+                "bUseRendered": true,
                 "sWidth": "150px", 
-                "aTargets": ["dt-erbracht-medikament-th-summe"]
+                "aTargets": ["dt-erbracht-medikament-th-summe"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[1])
+                }
             }]
         });
     
@@ -681,13 +880,17 @@ $(function() {
             {
                 "mDataProp": 1, 
                 "bSortable": true,
+                "bUseRendered": true,
                 "sWidth": "150px", 
-                "aTargets": ["dt-erbracht-leistung-th-summe"]
+                "aTargets": ["dt-erbracht-leistung-th-summe"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[1])
+                }
             }]
         });
     }
     
- /**********************************
+    /**********************************
  *  DataTable Konfigurationen für Statistik "Tagesbericht"
  *********************************/
 
@@ -724,11 +927,15 @@ $(function() {
             {
                 "mDataProp": 2, 
                 "bSortable": true,
-                "aTargets": ["dt-tagesbericht-position-th-betrag"]
+                "bUseRendered": true,
+                "aTargets": ["dt-tagesbericht-position-th-betrag"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[2])
+                }
             }]
         });
         
-        table_tb_position.fnAdjustColumnSizing();
+        //table_tb_position.fnAdjustColumnSizing();
     
         var table_tb_zahlung = $("#dt-tagesbericht-zahlung").dataTable({
             "bAutoWidth": true,
@@ -757,11 +964,15 @@ $(function() {
             {
                 "mDataProp": 1,
                 "bSortable": true,
-                "aTargets": ["dt-tagesbericht-zahlung-th-betrag"]
+                "bUseRendered": true,
+                "aTargets": ["dt-tagesbericht-zahlung-th-betrag"],
+                "fnRender": function(oObj){
+                    return pvhm_formatNumber(oObj.aData[1])
+                }
             }]
         });
         
-        table_tb_zahlung.fnAdjustColumnSizing();
+    //table_tb_zahlung.fnAdjustColumnSizing();
     }
 
 });
