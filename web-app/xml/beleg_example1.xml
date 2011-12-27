@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beleg id="1">
+    <belegnummer>1111111</belegnummer>
+    <betrag>221.21</betrag>
+    <bezahlt>0.00</bezahlt>
+    <brutto>221.21</brutto>
+    <dateCreated>2011-12-15 22:37:57.873 MEZ</dateCreated>
+    <datum>2011-12-15 00:00:00.0 MEZ</datum>
+    <kunde id="1">
+        <nachname>Huber</nachname>
+        <vorname>Franz</vorname>
+        <adresse>Landweg 12</adresse>
+        <wohnort>Mistelbach</wohnort>
+        <telefonnummer>0-555-123456</telefonnummer>
+        <beruf></beruf>
+        <mwst>true</mwst>
+        <bemerkung>da Franz is a guada Spezl</bemerkung>
+        <zahllast>221.21</zahllast>
+    </kunde>
+    <lastUpdated>2011-12-15 22:37:57.873 MEZ</lastUpdated>
+    <netto>184.34</netto>
+    <positionen>
+        <position id="2">
+            <anmerkung>Oskar der oarge Ochs</anmerkung>
+            <beleg ref="../.." />
+            <betrag>13.19</betrag>
+            <dateCreated>2011-12-15 22:37:57.865 MEZ</dateCreated>
+            <datum>2011-12-15 00:00:00.0 MEZ</datum>
+            <kunde id="1">
+                <nachname>Huber</nachname>
+                <vorname>Franz</vorname>
+                <adresse>Landweg 12</adresse>
+                <wohnort>Mistelbach</wohnort>
+                <telefonnummer>0-555-123456</telefonnummer>
+                <beruf></beruf>
+                <mwst>true</mwst>
+                <bemerkung>da Franz is a guada Spezl</bemerkung>
+                <zahllast>221.21</zahllast>
+            </kunde>
+            <lastUpdated>2011-12-15 22:37:57.985 MEZ</lastUpdated>
+            <menge>1</menge>
+            <preis>13.19</preis>
+            <tier id="1">
+                <bezeichnung>Kuh</bezeichnung>
+                <dateCreated>2011-12-15 22:37:57.772 MEZ</dateCreated>
+                <lastUpdated>2011-12-15 22:37:57.772 MEZ</lastUpdated>
+            </tier>
+            <typ id="4">
+                <bezeichnung>Krallen Stutzen</bezeichnung>
+                <dateCreated>2011-12-15 22:37:57.753 MEZ</dateCreated>
+                <lastUpdated>2011-12-15 22:37:57.753 MEZ</lastUpdated>
+                <preis>12.00</preis>
+            </typ>
+        </position>
+        <position id="1">
+            <anmerkung>Mitzi die Kuh</anmerkung>
+            <beleg ref="../.." />
+            <betrag>171.15</betrag>
+            <dateCreated>2011-12-15 22:37:57.858 MEZ</dateCreated>
+            <datum>2011-12-15 00:00:00.0 MEZ</datum>
+            <kunde id="1">
+                <nachname>Huber</nachname>
+                <vorname>Franz</vorname>
+                <adresse>Landweg 12</adresse>
+                <wohnort>Mistelbach</wohnort>
+                <telefonnummer>0-555-123456</telefonnummer>
+                <beruf></beruf>
+                <mwst>true</mwst>
+                <bemerkung>da Franz is a guada Spezl</bemerkung>
+                <zahllast>221.21</zahllast>
+            </kunde>
+            <lastUpdated>2011-12-15 22:37:57.979 MEZ</lastUpdated>
+            <menge>5</menge>
+            <preis>34.23</preis>
+            <tier id="1">
+                <bezeichnung>Kuh</bezeichnung>
+                <dateCreated>2011-12-15 22:37:57.772 MEZ</dateCreated>
+                <lastUpdated>2011-12-15 22:37:57.772 MEZ</lastUpdated>
+            </tier>
+            <typ id="1">
+                <bezeichnung>Wurmkur</bezeichnung>
+                <dateCreated>2011-12-15 22:37:57.718 MEZ</dateCreated>
+                <lastUpdated>2011-12-15 22:37:57.718 MEZ</lastUpdated>
+                <preis>12.70</preis>
+            </typ>
+        </position>
+    </positionen>
+    <rechnungen />
+    <zahlungsteile />
+</beleg>

@@ -21,6 +21,6 @@ class Zahlung implements Serializable { //muss Seriazable implementieren für Fl
     }
     
     def String toString() {
-        return "Zahlung of ${kunde} amount ${betrag}"
+        return "Zahlung by ${kunde} amount ${betrag}"
     }
 }

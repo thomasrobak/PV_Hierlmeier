@@ -9,10 +9,13 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
     Kunde kunde
     BigDecimal brutto
     BigDecimal netto
+    //BigDecimal mwstbetrag
     BigDecimal betrag
     BigDecimal bezahlt
         
-    static hasMany = [positionen:Position, zahlungsteile:Zahlungsteil]
+    static hasMany = [positionen:Position, zahlungsteile:Zahlungsteil, rechnungen:Rechnung]
+    
+    static belongsTo = [Rechnung]
 
     static constraints = {
         belegnummer(blank:false, unique:true, nullable:false)
@@ -22,6 +25,7 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
         netto(shared: "currencynumber")
         betrag(shared: "currencynumber")
         bezahlt(shared: "currencynumber")
+        //mwstbetrag(shared: "currencynumber")
     }
     
     static mapping = {
@@ -32,7 +36,23 @@ class Beleg implements Serializable { //muss Serializable implementieren für Fl
         unbeglichene {
             gtProperty 'betrag', 'bezahlt'
         }
-        
+        aktuelleZahllastPerKunde {
+            gtProperty 'betrag', 'bezahlt'
+            projections {
+                sum "betrag"
+                sum "bezahlt"
+                groupProperty "kunde"
+            }
+        }
+        aktuelleZahllastSpecificKunde { kunde ->
+            gtProperty 'betrag', 'bezahlt'
+            eq 'kunde', kunde 
+            projections {
+                sum "betrag"
+                sum "bezahlt"
+                groupProperty "kunde"
+            }
+        }    
     }
     
     /*

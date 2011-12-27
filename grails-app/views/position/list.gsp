@@ -28,6 +28,7 @@
       <th class="dt-position-th-typ">Typ</th>
       <th class="dt-position-th-anmerkung">Anmerkung</th>
       <th class="dt-position-th-tier">Tier</th>
+      <th class="dt-position-th-preis">Einzelpreis (€)</th>
       <th class="dt-position-th-menge">Menge</th>
       <th class="dt-position-th-betrag">Betrag (€)</th>
       <th id="dt-datum-column" class="dt-position-th-datum">Datum</th>

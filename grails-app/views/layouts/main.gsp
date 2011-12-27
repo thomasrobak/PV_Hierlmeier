@@ -53,6 +53,10 @@
                   name: "Zahlungen", 
                   attr: { title: "Zeigt eine Liste aller Zahlungen." },
                   selecton: function(){window.location.href='${createLink(controller:"zahlung", action:"list")}'} 
+                },{ 
+                  name: "Rechnungen", 
+                  attr: { title: "Zeigt eine Liste aller erstellter Rechnungen." },
+                  selecton: function(){window.location.href='${createLink(controller:"rechnung", action:"list")}'} 
                 }
               ]
             },{
@@ -86,14 +90,22 @@
                   name: "Zahlung", 
                   attr: { title: "Erstelle neue Zahlung." },
                   selecton: function(){window.location.href='${createLink(controller:"zahlung", action:"create")}'} 
+                },{ 
+                  name: "Rechnung", 
+                  attr: { title: "Erstelle neue Rechnung." },
+                  selecton: function(){window.location.href='${createLink(controller:"rechnung", action:"create")}'} 
                 }
               ]
             },{
               name: "Drucken",
               items: [{ 
                   name: "Beleg", 
-                  attr: { title: "Erstelle neuen Beleg." },
+                  attr: { title: "Drucke erstellten Beleg." },
                   selecton: function(){window.location.href='${createLink(controller:"beleg", action:"list")}'} 
+              },{ 
+                  name: "Rechnung", 
+                  attr: { title: "Drucke erstellte Rechnung." },
+                  selecton: function(){window.location.href='${createLink(controller:"rechnung", action:"list")}'} 
               }]              
             },{
               name: "Statistiken", 
